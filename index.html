@@ -656,7 +656,7 @@
       const state = {
         category: 'weapon', query: '', subtype: 'all', tier: 'all', crafted: false, favoritesOnly: false,
         lang: localStorage.getItem('grounded-lang') || 'ru',
-        previousCategory: 'weapon', setWeapon: '', setArmor: '', setHead: '', setBody: '', setLegs: '', setShield: '', setTrinket: '', armorProfile: 'auto', avatarTurned: false,
+        previousCategory: 'weapon', showSets: false, showCommunity: false, setWeapon: '', setArmor: '', setHead: '', setBody: '', setLegs: '', setShield: '', setTrinket: '', armorProfile: 'auto', avatarTurned: false,
         favorites: new Set(JSON.parse(localStorage.getItem('grounded-favorites') || '[]')), visible: 80
       };
       const $ = (id) => document.getElementById(id);
@@ -738,8 +738,8 @@
           const meta = categoryMeta[key];
           return `<button class="nav-item ${state.category === key ? 'active' : ''}" data-category="${key}"><span class="nav-icon">${meta.icon}</span><span class="nav-text">${meta.label}</span><span class="nav-count">${count}</span></button>`;
         }).join('');
-        $('setsNav').classList.toggle('active', state.category === 'sets');
-        $('communityNav').classList.toggle('active', state.category === 'community');
+        $('setsNav').classList.toggle('active', state.showSets);
+        $('communityNav').classList.toggle('active', state.showCommunity);
       }
 
       function renderStats() {
@@ -1031,25 +1031,17 @@
       function render() {
         renderLanguage();
         renderNav();
-        const isCommunity = state.category === 'community';
-        const isSets = state.category === 'sets';
-        if (!isSets && window.__modelFrame) { cancelAnimationFrame(window.__modelFrame); window.__modelFrame = null; }
-        const alternatePanel = isCommunity || isSets;
-        $('catalogToolbar').hidden = alternatePanel;
-        $('quickFilters').hidden = alternatePanel;
-        $('catalogTable').hidden = alternatePanel;
-        $('loadMore').hidden = alternatePanel;
-        $('catalogFootnote').hidden = alternatePanel;
+        const isCommunity = state.showCommunity;
+        const isSets = state.showSets;
+        $('catalogToolbar').hidden = false;
+        $('quickFilters').hidden = false;
+        $('catalogTable').hidden = false;
+        $('loadMore').hidden = false;
+        $('catalogFootnote').hidden = false;
         $('communityPanel').hidden = !isCommunity;
         $('setsPanel').hidden = !isSets;
-        if (isCommunity) {
-          renderCommunity();
-          return;
-        }
-        if (isSets) {
-          renderSets();
-          return;
-        }
+        if (isCommunity) renderCommunity();
+        if (isSets) renderSets();
         const pool = currentPool();
         updateSelects(pool);
         renderQuickFilters();
@@ -1117,9 +1109,7 @@
         render();
       });
       $('setsNav').addEventListener('click', () => {
-        if (state.category !== 'sets') state.previousCategory = state.category;
-        state.category = state.category === 'sets' ? (state.previousCategory || 'weapon') : 'sets';
-        state.visible = 80;
+        state.showSets = !state.showSets;
         render();
       });
       $('setsPanel').addEventListener('click', event => {
@@ -1149,9 +1139,7 @@
         renderSets();
       });
       $('communityNav').addEventListener('click', () => {
-        if (state.category !== 'community') state.previousCategory = state.category;
-        state.category = state.category === 'community' ? (state.previousCategory || 'weapon') : 'community';
-        state.visible = 80;
+        state.showCommunity = !state.showCommunity;
         render();
       });
       $('categoryNav').addEventListener('click', event => {
@@ -1200,5 +1188,5 @@
       render();
     })();
   </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a31d3971a8e9ef1a',t:'MTc4Nzg1NjIzMw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a31d41ecfce3ef1a',t:'MTc4Nzg1NjU4MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
