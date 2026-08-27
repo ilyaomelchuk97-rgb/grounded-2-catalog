@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: backyard-archive
+    runtime: static
+    plan: free
+    branch: main
+    buildCommand: echo "Static site — build step is not required"
+    staticPublishPath: .
+    autoDeploy: true
+    pullRequestPreviewsEnabled: true
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=3600
