@@ -71,7 +71,7 @@ def info_parts(info: str) -> tuple[str, str]:
 def weapon_data() -> list[dict[str, Any]]:
     soup = BeautifulSoup(get_html(BASE + "/wiki/Weapons_%26_Tools_(Grounded_2)"), "html.parser")
     tables = soup.find_all("table")[:14]
-    groups = ["one-handed", "stranger-one-handed", "shield", "stranger-shield", "two-handed", "stranger-two-handed", "dual-wield", "stranger-dual-wield", "bow", "stranger-bow", "greatbow", "stranger-greatbow", "candy-staves", "turret-ammo"]
+    groups = ["one-handed", "stranger-one-handed", "shield", "stranger-shield", "two-handed", "stranger-two-handed", "dual-wield", "stranger-dual-wield", "bow", "stranger-bow", "greatbow", "candy-staves", "stranger-staves", "turret-ammo"]
     out: list[dict[str, Any]] = []
     for table, group in zip(tables, groups):
         for tr in table.find_all("tr"):
@@ -82,23 +82,37 @@ def weapon_data() -> list[dict[str, Any]]:
             if not name or name.lower() in {"tool", "damage"}:
                 continue
             texts = [clean(td.get_text(" ", strip=True)) for td in tds]
-            if len(texts) >= 8:
+            if group == "stranger-bow":
+                stats = " • ".join([
+                    f"Bow multiplier: {texts[1]}" if len(texts) > 1 and texts[1] else "",
+                    f"Speed: {texts[2]}" if len(texts) > 2 and texts[2] else "",
+                    f"Crit: {texts[3]}" if len(texts) > 3 and texts[3] else "",
+                ])
+                info, materials, repair = texts[4], texts[5], texts[6]
+            elif group == "turret-ammo":
+                stats = " • ".join([
+                    f"Damage: {texts[1]}" if texts[1] else "",
+                    f"Stun: {texts[2]}" if texts[2] else "",
+                    f"Fire rate: {texts[3]}" if texts[3] else "",
+                ])
+                info, materials, repair = texts[4], texts[5], ""
+            elif len(texts) >= 8:
                 # Bow and greatbow tables have one extra stat column.
                 if len(texts) == 9:
                     stats = " • ".join([
-                        f"Arrow damage: {texts[1]}" if texts[1] else "",
-                        f"Bow multiplier: {texts[2]}" if texts[2] else "",
-                        f"Stun: {texts[3]}" if texts[3] else "",
-                        f"Speed: {texts[4]}" if texts[4] else "",
-                        f"Crit: {texts[5]}" if texts[5] else "",
+                        f"Урон стрелы: {texts[1]}" if texts[1] else "",
+                        f"Усиление лука: {texts[2]}" if texts[2] else "",
+                        f"Оглушение: {texts[3]}" if texts[3] else "",
+                        f"Скорость: {texts[4]}" if texts[4] else "",
+                        f"Крит: {texts[5]}" if texts[5] else "",
                     ])
                     info, materials, repair = texts[6], texts[7], texts[8]
                 else:
                     stats = " • ".join([
-                        f"Damage: {texts[1]}" if texts[1] else "",
-                        f"Stun: {texts[2]}" if texts[2] else "",
-                        f"Speed: {texts[3]}" if texts[3] else "",
-                        f"Crit: {texts[4]}" if texts[4] else "",
+                        f"Урон: {texts[1]}" if texts[1] else "",
+                        f"Оглушение: {texts[2]}" if texts[2] else "",
+                        f"Скорость: {texts[3]}" if texts[3] else "",
+                        f"Крит: {texts[4]}" if texts[4] else "",
                     ])
                     info, materials, repair = texts[5], texts[6], texts[7]
             elif len(texts) == 6:
@@ -118,8 +132,8 @@ def weapon_data() -> list[dict[str, Any]]:
                 "two-handed": "Two-handed", "stranger-two-handed": "Stranger variant · two-handed",
                 "dual-wield": "Dual wield", "stranger-dual-wield": "Stranger variant · dual wield",
                 "bow": "Bow", "stranger-bow": "Stranger variant · bow",
-                "greatbow": "Greatbow", "stranger-greatbow": "Stranger variant · greatbow",
-                "candy-staves": "Candy staff", "turret-ammo": "Turret ammo",
+                "greatbow": "Greatbow", "candy-staves": "Candy staff", "stranger-staves": "Stranger variant · staff",
+                "turret-ammo": "Turret ammo",
             }[group]
             out.append({
                 "id": f"weapon-{len(out)+1}", "name": name, "category": "weapon", "subtype": subtype,
@@ -274,7 +288,40 @@ def resource_data() -> list[dict[str, Any]]:
     soup = BeautifulSoup(get_html(BASE + "/wiki/Resources_(Grounded_2)"), "html.parser")
     out: list[dict[str, Any]] = []
     tables = soup.find_all("table")[:15]
+    crafting_stations = {"Workbench", "By Hand", "Spinning Wheel", "Jerky Rack", "Oven", "Grinder", "Glue Masher", "Shard Recipe", "Bug Part Recipe"}
     for ti, table in enumerate(tables):
+        # The first five resource tables have a visually grouped recipe layout:
+        # item row -> station row -> ingredient row -> optional station row -> ingredient row.
+        if ti < 5:
+            current = None
+            active_station = ""
+            for tr in table.find_all("tr"):
+                tds = tr.find_all("td", recursive=False)
+                if len(tds) >= 3:
+                    if current:
+                        current["recipeMethods"] = current.pop("_methods")
+                        out.append(current)
+                    name = first_item_anchor(tds[0])
+                    if not name or name.lower() in {"resource", "resources"}:
+                        continue
+                    description = clean(tds[1].get_text(" ", strip=True))
+                    active_station = clean(tds[2].get_text(" ", strip=True))
+                    current = {
+                        "id": f"resource-{len(out)+1}", "name": name, "category": "resource",
+                        "subtype": "Upgrade material", "tier": tier_from(tds[0]), "image": item_img(tds[0]),
+                        "stats": "Crafting material", "effect": description, "recipe": "", "repair": "",
+                        "unlock": "", "info": description, "source": active_station, "_methods": []
+                    }
+                elif len(tds) == 1 and current:
+                    value = clean(tds[0].get_text(" ", strip=True))
+                    if value in crafting_stations:
+                        active_station = value
+                    elif value:
+                        current["_methods"].append({"station": active_station, "recipe": value})
+            if current:
+                current["recipeMethods"] = current.pop("_methods")
+                out.append(current)
+            continue
         for tr in table.find_all("tr"):
             tds = tr.find_all("td", recursive=False)
             if len(tds) < 2:
@@ -288,11 +335,17 @@ def resource_data() -> list[dict[str, Any]]:
             locations = vals[3] if len(vals) > 3 else ""
             out.append({
                 "id": f"resource-{len(out)+1}", "name": name, "category": "resource",
-                "subtype": "Upgrade material" if ti < 5 else "Natural resource", "tier": tier_from(tds[0]),
+                "subtype": "Natural resource", "tier": tier_from(tds[0]),
                 "image": item_img(tds[0]), "stats": "Crafting material", "effect": description,
-                "recipe": source if ti < 5 else "", "repair": "", "unlock": locations,
+                "recipe": "", "repair": "", "unlock": locations,
                 "info": description, "source": source,
             })
+    for item in out:
+        methods = item.pop("recipeMethods", [])
+        if methods:
+            item["craftingMethods"] = methods
+            item["craftingStation"] = methods[0].get("station", "")
+            item["recipe"] = methods[0].get("recipe", "")
     return out
 
 
@@ -319,8 +372,9 @@ def guessed_resource_image(name: str) -> str:
 
 def guessed_building_image(name: str) -> str:
     """Construction pieces use the same item icon naming convention on the wiki."""
-    slug = re.sub(r"[^A-Za-z0-9]+", "_", name).strip("_")
-    encoded = quote(slug, safe="_")
+    name = name.replace("’", "'").replace("‘", "'")
+    slug = re.sub(r"[^A-Za-z0-9']+", "_", name).strip("_")
+    encoded = quote(slug, safe="_'")
     return f"{BASE}/images/thumb/{encoded}.png/100px-{encoded}.png"
 
 
