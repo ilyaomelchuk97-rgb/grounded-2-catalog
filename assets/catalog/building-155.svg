@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#a6634c"/><stop offset="1" stop-color="#142b41"/></linearGradient></defs>
+<rect width="240" height="240" rx="34" fill="url(#g)"/><circle cx="42" cy="42" r="34" fill="#fff" opacity=".05"/><circle cx="200" cy="194" r="68" fill="#fff" opacity=".04"/>
+<rect x="58" y="72" width="124" height="93" rx="14" fill="#ffd3a5" opacity=".86"/><circle cx="120" cy="112" r="21" fill="#132536" opacity=".65"/><path d="M120 91v42M99 112h42" stroke="#fff" stroke-width="6" opacity=".72"/><text x="120" y="211" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="700" letter-spacing="2" fill="#fff" opacity=".9">ДЕКОР</text></svg>
