@@ -4,6 +4,7 @@ import json
 import re
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 import requests
 from bs4 import BeautifulSoup
@@ -262,7 +263,7 @@ def building_data() -> list[dict[str, Any]]:
                 continue
             out.append({
                 "id": f"building-{len(out)+1}", "name": name, "category": "building",
-                "subtype": building_subtype(name, ti), "tier": "", "image": "", "stats": "Build piece",
+                "subtype": building_subtype(name, ti), "tier": "", "image": guessed_building_image(name), "stats": "Build piece",
                 "effect": "", "recipe": recipe, "repair": "", "unlock": "",
                 "info": f"Construction recipe · {building_subtype(name, ti)}",
             })
@@ -295,6 +296,92 @@ def resource_data() -> list[dict[str, Any]]:
     return out
 
 
+def recipe_segments(recipe: str) -> list[tuple[str, int]]:
+    """Read both recipe formats used by the sources: `4 Material` and `Material (4)`."""
+    recipe = clean(recipe).replace("Recipe:", "", 1).strip()
+    result: list[tuple[str, int]] = []
+    for match in re.finditer(r"([^()]+?)\s*\((\d+)\)", recipe):
+        name = clean(match.group(1)).strip(" ·,")
+        if name:
+            result.append((name, int(match.group(2))))
+    for match in re.finditer(r"(?<!\w)(\d+)\s*x?\s+(.+?)(?=\s+\d+\s*x?\s+|$)", recipe):
+        name = clean(match.group(2)).strip(" ·,")
+        if name and not name.isdigit():
+            result.append((name, int(match.group(1))))
+    return result
+
+
+def guessed_resource_image(name: str) -> str:
+    """A stable MediaWiki file URL for recipe-only resources absent from the main table."""
+    slug = re.sub(r"[^A-Za-z0-9]+", "_", name).strip("_")
+    return f"{BASE}/wiki/Special:FilePath/{quote(slug + '.png')}?width=50"
+
+
+def guessed_building_image(name: str) -> str:
+    """Construction pieces use the same item icon naming convention on the wiki."""
+    slug = re.sub(r"[^A-Za-z0-9]+", "_", name).strip("_")
+    encoded = quote(slug, safe="_")
+    return f"{BASE}/images/thumb/{encoded}.png/100px-{encoded}.png"
+
+
+def add_recipe_only_resources(items: list[dict[str, Any]]) -> None:
+    known = {item["name"] for item in items}
+    missing: list[str] = []
+    for item in items:
+        for name, _qty in recipe_segments(item.get("recipe", "")):
+            # The recipe parser may capture a malformed joined token; keep only plausible resource names.
+            if name not in known and 1 < len(name) < 70 and not any(ch.isdigit() for ch in name):
+                if name not in missing:
+                    missing.append(name)
+    for name in missing:
+        items.append({
+            "id": f"resource-recipe-{len(items)+1}", "name": name, "category": "resource",
+            "subtype": "Crafting material", "tier": "", "image": guessed_resource_image(name),
+            "stats": "Crafting material", "effect": "Resource used in crafting recipes.",
+            "recipe": "", "repair": "", "unlock": "", "info": "Resource used in crafting recipes.",
+        })
+
+
+def attach_ingredients(items: list[dict[str, Any]]) -> None:
+    """Add structured recipe ingredients so the UI can show a thumbnail per resource."""
+    lookup: dict[str, dict[str, Any]] = {}
+    for item in items:
+        # Prefer an entry with an actual image when names are repeated.
+        if item["name"] not in lookup or (not lookup[item["name"]].get("image") and item.get("image")):
+            lookup[item["name"]] = item
+    known = sorted(lookup, key=len, reverse=True)
+    for item in items:
+        recipe = clean(item.get("recipe", "")).replace("Recipe:", "", 1).strip()
+        found: list[tuple[int, int, str, int]] = []
+        # Building recipes use the form "Material (4)".
+        for name in known:
+            for match in re.finditer(re.escape(name) + r"\s*\((\d+)\)", recipe, flags=re.I):
+                found.append((match.start(), match.end(), name, int(match.group(1))))
+        # Equipment recipes use the form "4 Material" or "4x Material".
+        for match in re.finditer(r"(?<!\w)(\d+)\s*x?\s+", recipe):
+            start = match.end()
+            for name in known:
+                if recipe[start:start + len(name)].lower() == name.lower():
+                    found.append((match.start(), start + len(name), name, int(match.group(1))))
+                    break
+        found.sort(key=lambda value: value[0])
+        clean_found = []
+        used_positions = set()
+        for start, end, name, qty in found:
+            if start in used_positions:
+                continue
+            used_positions.add(start)
+            ing = lookup[name]
+            clean_found.append({"name": name, "qty": qty, "image": ing.get("image", ""), "category": ing.get("category", "")})
+        # Fallback for recipes where a source omitted a separator: still show each known resource.
+        if not clean_found:
+            for name, qty in recipe_segments(recipe):
+                if name in lookup:
+                    ing = lookup[name]
+                    clean_found.append({"name": name, "qty": qty, "image": ing.get("image", ""), "category": ing.get("category", "")})
+        item["ingredients"] = clean_found
+
+
 def main() -> None:
     data = weapon_data() + armor_data() + trinket_data() + building_data() + resource_data()
     # Preserve first occurrence if the source repeats a row.
@@ -306,6 +393,8 @@ def main() -> None:
             continue
         seen.add(key)
         unique.append(item)
+    add_recipe_only_resources(unique)
+    attach_ingredients(unique)
     payload = {
         "updated": "2026-08-27",
         "sources": [
