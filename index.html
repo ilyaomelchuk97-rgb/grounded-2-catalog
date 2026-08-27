@@ -44,7 +44,13 @@
       background: radial-gradient(circle at 86% 2%, rgba(47,111,209,.13), transparent 28rem), radial-gradient(circle at 8% 30%, rgba(65,117,190,.10), transparent 30rem), var(--bg);
     }
     * { box-sizing: border-box; }
-    html { min-width: 320px; scroll-behavior: smooth; }
+    html { min-width: 320px; scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: rgba(216,241,123,.38) transparent; }
+    * { scrollbar-width: thin; scrollbar-color: rgba(216,241,123,.32) transparent; }
+    *::-webkit-scrollbar { width: 8px; height: 8px; }
+    *::-webkit-scrollbar-track { background: transparent; }
+    *::-webkit-scrollbar-thumb { background: linear-gradient(180deg, rgba(216,241,123,.50), rgba(216,241,123,.18)); border-radius: 99px; border: 2px solid transparent; background-clip: padding-box; }
+    body.light, body.light * { scrollbar-color: rgba(47,111,209,.42) transparent; }
+    body.light *::-webkit-scrollbar-thumb { background: linear-gradient(180deg, rgba(47,111,209,.56), rgba(47,111,209,.20)); background-clip: padding-box; }
     body {
       margin: 0;
       min-height: 100vh;
@@ -58,7 +64,13 @@
     }
     button, input, select { font: inherit; }
     button { cursor: pointer; }
+    @keyframes rise-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes hero-float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-5px) rotate(.5deg); } }
+    @keyframes row-in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse-dot { 0%,100% { box-shadow: 0 0 0 4px rgba(216,241,123,.10); } 50% { box-shadow: 0 0 0 7px rgba(216,241,123,.03); } }
     .app-shell { min-height: 100vh; }
+    .hero-kicker i, .live-dot { animation: pulse-dot 2.4s ease-in-out infinite; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
     .topbar {
       height: 78px;
       border-bottom: 1px solid var(--line);
@@ -131,10 +143,16 @@
     .nav-item .nav-text { font-size: 12px; font-weight: 650; flex: 1; }
     .nav-count { font-size: 10px; color: var(--muted-2); }
     .nav-item.active .nav-count { color: var(--lime); }
+    .sets-nav { margin-top: 15px; border-color: rgba(146,201,233,.20); background: rgba(146,201,233,.045); }
+    .sets-nav:hover, .sets-nav.active { color: var(--blue); border-color: rgba(146,201,233,.42); background: rgba(146,201,233,.10); }
+    .sets-nav.active .nav-count, .sets-nav.active .nav-icon { color: var(--blue); }
+    .community-nav { margin-top: 7px; border-color: rgba(246,163,94,.18); background: rgba(246,163,94,.045); }
+    .community-nav:hover, .community-nav.active { color: var(--orange); border-color: rgba(246,163,94,.35); background: rgba(246,163,94,.10); }
+    .community-nav.active .nav-count, .community-nav.active .nav-icon { color: var(--orange); }
     .sidebar-foot { margin-top: auto; padding: 19px 12px 0; color: var(--muted-2); font-size: 10px; line-height: 1.6; }
     .sidebar-foot a { color: var(--muted); text-decoration: none; border-bottom: 1px dotted var(--muted-2); }
     .main { min-width: 0; padding: 38px clamp(22px, 4vw, 60px) 72px; max-width: 1600px; width: 100%; margin: 0 auto; }
-    .hero { min-height: 228px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: space-between; padding: 38px 42px; border: 1px solid var(--line); border-radius: 25px; background: linear-gradient(115deg, rgba(30,44,33,.92) 0%, rgba(25,35,28,.92) 51%, rgba(52,65,37,.68) 100%); box-shadow: var(--shadow); }
+    .hero { min-height: 184px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: space-between; padding: 27px 34px; border: 1px solid var(--line); border-radius: 25px; background: linear-gradient(115deg, rgba(30,44,33,.92) 0%, rgba(25,35,28,.92) 51%, rgba(52,65,37,.68) 100%); box-shadow: var(--shadow); animation: rise-in .55s ease both; }
     body.light .hero { background: linear-gradient(115deg, #ffffff, #eef4fd 65%, #dce9fb); }
     body.light .leaf.one { background: linear-gradient(140deg, #7fa9ea, #365d9b); }
     body.light .leaf.two { background: linear-gradient(140deg, #9dc3f5, #3d72bb); }
@@ -149,7 +167,7 @@
     .hero-description { font-size: 13px; color: var(--muted); max-width: 530px; line-height: 1.6; margin: 0; }
     .hero-bubbles { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 20px; }
     .bubble { border: 1px solid var(--line-strong); background: rgba(255,255,255,.035); border-radius: 30px; padding: 6px 10px; color: var(--muted); font-size: 10px; }
-    .hero-art { width: 275px; height: 190px; position: relative; flex: 0 0 auto; z-index: 1; opacity: .95; }
+    .hero-art { width: 235px; height: 155px; position: relative; flex: 0 0 auto; z-index: 1; opacity: .95; animation: hero-float 6s ease-in-out infinite; }
     .leaf { position: absolute; border-radius: 100% 0 100% 0; transform: rotate(30deg); background: linear-gradient(140deg, #9bc657, #395e35); filter: drop-shadow(14px 20px 18px rgba(0,0,0,.24)); }
     .leaf.one { width: 126px; height: 64px; right: 49px; top: 13px; transform: rotate(28deg); }
     .leaf.two { width: 178px; height: 80px; right: 12px; top: 89px; transform: rotate(-21deg); background: linear-gradient(140deg, #c0df65, #3c784a); }
@@ -158,7 +176,10 @@
     .blade::after { content: ""; position: absolute; right: -15px; top: -5px; width: 17px; height: 17px; background: var(--orange); transform: rotate(45deg); border-radius: 3px; }
     .blade::before { content: ""; position: absolute; left: -34px; top: -7px; width: 38px; height: 23px; border: 5px solid #bd7c45; border-right: 0; border-radius: 15px 0 0 15px; }
     .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 19px 0 32px; }
-    .stat-card { border: 1px solid var(--line); border-radius: 17px; padding: 16px 17px; background: var(--panel); min-height: 89px; }
+    .stat-card { border: 1px solid var(--line); border-radius: 17px; padding: 16px 17px; background: var(--panel); min-height: 89px; animation: rise-in .55s ease both; }
+    .stat-card:nth-child(2) { animation-delay: .06s; }
+    .stat-card:nth-child(3) { animation-delay: .12s; }
+    .stat-card:nth-child(4) { animation-delay: .18s; }
     .stat-card .stat-top { display: flex; align-items: center; justify-content: space-between; color: var(--muted-2); font-size: 10px; }
     .stat-card .stat-value { font-size: 25px; font-weight: 760; letter-spacing: -.05em; margin-top: 10px; }
     .stat-card .stat-tag { color: var(--lime); font-size: 10px; }
@@ -168,8 +189,13 @@
     .section-subtitle { color: var(--muted); font-size: 12px; margin: 5px 0 0; }
     .toolbar-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
     .select-wrap { position: relative; }
-    select { height: 38px; background: var(--panel); border: 1px solid var(--line-strong); color: var(--muted); border-radius: 11px; padding: 0 30px 0 11px; outline: none; font-size: 11px; appearance: none; }
-    .select-wrap::after { content: "⌄"; position: absolute; right: 10px; top: 8px; color: var(--muted-2); pointer-events: none; }
+    select { height: 40px; min-width: 128px; background: linear-gradient(180deg, var(--panel-hover), var(--panel)); border: 1px solid var(--line-strong); color: var(--text); border-radius: 12px; padding: 0 32px 0 12px; outline: none; font-size: 12px; appearance: none; cursor: pointer; transition: .2s ease; }
+    select:hover { border-color: rgba(216,241,123,.34); }
+    select:focus { border-color: var(--lime-dark); box-shadow: 0 0 0 4px rgba(216,241,123,.09); }
+    select option { background: var(--panel-strong); color: var(--text); }
+    body.light select:hover { border-color: rgba(47,111,209,.35); }
+    body.light select:focus { border-color: var(--lime-dark); box-shadow: 0 0 0 4px rgba(47,111,209,.10); }
+    .select-wrap::after { content: "⌄"; position: absolute; right: 11px; top: 9px; color: var(--lime); pointer-events: none; font-size: 15px; }
     .toggle { height: 38px; padding: 0 12px; border: 1px solid var(--line-strong); border-radius: 11px; background: var(--panel); color: var(--muted); font-size: 11px; }
     .toggle.active { color: var(--lime); border-color: rgba(216,241,123,.32); background: rgba(216,241,123,.08); }
     .filters { display: flex; gap: 7px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: thin; }
@@ -184,6 +210,8 @@
     body.light .stat-pill { background: rgba(47,111,209,.025); }
     body.light .ingredient-card img, body.light .ingredient-icon { background: rgba(47,111,209,.08); }
     body.light .ingredient-card:hover { border-color: rgba(47,111,209,.36); background: rgba(47,111,209,.08); }
+    body.light .set-item-image { background: rgba(47,111,209,.06); }
+    body.light .set-item-card:hover, body.light .set-item-card:focus { border-color: rgba(47,111,209,.35); }
     body.light .load-more { color: #2f6fd1; background: rgba(47,111,209,.07); border-color: rgba(47,111,209,.22); }
     body.light .live-dot { background: #2f6fd1; box-shadow: 0 0 0 4px rgba(47,111,209,.10); }
     .table-card { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); overflow: hidden; box-shadow: var(--shadow); }
@@ -196,7 +224,7 @@
     th:first-child, td:first-child { padding-left: 20px; }
     th:last-child, td:last-child { padding-right: 18px; width: 44px; }
     td { vertical-align: top; padding: 15px 15px; border-bottom: 1px solid var(--line); font-size: 12px; }
-    tbody tr { transition: .18s ease; cursor: pointer; }
+    tbody tr { transition: .18s ease; cursor: pointer; animation: row-in .4s ease both; animation-delay: calc(var(--row-index, 0) * 18ms); }
     tbody tr:hover { background: var(--panel-hover); }
     tbody tr:last-child td { border-bottom: 0; }
     .item-cell { display: flex; align-items: center; gap: 12px; min-width: 235px; }
@@ -233,6 +261,111 @@
     .source-text { display: block; color: var(--muted-2); font-size: 11px; line-height: 1.4; margin-top: 6px; max-width: 285px; -webkit-line-clamp: 2; -webkit-box-orient: vertical; display: -webkit-box; overflow: hidden; }
     .star-btn { width: 30px; height: 30px; border: 0; border-radius: 9px; background: transparent; color: var(--muted-2); font-size: 17px; transition: .2s ease; }
     .star-btn:hover, .star-btn.active { color: var(--orange); background: rgba(246,163,94,.11); }
+    .community-panel { display: grid; gap: 14px; animation: rise-in .45s ease both; }
+    .community-intro { padding: 21px 23px; border: 1px solid rgba(246,163,94,.22); border-radius: 18px; background: linear-gradient(120deg, rgba(246,163,94,.10), rgba(246,163,94,.025)); }
+    .community-intro h3 { margin: 0 0 6px; font-size: 20px; letter-spacing: -.035em; }
+    .community-intro p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+    .tips-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .tip-card { border: 1px solid var(--line); border-radius: 17px; background: var(--panel); padding: 17px; transition: .2s ease; }
+    .tip-card:hover { border-color: rgba(246,163,94,.30); transform: translateY(-2px); box-shadow: var(--shadow); }
+    .tip-card-head { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 12px; }
+    .tip-icon { width: 32px; height: 32px; display: grid; place-items: center; flex: 0 0 32px; border-radius: 10px; color: var(--orange); background: rgba(246,163,94,.12); font-size: 17px; }
+    .tip-card h4 { font-size: 14px; margin: 0 0 3px; }
+    .tip-tag { font-size: 9px; color: var(--orange); text-transform: uppercase; letter-spacing: .12em; }
+    .tip-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 9px; }
+    .tip-list li { color: var(--muted); font-size: 12px; line-height: 1.5; padding-left: 16px; position: relative; }
+    .tip-list li::before { content: "•"; color: var(--orange); position: absolute; left: 1px; font-size: 16px; line-height: 1; }
+    .tip-source { display: inline-block; margin-top: 14px; color: var(--muted-2); font-size: 10px; text-decoration: none; border-bottom: 1px dotted var(--muted-2); }
+    .tip-source:hover { color: var(--orange); }
+    .community-question { border: 1px solid var(--line-strong); border-radius: 17px; padding: 17px; background: var(--panel); display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+    .community-question strong { display: block; font-size: 13px; margin-bottom: 4px; }
+    .community-question span { color: var(--muted); font-size: 11px; }
+    .question-actions { display: flex; gap: 7px; flex-wrap: wrap; }
+    .question-btn { color: var(--muted); background: transparent; border: 1px solid var(--line-strong); border-radius: 9px; padding: 8px 10px; font-size: 10px; }
+    .question-btn:hover, .question-btn.active { color: var(--lime); border-color: rgba(216,241,123,.30); background: rgba(216,241,123,.08); }
+    body.light .community-intro { background: linear-gradient(120deg, rgba(246,163,94,.10), rgba(246,163,94,.035)); }
+    .sets-panel { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 14px; animation: rise-in .45s ease both; }
+    .set-controls, .set-preview, .set-item-card { border: 1px solid var(--line); border-radius: 18px; background: var(--panel); }
+    .set-controls { padding: 18px; }
+    .set-controls h3, .set-preview h3 { margin: 0; font-size: 18px; letter-spacing: -.035em; }
+    .set-controls-copy { color: var(--muted); font-size: 11px; line-height: 1.5; margin: 6px 0 16px; }
+    .set-field { display: grid; gap: 6px; margin-top: 12px; }
+    .set-field label { color: var(--muted-2); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; font-weight: 800; }
+    .set-field select { width: 100%; }
+    .synergy-note { margin-top: 14px; padding: 10px 11px; border: 1px solid rgba(216,241,123,.18); border-radius: 11px; color: var(--muted); background: rgba(216,241,123,.045); font-size: 10px; line-height: 1.45; }
+    body.light .synergy-note { border-color: rgba(47,111,209,.18); background: rgba(47,111,209,.045); }
+    .set-preview { padding: 18px; min-width: 0; }
+    .set-preview-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+    .rotate-btn { color: var(--muted); border: 1px solid var(--line-strong); background: transparent; border-radius: 9px; padding: 7px 10px; font-size: 10px; }
+    .rotate-btn:hover { color: var(--lime); border-color: rgba(216,241,123,.32); }
+    .avatar-stage { min-height: 520px; display: grid; place-items: center; position: relative; overflow: visible; border: 1px solid var(--line); border-radius: 15px; background: radial-gradient(circle at 50% 34%, rgba(216,241,123,.16), transparent 28%), linear-gradient(145deg, rgba(7,17,12,.60), rgba(30,52,42,.64)); perspective: 800px; }
+    .avatar-stage::before { content: ""; position: absolute; width: 170px; height: 26px; border-radius: 50%; bottom: 28px; background: rgba(0,0,0,.35); filter: blur(5px); }
+    .model-canvas { display: block; width: min(100%, 520px); height: auto; max-height: 330px; cursor: grab; touch-action: none; position: relative; z-index: 2; }
+    .model-canvas:active { cursor: grabbing; }
+    .character-frame { position: relative; width: min(100%, 193px); height: auto; aspect-ratio: 715 / 1923; margin: 0 auto; display: grid; place-items: center; overflow: visible; }
+    .character-image {
+      display: block;
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      object-fit: contain;
+      object-position: center top;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: none;
+      z-index: 2;
+      filter: drop-shadow(0 14px 12px rgba(0,0,0,.28));
+    }
+    .character-caption { position: absolute; left: 50%; bottom: 7px; transform: translateX(-50%); z-index: 8; padding: 6px 8px; border-radius: 8px; color: #fff; background: rgba(8,16,11,.68); font-size: 10px; white-space: nowrap; }
+    .equipment-overlay { position: absolute; z-index: 5; object-fit: contain; pointer-events: auto; cursor: pointer; filter: drop-shadow(0 5px 5px rgba(0,0,0,.42)); transition: transform .2s ease, filter .2s ease; }
+    .equipment-overlay:hover { transform: scale(1.10); filter: drop-shadow(0 8px 9px rgba(0,0,0,.60)); }
+    .equipment-overlay.head { width: 120px; height: 120px; top: 1%; left: 50%; transform: translateX(-50%); }
+    .equipment-overlay.head:hover { transform: translateX(-50%) scale(1.10); }
+    .equipment-overlay.body { width: 150px; height: 150px; top: 20%; left: 50%; transform: translateX(-50%); }
+    .equipment-overlay.body:hover { transform: translateX(-50%) scale(1.10); }
+    .equipment-overlay.legs { width: 200px; height: 200px; top: 57%; left: 50%; transform: translateX(-50%); }
+    .equipment-overlay.legs:hover { transform: translateX(-50%) scale(1.10); }
+    .equipment-overlay.weapon { width: 106px; height: 106px; top: 38%; left: calc(50% + 39px); }
+    .equipment-overlay.weapon-copy { left: calc(50% - 91px); transform: scaleX(-1); }
+    .equipment-overlay.weapon-copy:hover { transform: scaleX(-1) scale(1.10); }
+    .equipment-overlay.shield { width: 112px; height: 112px; top: calc(37% + 20px); left: calc(50% - 161px); }
+    .equipment-overlay.trinket { width: 52px; height: 52px; top: 10%; left: 95%; transform: translateX(-50%); padding: 5px; border: 2px solid var(--lime); border-radius: 50%; background: rgba(12,24,17,.58); }
+    .equipment-overlay.trinket:hover { transform: translateX(-50%) scale(1.10); }
+    .equipment-legend { position: absolute; right: 14px; bottom: 12px; z-index: 8; color: var(--muted-2); font-size: 10px; text-align: right; line-height: 1.45; }
+    body.light .avatar-stage { background: radial-gradient(circle at 50% 34%, rgba(47,111,209,.15), transparent 28%), linear-gradient(145deg, #f7faff, #dbe8fb); }
+    body.light .avatar-stage::before { background: rgba(28,67,125,.17); }
+    .avatar-figure { width: 174px; height: 250px; position: relative; transform-style: preserve-3d; transition: transform .7s cubic-bezier(.22,.8,.27,1); animation: avatar-bob 4s ease-in-out infinite; z-index: 1; }
+    .avatar-figure.turned { transform: rotateY(180deg); }
+    @keyframes avatar-bob { 0%,100% { translate: 0 0; } 50% { translate: 0 -4px; } }
+    .avatar-head { position: absolute; width: 62px; height: 67px; left: 56px; top: 13px; border-radius: 47% 47% 42% 42%; background: linear-gradient(135deg, #e7b07d, #9f603f); box-shadow: inset -11px -4px 0 rgba(80,43,32,.22), 5px 10px 0 rgba(0,0,0,.10); }
+    .avatar-head::after { content: ""; position: absolute; width: 15px; height: 7px; border-radius: 50%; border-bottom: 3px solid rgba(51,35,33,.65); left: 24px; top: 39px; }
+    .avatar-hair { position: absolute; width: 68px; height: 30px; left: 53px; top: 8px; border-radius: 50% 50% 22% 22%; background: #2d2723; z-index: 2; }
+    .avatar-neck { position: absolute; width: 26px; height: 23px; left: 74px; top: 67px; background: #c8885b; }
+    .avatar-torso { position: absolute; width: 80px; height: 100px; left: 47px; top: 76px; border-radius: 24px 24px 15px 15px; background: linear-gradient(90deg, #3f6d57, #a6c15d 49%, #33523f); box-shadow: inset -10px 0 0 rgba(0,0,0,.18), 4px 9px 0 rgba(0,0,0,.13); }
+    .avatar-belt { position: absolute; width: 86px; height: 12px; left: 44px; top: 150px; border-radius: 8px; background: #5b3927; z-index: 3; }
+    .avatar-arm { position: absolute; width: 25px; height: 91px; top: 84px; border-radius: 14px; background: linear-gradient(90deg, #a36b4b, #d79964); }
+    .avatar-arm.left { left: 22px; transform: rotate(13deg); }
+    .avatar-arm.right { right: 22px; transform: rotate(-13deg); }
+    .avatar-leg { position: absolute; width: 31px; height: 92px; top: 170px; border-radius: 9px 9px 15px 15px; background: linear-gradient(90deg, #2b5142, #86a452); }
+    .avatar-leg.left { left: 53px; transform: rotate(3deg); }
+    .avatar-leg.right { right: 53px; transform: rotate(-3deg); }
+    .avatar-gear { position: absolute; z-index: 5; object-fit: contain; filter: drop-shadow(0 5px 4px rgba(0,0,0,.35)); pointer-events: none; }
+    .avatar-gear.head { width: 78px; height: 78px; left: 48px; top: 0; }
+    .avatar-gear.body { width: 110px; height: 112px; left: 32px; top: 71px; }
+    .avatar-gear.legs { width: 96px; height: 86px; left: 39px; top: 163px; }
+    .avatar-weapon { position: absolute; z-index: 6; width: 92px; height: 92px; right: -28px; top: 85px; object-fit: contain; filter: drop-shadow(0 7px 4px rgba(0,0,0,.45)); transform: rotate(-24deg); }
+    .avatar-trinket { position: absolute; z-index: 7; width: 39px; height: 39px; left: 67px; top: 150px; object-fit: contain; border-radius: 50%; padding: 5px; background: rgba(216,241,123,.22); border: 2px solid rgba(216,241,123,.72); }
+    body.light .avatar-trinket { background: rgba(47,111,209,.18); border-color: rgba(47,111,209,.68); }
+    .set-items { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+    .set-item-card { padding: 12px; min-width: 0; cursor: pointer; transition: .18s ease; }
+    .set-item-card:hover, .set-item-card:focus { border-color: rgba(216,241,123,.35); background: var(--panel-hover); transform: translateY(-2px); outline: none; }
+    .set-item-image { width: 56px; height: 56px; display: grid; place-items: center; margin-bottom: 9px; border-radius: 13px; border: 1px solid var(--line); background: rgba(216,241,123,.06); overflow: hidden; }
+    .set-item-image img { width: 100%; height: 100%; object-fit: contain; padding: 5px; }
+    .set-item-label { color: var(--muted-2); font-size: 9px; text-transform: uppercase; letter-spacing: .12em; margin-bottom: 7px; }
+    .set-item-name { color: var(--text); font-size: 13px; font-weight: 750; line-height: 1.25; margin-bottom: 6px; }
+    .set-item-effect { color: var(--muted); font-size: 11px; line-height: 1.45; }
+    .set-item-effect strong { color: var(--lime); }
     .empty-state { padding: 70px 20px; text-align: center; color: var(--muted); }
     .empty-state .empty-icon { font-size: 38px; margin-bottom: 10px; }
     .empty-state h3 { margin: 0 0 6px; color: var(--text); font-size: 17px; }
@@ -244,8 +377,11 @@
     dialog { color: var(--text); background: var(--panel-strong); border: 1px solid var(--line-strong); border-radius: 23px; width: min(700px, calc(100vw - 28px)); padding: 0; box-shadow: 0 30px 100px rgba(0,0,0,.58); }
     dialog::backdrop { background: rgba(4,8,5,.74); backdrop-filter: blur(5px); }
     .modal-head { padding: 22px 24px 18px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; gap: 18px; align-items: flex-start; }
-    .modal-title-row { display: flex; gap: 15px; align-items: center; }
+    .modal-title-row { display: flex; gap: 15px; align-items: center; min-width: 0; flex: 1; }
+    .modal-title-row > div:not(.item-art) { min-width: 0; }
     .modal-art { width: 71px; height: 71px; flex-basis: 71px; border-radius: 18px; }
+    .modal-star { width: 38px; height: 38px; flex: 0 0 38px; margin-left: auto; border: 1px solid var(--line-strong); border-radius: 11px; color: var(--muted); background: transparent; font-size: 22px; line-height: 1; transition: .2s ease; }
+    .modal-star:hover, .modal-star.active { color: var(--orange); border-color: rgba(246,163,94,.42); background: transparent; transform: scale(1.04); }
     .modal-name { margin: 0 0 7px; font-size: 23px; letter-spacing: -.045em; }
     .modal-meta { color: var(--muted); font-size: 11px; }
     .modal-close { width: 31px; height: 31px; border-radius: 9px; border: 1px solid var(--line); color: var(--muted); background: transparent; font-size: 18px; }
@@ -303,6 +439,7 @@
       .hero { min-height: 0; padding: 27px 24px; }
       .hero-art { display: none; }
       .stats-row { grid-template-columns: repeat(2, 1fr); margin-bottom: 25px; }
+      .sets-panel { grid-template-columns: 1fr; }
       .section-toolbar { align-items: flex-start; flex-direction: column; }
       .toolbar-actions { justify-content: flex-start; }
       .table-card { border-radius: 18px; }
@@ -323,6 +460,14 @@
       .main { padding-left: 12px; padding-right: 12px; }
       .hero { padding-left: 19px; padding-right: 19px; }
       .section-title { font-size: 21px; }
+      .set-controls, .set-preview { padding: 15px; }
+      .set-preview-top { align-items: flex-start; flex-direction: column; }
+      .character-frame { width: min(100%, 186px); }
+      .equipment-overlay.weapon { left: calc(50% + 38px); }
+      .equipment-overlay.weapon-copy { left: calc(50% - 90px); }
+      .equipment-overlay.shield { left: calc(50% - 160px); }
+      .set-items { grid-template-columns: 1fr; }
+      .set-item-card { padding: 14px; }
       .table-card { background: transparent; border: 0; box-shadow: none; overflow: visible; }
       .table-caption { border: 1px solid var(--line); border-radius: 14px; background: var(--panel); margin-bottom: 9px; padding: 12px 13px; }
       .table-caption #catalogHint { display: none; }
@@ -348,6 +493,8 @@
       .ingredient-list { max-width: none !important; width: 100%; }
       .ingredient-card { min-width: 130px !important; flex-basis: 130px; max-width: none; }
       .ingredient-name { font-size: 11px !important; white-space: normal; overflow: visible; }
+      .tips-grid { grid-template-columns: 1fr; }
+      .community-question { align-items: flex-start; flex-direction: column; }
       .location-head { align-items: flex-start; flex-direction: column; }
       .map-link { width: 100%; text-align: center; }
       .mini-map { height: 170px; }
@@ -387,6 +534,8 @@
         </div>
         <div class="nav-label">РАЗДЕЛЫ КАТАЛОГА</div>
         <nav class="nav-list" id="categoryNav"></nav>
+        <button class="nav-item sets-nav" id="setsNav" data-sets="true"><span class="nav-icon">♙</span><span class="nav-text">Сэты</span><span class="nav-count">3</span></button>
+        <button class="nav-item community-nav" id="communityNav" data-community="true"><span class="nav-icon">✺</span><span class="nav-text">Советы сообщества</span><span class="nav-count">★</span></button>
         <div class="sidebar-foot">Данные собраны из открытых игровых справочников. Изображения предметов загружаются из внешнего каталога.<br><br><a href="https://grounded.wiki.gg/wiki/Grounded_2" target="_blank" rel="noreferrer">Открыть первоисточник ↗</a></div>
       </aside>
 
@@ -407,7 +556,7 @@
 
         <section class="stats-row" id="statsRow"></section>
 
-        <section class="section-toolbar">
+        <section class="section-toolbar" id="catalogToolbar">
           <div>
             <h2 class="section-title" id="sectionTitle">Оружие <small id="sectionCount"></small></h2>
             <p class="section-subtitle" id="sectionSubtitle">Собери свой комплект и не забудь починить его перед вылазкой.</p>
@@ -420,8 +569,10 @@
           </div>
         </section>
         <div class="filters" id="quickFilters"></div>
+        <section class="community-panel" id="communityPanel" hidden></section>
+        <section class="sets-panel" id="setsPanel" hidden></section>
 
-        <section class="table-card">
+        <section class="table-card" id="catalogTable">
           <div class="table-caption"><span><span class="live-dot"></span><b id="visibleCount">0</b> предметов найдено</span><span id="catalogHint">Нажми на строку, чтобы открыть карточку</span></div>
           <div class="table-wrap">
             <table>
@@ -432,7 +583,7 @@
           </div>
         </section>
         <button class="load-more" id="loadMore">Показать ещё</button>
-        <p class="footnote">Интерфейс и каталог переведены на русский язык; без перевода оставлено только название игры Grounded 2. Цифры и рецепты могут меняться после обновлений — дата среза: <b id="updatedDate"></b>.</p>
+        <p class="footnote" id="catalogFootnote">Интерфейс и каталог переведены на русский язык; без перевода оставлено только название игры Grounded 2. Цифры и рецепты могут меняться после обновлений — дата среза: <b id="updatedDate"></b>.</p>
       </main>
     </div>
   </div>
@@ -460,9 +611,52 @@
         resource: { label: 'Материалы', icon: '●', subtitle: 'Ресурсы, ингредиенты и материалы для крафта.' }
       };
       const symbols = { weapon: '⚔', armor: '◈', trinket: '✦', building: '⌂', resource: '●' };
+      const communityTips = [
+        {
+          icon: '◈', title: 'Редкие ресурсы', tag: 'добыча',
+          points: [
+            'Осколки кварцита и мрамора ищи в муравейниках и пещерах; удобные открытые залежи стоит помечать на карте и проверять повторно.',
+            'Мятные и пряные конфеты возвращаются со временем — отметь ящик с обедом, стол для пикника и другие места с конфетами.',
+            'Перед дальним походом улучши омни-инструмент: это экономит время на повторных вылазках за ресурсами высокого уровня.'
+          ], source: 'Советы игроков и гайд по редким ресурсам', url: 'https://gggamer.net/portfolio-item/10-rare-resources-in-grounded-2/'
+        },
+        {
+          icon: '⚔', title: 'Уникальное оружие', tag: 'секреты',
+          points: [
+            'Багровый мститель находится в муравейнике Логова паука, внутри жвачки в Мемориальном ящике; понадобится омни-лопата второго уровня.',
+            'Мрачное копьё спрятано внизу Токсичного муравейника, а Пинч-вакер — в пещере к северу от ямы для костра.',
+            'Кусторуб ищи в живой изгороди у Соснового холма, а Палящую волну — в центре ямы для костра за углём.'
+          ], source: 'Обсуждение игроков об уникальном оружии', url: 'https://www.reddit.com/r/GroundedGame/comments/1menac6/grounded_2_all_unique_weapon_trinket_locations_wip/'
+        },
+        {
+          icon: '♢', title: 'Броня и сборки', tag: 'экипировка',
+          points: [
+            'В начале игры удобно начать с желудевой или клеверной брони, затем перейти на броню божьей коровки для блоков и лечения.',
+            'Для дальнего боя игроки часто используют броню пчелы или личинки, а для парных клинков — комплекты ткача и волка.',
+            'Не существует одной лучшей брони: подбирай комплект под слабость существа и стиль боя, а не только под уровень предмета.'
+          ], source: 'Обсуждения игроков о сборках', url: 'https://www.reddit.com/r/GroundedGame/comments/1siq9yp/what_builds_yall_use_grounded_2/'
+        },
+        {
+          icon: '✺', title: 'Фермы редких выпадений', tag: 'шанс выпадения',
+          points: [
+            'Поставь чучело нужного существа рядом с базой: игроки отмечают, что оно повышает шанс добычи его частей.',
+            'Для массовой добычи используй приманки и генератор волн, а перед опасным местом сохранись — редкие выпадения зависят от случайности.',
+            'Проверяй гнёзда и узкие маршруты патруля, где нужное существо появляется чаще; не трать редкие материалы на случайные улучшения.'
+          ], source: 'Гайд игроков по полному прохождению', url: 'https://steamcommunity.com/sharedfiles/filedetails/?id=3540793551'
+        },
+        {
+          icon: '⌂', title: 'Маршрут и база', tag: 'подготовка',
+          points: [
+            'Для первой базы игроки советуют район закусочной: рядом станция рейнджеров, базовые материалы и удобный путь к столу для пикника.',
+            'Для холодных зон заранее подготовь защиту от холода, факелы, еду, воду и предмет для ремонта.',
+            'Ставь маркеры на ресурсные точки и маленькие промежуточные лагеря — так не придётся каждый раз возвращаться через весь парк.'
+          ], source: 'Гайды игроков по местам баз', url: 'https://game8.co/games/Grounded-2/archives/540198'
+        }
+      ];
       const state = {
         category: 'weapon', query: '', subtype: 'all', tier: 'all', crafted: false, favoritesOnly: false,
         lang: localStorage.getItem('grounded-lang') || 'ru',
+        previousCategory: 'weapon', setWeapon: '', setArmor: '', setHead: '', setBody: '', setLegs: '', setShield: '', setTrinket: '', armorProfile: 'auto', avatarTurned: false,
         favorites: new Set(JSON.parse(localStorage.getItem('grounded-favorites') || '[]')), visible: 80
       };
       const $ = (id) => document.getElementById(id);
@@ -544,6 +738,8 @@
           const meta = categoryMeta[key];
           return `<button class="nav-item ${state.category === key ? 'active' : ''}" data-category="${key}"><span class="nav-icon">${meta.icon}</span><span class="nav-text">${meta.label}</span><span class="nav-count">${count}</span></button>`;
         }).join('');
+        $('setsNav').classList.toggle('active', state.category === 'sets');
+        $('communityNav').classList.toggle('active', state.category === 'community');
       }
 
       function renderStats() {
@@ -652,7 +848,7 @@
         } else {
           recipeLine = `<div class="recipe-text empty">${item.category === 'building' ? 'Рецепт не указан' : 'Не создаётся вручную'}</div>`;
         }
-        const sourceLink = hasLocation(item) ? `<a class="inline-map-link" href="${mapUrl}" target="_blank" rel="noreferrer">⌖ Точка на карте</a>` : '';
+        const sourceLink = hasLocation(item) ? `<a class="inline-map-link" href="${itemMapUrl(item)}" target="_blank" rel="noreferrer">⌖ ${item.mapUrl ? 'Точная точка на карте' : 'Открыть карту по описанию'}</a>` : '';
         const sourceLine = source ? `<span class="source-text">${escapeHtml(truncate(source, 145))}</span>` : '';
         return recipeLine + sourceLine + sourceLink;
       }
@@ -661,6 +857,12 @@
       }
       const mapPreviewUrl = 'https://cdn.th.gl/grounded2/map-tiles/brookhollow-park/preview.webp';
       const mapUrl = 'https://grounded2.th.gl/maps/Brookhollow%20Park';
+      const mapBounds = { minX: -261299, maxX: 73699, minY: -137499, maxY: 197499 };
+      const itemMapUrl = (item) => item.mapUrl || mapUrl;
+      const mapPointPercent = (item) => item.mapX == null || item.mapY == null ? null : {
+        x: Math.max(5, Math.min(95, ((item.mapX - mapBounds.minX) / (mapBounds.maxX - mapBounds.minX)) * 100)),
+        y: Math.max(8, Math.min(92, ((mapBounds.maxY - item.mapY) / (mapBounds.maxY - mapBounds.minY)) * 100))
+      };
       const mapRegions = [
         { keys: ['fire pit', 'костер', 'костра'], label: 'Яма для костра', x: 68, y: 72 },
         { keys: ['pine hill', 'соснов', 'pine'], label: 'Сосновый холм', x: 30, y: 29 },
@@ -674,29 +876,152 @@
         { keys: ['pond', 'пруд'], label: 'Пруд скунса', x: 14, y: 36 }
       ];
       function locationRegion(item) {
+        const exact = mapPointPercent(item);
+        if (exact) return { ...exact, label: 'Точная точка' };
         const text = [item.unlock, item.source, item.unlockRu, item.sourceRu].filter(Boolean).join(' ').toLocaleLowerCase('ru-RU');
         return mapRegions.find(region => region.keys.some(key => text.includes(key))) || { label: 'Парк Брукхоллоу', x: 51, y: 51 };
       }
       function hasLocation(item) {
+        if (item.mapUrl) return true;
         const text = [item.unlock, item.source, item.unlockRu, item.sourceRu].filter(Boolean).join(' ').toLocaleLowerCase('ru-RU');
         if (!text) return false;
-        return !/(анализ|анализиру|уровн|рецепт|крафт|brainpower|analyz|recipe|workbench|достиж)/i.test(text);
+        return !/(анализ|анализиру|уровн|рецепт|крафт|brainpower|analyz|recipe|workbench|верстак|достиж)/i.test(text);
       }
       function locationHtml(item) {
         const region = locationRegion(item);
+        const exact = Boolean(item.mapUrl);
         const locationText = displayField(item, 'unlock') || displayField(item, 'source') || 'Точное описание пока не добавлено.';
-        return `<div class="location-card"><div class="location-head"><div class="location-title">Расположение <span>ориентир по описанию</span></div><a class="map-link" href="${mapUrl}" target="_blank" rel="noreferrer">⌖ Открыть карту Grounded 2 ↗</a></div><div class="mini-map"><img src="${mapPreviewUrl}" alt="Карта парка" /><div class="map-road"></div><span class="map-pin" style="left:${region.x}%;top:${region.y}%"></span><span class="map-label" style="left:${region.x}%;top:${region.y}%">${escapeHtml(region.label)}</span></div><div class="location-copy">${escapeHtml(truncate(locationText, 360))}</div></div>`;
+        const mapLabel = exact ? '⌖ Открыть точку на карте Grounded 2 ↗' : '⌖ Открыть карту Grounded 2 ↗';
+        return `<div class="location-card"><div class="location-head"><div class="location-title">Расположение <span>${exact ? 'точная точка' : 'ориентир по описанию'}</span></div><a class="map-link" href="${itemMapUrl(item)}" target="_blank" rel="noreferrer">${mapLabel}</a></div><div class="mini-map"><img src="${mapPreviewUrl}" alt="Карта парка" /><div class="map-road"></div><span class="map-pin" style="left:${region.x}%;top:${region.y}%"></span><span class="map-label" style="left:${region.x}%;top:${region.y}%">${escapeHtml(region.label)}</span></div><div class="location-copy">${escapeHtml(truncate(locationText, 360))}</div></div>`;
       }
-      function rowHtml(item) {
+      function rowHtml(item, index) {
         const favorite = state.favorites.has(item.id);
         const meta = [categoryLabel(item), displaySubtype(item.subtype), item.tier ? `<span class="tier-badge">Ур. ${escapeHtml(item.tier)}</span>` : ''].filter(Boolean).join(' · ');
-        return `<tr data-id="${escapeHtml(item.id)}">
+        return `<tr data-id="${escapeHtml(item.id)}" style="--row-index:${Math.min(index, 20)}">
           <td><div class="item-cell">${imageHtml(item)}<div class="item-text"><strong class="item-name">${escapeHtml(displayName(item))}</strong><span class="item-meta">${meta}</span>${item.set ? `<span class="item-meta">${escapeHtml(state.lang === 'en' ? item.set : item.setRu || item.set)} · комплект</span>` : ''}</div></div></td>
           <td><span class="cell-label">Характеристики</span>${formatStats(displayField(item, 'stats'))}</td>
           <td><span class="cell-label">Доп. эффекты</span>${effectHtml(item)}</td>
           <td><span class="cell-label">Крафт / источник</span>${recipeHtml(item)}</td>
           <td><button class="star-btn ${favorite ? 'active' : ''}" data-favorite="${escapeHtml(item.id)}" title="${favorite ? 'Убрать из избранного' : 'В избранное'}">${favorite ? '★' : '☆'}</button></td>
         </tr>`;
+      }
+
+      const setWeapons = items.filter(item => item.category === 'weapon' && item.subtype !== 'Turret ammo');
+      const setTrinkets = items.filter(item => item.category === 'trinket');
+      const setArmor = [...new Map(items.filter(item => item.category === 'armor' && item.set && item.set !== 'Individual').map(item => [item.set, item])).values()];
+      function itemTags(item) {
+        if (!item) return new Set();
+        const text = [item.name, item.nameRu, item.subtype, item.effect, item.effectRu, item.sleekRu, item.setBonusRu, item.classRu, item.statsRu].filter(Boolean).join(' ').toLocaleLowerCase();
+        const tags = new Set();
+        if (/venom|яд|poison/.test(text)) tags.add('venom');
+        if (/spicy|прян|sizzle|шипен/.test(text)) tags.add('spicy');
+        if (/fresh|свеж|chill|холод|mint|мят/.test(text)) tags.add('fresh');
+        if (/sour|кислот|tang/.test(text)) tags.add('sour');
+        if (/shock|шок|electric|электр/.test(text)) tags.add('shock');
+        if (/bow|лук|arrow|стрел|ranger|дальн/.test(text)) tags.add('bow');
+        if (/staff|посох|mage|маг/.test(text)) tags.add('staff');
+        if (/dual|парн|dagger|кинжал|fang|клык|fist|кулач/.test(text)) tags.add('dual');
+        if (/block|блок|parry|парир|fighter|боец|shield|щит/.test(text)) tags.add('block');
+        if (/critical|крит|crit/.test(text)) tags.add('crit');
+        if (/heal|леч|health|здоров/.test(text)) tags.add('heal');
+        if (/stamina|вынослив/.test(text)) tags.add('stamina');
+        if (/sizzle|шипен/.test(text)) tags.add('sizzle');
+        return tags;
+      }
+      function synergyScore(base, candidate) {
+        if (!base || !candidate) return 0;
+        const common = [...itemTags(base)].filter(tag => itemTags(candidate).has(tag));
+        let score = common.length * 4;
+        const baseTags = itemTags(base);
+        const candidateTags = itemTags(candidate);
+        if (baseTags.has('bow') && candidateTags.has('bow')) score += 6;
+        if (baseTags.has('staff') && candidateTags.has('staff')) score += 6;
+        if ((baseTags.has('dual') || baseTags.has('venom')) && candidateTags.has('venom')) score += 5;
+        if (baseTags.has('block') && candidateTags.has('block')) score += 4;
+        return score;
+      }
+      function setArmorRepresentative(setName) {
+        return items.find(item => item.category === 'armor' && item.set === setName && item.subtype === 'Body') || items.find(item => item.category === 'armor' && item.set === setName);
+      }
+      function setOptionLabel(item) {
+        if (!item) return 'Не выбрано';
+        if (item.category === 'armor') return state.lang === 'en' ? item.set : item.setRu || item.set;
+        return displayName(item);
+      }
+      function gearImage(item, className) {
+        const specialClass = className === 'weapon' ? 'avatar-weapon' : className === 'trinket' ? 'avatar-trinket' : '';
+        return item?.image ? `<img class="avatar-gear ${className} ${specialClass}" src="${escapeHtml(item.image)}" alt="${escapeHtml(displayName(item))}" loading="lazy" />` : '';
+      }
+      function equipmentOverlay(item, slot) {
+        return item?.image ? `<img class="equipment-overlay ${slot}" data-equipment-id="${escapeHtml(item.id)}" src="${escapeHtml(item.image)}" alt="${escapeHtml(displayName(item))}" title="${escapeHtml(displayName(item))}" loading="lazy" />` : '';
+      }
+      function setItemCard(label, item, extra = '') {
+        if (!item) return `<article class="set-item-card"><div class="set-item-label">${label}</div><div class="set-item-name">Не выбрано</div></article>`;
+        const effect = displayField(item, 'effect') || 'Дополнительный эффект не указан.';
+        const bonus = displayField(item, 'setBonus');
+        const image = item.image ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(displayName(item))}" loading="lazy" />` : '';
+        return `<article class="set-item-card" data-equipment-id="${escapeHtml(item.id)}" role="button" tabindex="0" title="Открыть карточку предмета"><div class="set-item-label">${label}</div><div class="set-item-image">${image}</div><div class="set-item-name">${escapeHtml(displayName(item))}</div>${extra ? `<div class="set-item-effect"><strong>${escapeHtml(extra)}</strong></div>` : ''}<div class="set-item-effect">${escapeHtml(effect)}</div>${bonus ? `<div class="set-item-effect" style="margin-top:6px"><strong>Бонус комплекта:</strong> ${escapeHtml(bonus)}</div>` : ''}</article>`;
+      }
+      const armorProfiles = [
+        { id: 'auto', label: 'Автоподбор по характеристикам', tags: [] },
+        { id: 'fighter', label: 'Боец · блок и выживаемость', tags: ['block', 'heal', 'stamina'] },
+        { id: 'rogue', label: 'Разбойник · криты и яд', tags: ['dual', 'crit', 'venom'] },
+        { id: 'ranger', label: 'Стрелок · дальний бой', tags: ['bow', 'stamina'] },
+        { id: 'mage', label: 'Маг · стихийный урон', tags: ['staff', 'spicy', 'fresh', 'sour'] },
+        { id: 'explorer', label: 'Исследователь · защита', tags: ['heal', 'stamina', 'block'] }
+      ];
+      function armorPieceScore(piece, loadout, profile) {
+        const bases = [loadout.weapon, loadout.shield, loadout.trinket].filter(Boolean);
+        let score = bases.reduce((total, base) => total + synergyScore(base, piece), 0);
+        const tags = itemTags(piece);
+        score += profile.tags.reduce((total, tag) => total + (tags.has(tag) ? 7 : 0), 0);
+        if (profile.id === 'auto') score += itemTags(loadout.weapon).size * 0.3;
+        return score;
+      }
+      function chooseArmorPiece(slot, loadout, profile) {
+        return items.filter(item => item.category === 'armor' && item.subtype === slot && item.set !== 'Individual')
+          .sort((a, b) => armorPieceScore(b, loadout, profile) - armorPieceScore(a, loadout, profile) || Number(b.tier || 0) - Number(a.tier || 0) || a.name.localeCompare(b.name))[0];
+      }
+      function renderSets() {
+        const weapons = [...setWeapons].sort((a,b) => a.name.localeCompare(b.name));
+        const shields = items.filter(item => item.category === 'weapon' && (item.subtype === 'Shield' || item.subtype === 'Stranger variant · shield')).sort((a,b) => a.name.localeCompare(b.name));
+        const trinkets = [...setTrinkets].sort((a,b) => a.name.localeCompare(b.name));
+        const armorPieces = items.filter(item => item.category === 'armor' && item.set && item.set !== 'Individual');
+        if (!state.setWeapon || !weapons.some(item => item.id === state.setWeapon)) state.setWeapon = (weapons.find(item => item.name === 'Mosquito Needle') || weapons[0])?.id || '';
+        const weapon = items.find(item => item.id === state.setWeapon) || weapons[0];
+        const oneHanded = weapon && (weapon.subtype === 'One-handed' || weapon.subtype === 'Stranger variant · one-handed');
+        const dualWield = weapon && (weapon.subtype === 'Dual wield' || weapon.subtype === 'Stranger variant · dual wield');
+        if (oneHanded) {
+          if (!state.setShield || !shields.some(item => item.id === state.setShield)) state.setShield = (shields.find(item => item.name === 'Crimson Buckler') || shields[0])?.id || '';
+        } else state.setShield = '';
+        const shield = oneHanded ? items.find(item => item.id === state.setShield) || shields[0] : null;
+        if (!state.setTrinket || !trinkets.some(item => item.id === state.setTrinket)) state.setTrinket = (trinkets.slice().sort((a,b) => synergyScore(weapon,b) - synergyScore(weapon,a))[0] || trinkets[0])?.id || '';
+        const trinket = items.find(item => item.id === state.setTrinket) || trinkets[0];
+        const profile = armorProfiles.find(item => item.id === state.armorProfile) || armorProfiles[0];
+        const loadout = { weapon, shield, trinket };
+        if (!state.setHead || !armorPieces.some(item => item.id === state.setHead)) state.setHead = chooseArmorPiece('Head', loadout, profile)?.id || '';
+        if (!state.setBody || !armorPieces.some(item => item.id === state.setBody)) state.setBody = chooseArmorPiece('Body', loadout, profile)?.id || '';
+        if (!state.setLegs || !armorPieces.some(item => item.id === state.setLegs)) state.setLegs = chooseArmorPiece('Legs', loadout, profile)?.id || '';
+        const head = items.find(item => item.id === state.setHead);
+        const body = items.find(item => item.id === state.setBody);
+        const legs = items.find(item => item.id === state.setLegs);
+        const selectedArmor = [head, body, legs].filter(Boolean);
+        const tags = [...new Set([...itemTags(weapon), ...itemTags(shield), ...itemTags(head), ...itemTags(body), ...itemTags(legs), ...itemTags(trinket)])];
+        const tagLabels = {venom:'яд',spicy:'пряность',fresh:'свежесть',sour:'кислота',shock:'шок',bow:'дальний бой',staff:'посох',dual:'парное оружие',block:'блок',crit:'крит',heal:'лечение',stamina:'выносливость',sizzle:'шипение'};
+        const armorSelect = (slot, selected) => items.filter(item => item.category === 'armor' && item.subtype === slot && item.set !== 'Individual').sort((a,b) => armorPieceScore(b,loadout,profile)-armorPieceScore(a,loadout,profile)).map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(displayName(item))} · ${escapeHtml(item.setRu || item.set)}</option>`).join('');
+        const synergy = selectedArmor.reduce((total, item) => total + [weapon, shield, trinket].filter(Boolean).reduce((score, base) => score + synergyScore(base, item), 0), 0);
+        $('setsPanel').innerHTML = `<div class="set-controls"><h3>Сборщик сэта</h3><p class="set-controls-copy">Сочетания брони подбираются по характеристикам выбранного оружия, щита и тринкета. Можно оставить автоподбор или вручную заменить любой элемент.</p><div class="set-field"><label for="setWeaponSelect">Оружие</label><select id="setWeaponSelect" data-set-select="weapon">${weapons.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(displayName(item))}</option>`).join('')}</select></div>${oneHanded ? `<div class="set-field"><label for="setShieldSelect">Щит для одноручного оружия</label><select id="setShieldSelect" data-set-select="shield">${shields.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(displayName(item))}</option>`).join('')}</select></div>` : dualWield ? `<div class="synergy-note">Парное оружие занимает обе руки — второе лезвие добавлено автоматически.</div>` : `<div class="synergy-note">Для двуручного оружия щит не добавляется.</div>`}<div class="set-field"><label for="setTrinketSelect">Тринкет</label><select id="setTrinketSelect" data-set-select="trinket">${trinkets.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(displayName(item))}</option>`).join('')}</select></div><div class="set-field"><label for="setHeadSelect">Шлем</label><select id="setHeadSelect" data-set-select="head">${armorSelect('Head',head)}</select></div><div class="set-field"><label for="setBodySelect">Нагрудник</label><select id="setBodySelect" data-set-select="body">${armorSelect('Body',body)}</select></div><div class="set-field"><label for="setLegsSelect">Поножи</label><select id="setLegsSelect" data-set-select="legs">${armorSelect('Legs',legs)}</select></div><div class="set-field"><label for="armorProfileSelect">Подготовленное сочетание брони</label><select id="armorProfileSelect" data-set-select="profile">${armorProfiles.map(item => `<option value="${item.id}">${item.label}</option>`).join('')}</select></div><div class="synergy-note"><strong>Синергия: ${synergy} баллов</strong><br>${tags.length ? tags.map(tag => escapeHtml(tagLabels[tag] || tag)).join(' · ') : 'Выбери предметы, чтобы увидеть совместимость.'}</div></div><div class="set-preview"><div class="set-preview-top"><div><h3>Персонаж и экипировка</h3><span class="modal-meta">Персонаж из игры · выбранные предметы показаны ниже</span></div></div><div class="avatar-stage"><div class="character-frame"><img class="character-image" src="grounded2-character.png" alt="Персонаж Grounded 2" loading="lazy" />${equipmentOverlay(head,'head')}${equipmentOverlay(body,'body')}${equipmentOverlay(legs,'legs')}${equipmentOverlay(weapon,'weapon')}${dualWield ? equipmentOverlay(weapon,'weapon-copy') : equipmentOverlay(shield,'shield')}${equipmentOverlay(trinket,'trinket')}<span class="character-caption">Персонаж из игры</span></div><span class="equipment-legend">Нажми на иконку экипировки<br />для открытия карточки</span></div><div class="set-items">${setItemCard('Оружие', weapon, displaySubtype(weapon?.subtype))}${oneHanded ? setItemCard('Щит', shield, displaySubtype(shield?.subtype)) : dualWield ? setItemCard('Второе оружие', weapon, 'Копия парного оружия') : setItemCard('Щит', null, 'Не требуется')}${setItemCard('Броня · шлем', head, head?.setRu || head?.set)}${setItemCard('Броня · нагрудник', body, body?.setRu || body?.set)}${setItemCard('Броня · поножи', legs, legs?.setRu || legs?.set)}${setItemCard('Тринкет', trinket, displaySubtype(trinket?.subtype))}</div></div>`;
+        $('setWeaponSelect').value = state.setWeapon;
+        if ($('setShieldSelect')) $('setShieldSelect').value = state.setShield;
+        $('setTrinketSelect').value = state.setTrinket;
+        $('armorProfileSelect').value = state.armorProfile;
+        $('setHeadSelect').value = state.setHead;
+        $('setBodySelect').value = state.setBody;
+        $('setLegsSelect').value = state.setLegs;
+      }
+
+      function renderCommunity() {
+        $('communityPanel').innerHTML = `<div class="community-intro"><h3>Советы сообщества</h3><p>Собрал практические рекомендации игроков из обсуждений, гайдов и подсказок по игре. Это неофициальные советы: проверяй опасные маршруты и редкие выпадения в своём сохранении.</p></div><div class="tips-grid">${communityTips.map(tip => `<article class="tip-card"><div class="tip-card-head"><div class="tip-icon">${tip.icon}</div><div><h4>${escapeHtml(tip.title)}</h4><span class="tip-tag">${escapeHtml(tip.tag)}</span></div></div><ul class="tip-list">${tip.points.map(point => `<li>${escapeHtml(point)}</li>`).join('')}</ul><a class="tip-source" href="${tip.url}" target="_blank" rel="noreferrer">${escapeHtml(tip.source)} ↗</a></article>`).join('')}</div>`;
       }
 
       function renderLanguage() {
@@ -706,6 +1031,25 @@
       function render() {
         renderLanguage();
         renderNav();
+        const isCommunity = state.category === 'community';
+        const isSets = state.category === 'sets';
+        if (!isSets && window.__modelFrame) { cancelAnimationFrame(window.__modelFrame); window.__modelFrame = null; }
+        const alternatePanel = isCommunity || isSets;
+        $('catalogToolbar').hidden = alternatePanel;
+        $('quickFilters').hidden = alternatePanel;
+        $('catalogTable').hidden = alternatePanel;
+        $('loadMore').hidden = alternatePanel;
+        $('catalogFootnote').hidden = alternatePanel;
+        $('communityPanel').hidden = !isCommunity;
+        $('setsPanel').hidden = !isSets;
+        if (isCommunity) {
+          renderCommunity();
+          return;
+        }
+        if (isSets) {
+          renderSets();
+          return;
+        }
         const pool = currentPool();
         updateSelects(pool);
         renderQuickFilters();
@@ -739,7 +1083,8 @@
       function openDetail(item) {
         if (dialog.open) dialog.close();
         const meta = [categoryLabel(item), displaySubtype(item.subtype), tierLabel(item.tier), item.set ? `${state.lang === 'en' ? item.set : item.setRu || item.set} · комплект` : ''].filter(Boolean).join(' · ');
-        $('modalTitleRow').innerHTML = `${imageHtml(item, true)}<div><h2 class="modal-name">${escapeHtml(displayName(item))}</h2><div class="modal-meta">${escapeHtml(meta)}</div></div>`;
+        const favorite = state.favorites.has(item.id);
+        $('modalTitleRow').innerHTML = `${imageHtml(item, true)}<div><h2 class="modal-name">${escapeHtml(displayName(item))}</h2><div class="modal-meta">${escapeHtml(meta)}</div></div><button type="button" class="modal-star ${favorite ? 'active' : ''}" data-modal-favorite="${escapeHtml(item.id)}" title="${favorite ? 'Убрать из избранного' : 'Добавить в избранное'}">${favorite ? '★' : '☆'}</button>`;
         const blocks = [];
         const localizedStats = displayField(item, 'stats');
         if (localizedStats) blocks.push(`<div class="detail-block"><div class="detail-label">Характеристики</div><div class="detail-value">${escapeHtml(localizedStats)}</div></div>`);
@@ -771,6 +1116,44 @@
         state.visible = 80;
         render();
       });
+      $('setsNav').addEventListener('click', () => {
+        if (state.category !== 'sets') state.previousCategory = state.category;
+        state.category = state.category === 'sets' ? (state.previousCategory || 'weapon') : 'sets';
+        state.visible = 80;
+        render();
+      });
+      $('setsPanel').addEventListener('click', event => {
+        const trigger = event.target.closest('[data-equipment-id]');
+        if (!trigger) return;
+        const equipment = items.find(item => item.id === trigger.dataset.equipmentId);
+        if (equipment) openDetail(equipment);
+      });
+      $('setsPanel').addEventListener('keydown', event => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        const trigger = event.target.closest('[data-equipment-id]');
+        if (!trigger) return;
+        event.preventDefault();
+        const equipment = items.find(item => item.id === trigger.dataset.equipmentId);
+        if (equipment) openDetail(equipment);
+      });
+      $('setsPanel').addEventListener('change', event => {
+        const select = event.target.closest('[data-set-select]');
+        if (!select) return;
+        if (select.dataset.setSelect === 'weapon') { state.setWeapon = select.value; state.setShield = ''; state.setHead = ''; state.setBody = ''; state.setLegs = ''; }
+        if (select.dataset.setSelect === 'shield') { state.setShield = select.value; state.setHead = ''; state.setBody = ''; state.setLegs = ''; }
+        if (select.dataset.setSelect === 'trinket') { state.setTrinket = select.value; state.setHead = ''; state.setBody = ''; state.setLegs = ''; }
+        if (select.dataset.setSelect === 'profile') { state.armorProfile = select.value; state.setHead = ''; state.setBody = ''; state.setLegs = ''; }
+        if (select.dataset.setSelect === 'head') state.setHead = select.value;
+        if (select.dataset.setSelect === 'body') state.setBody = select.value;
+        if (select.dataset.setSelect === 'legs') state.setLegs = select.value;
+        renderSets();
+      });
+      $('communityNav').addEventListener('click', () => {
+        if (state.category !== 'community') state.previousCategory = state.category;
+        state.category = state.category === 'community' ? (state.previousCategory || 'weapon') : 'community';
+        state.visible = 80;
+        render();
+      });
       $('categoryNav').addEventListener('click', event => {
         const button = event.target.closest('[data-category]'); if (!button) return;
         state.category = button.dataset.category; state.subtype = 'all'; state.tier = 'all'; state.visible = 80; render();
@@ -787,6 +1170,19 @@
       searchInput.addEventListener('input', event => { state.query = event.target.value.trim(); state.visible = 80; render(); });
       $('themeBtn').addEventListener('click', () => { document.body.classList.toggle('light'); localStorage.setItem('grounded-theme', document.body.classList.contains('light') ? 'light' : 'dark'); });
       $('modalClose').addEventListener('click', () => dialog.close());
+      $('modalTitleRow').addEventListener('click', event => {
+        const button = event.target.closest('[data-modal-favorite]');
+        if (!button) return;
+        const id = button.dataset.modalFavorite;
+        if (state.favorites.has(id)) state.favorites.delete(id); else state.favorites.add(id);
+        localStorage.setItem('grounded-favorites', JSON.stringify([...state.favorites]));
+        const active = state.favorites.has(id);
+        button.classList.toggle('active', active);
+        button.textContent = active ? '★' : '☆';
+        button.title = active ? 'Убрать из избранного' : 'Добавить в избранное';
+        render();
+        showToast(active ? 'Добавлено в избранное' : 'Убрано из избранного');
+      });
       $('modalBody').addEventListener('click', event => {
         const resourceButton = event.target.closest('[data-resource]');
         if (!resourceButton) return;
@@ -804,5 +1200,5 @@
       render();
     })();
   </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a31ba273ec192332',t:'MTc4NzgzOTU2Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a31d3971a8e9ef1a',t:'MTc4Nzg1NjIzMw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
