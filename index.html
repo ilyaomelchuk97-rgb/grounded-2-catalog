@@ -224,6 +224,10 @@
     .ingredient-info { min-width: 0; flex: 1; }
     .ingredient-qty { display: block; color: var(--lime); font-size: 10px; font-weight: 800; line-height: 1; }
     .ingredient-name { display: block; overflow: visible; text-overflow: clip; white-space: normal; overflow-wrap: anywhere; font-size: 10px; line-height: 1.25; margin-top: 3px; }
+    .craft-method + .craft-method { border-top: 1px solid var(--line); margin-top: 9px; padding-top: 9px; }
+    .method-label { color: var(--lime); font-size: 10px; font-weight: 750; margin-bottom: 6px; }
+    .inline-map-link { display: inline-flex; align-items: center; width: fit-content; margin-top: 7px; color: var(--lime); text-decoration: none; font-size: 10px; border-bottom: 1px dotted currentColor; }
+    .inline-map-link:hover { color: var(--text); }
     .recipe-text { color: var(--muted); font-size: 12px; line-height: 1.5; max-width: 270px; }
     .recipe-text.empty { color: var(--muted-2); font-style: italic; }
     .source-text { display: block; color: var(--muted-2); font-size: 11px; line-height: 1.4; margin-top: 6px; max-width: 285px; -webkit-line-clamp: 2; -webkit-box-orient: vertical; display: -webkit-box; overflow: hidden; }
@@ -607,19 +611,50 @@
         if (armorClass) lines.push(`<div class="effect-line"><strong>Класс</strong> · ${escapeHtml(armorClass)}</div>`);
         return lines.length ? `<div class="effect-stack">${lines.join('')}</div>` : '<span class="muted-dash">—</span>';
       }
+      const stationRussian = {
+        'Workbench': 'Верстак', 'By Hand': 'Вручную', 'Spinning Wheel': 'Прялка', 'Jerky Rack': 'Сушилка',
+        'Oven': 'Печь', 'Grinder': 'Измельчитель', 'Glue Masher': 'Мешалка для клея',
+        'Shard Recipe': 'Рецепт из осколков', 'Bug Part Recipe': 'Рецепт из частей существа'
+      };
+      function parseRecipeIngredients(recipe) {
+        const result = [];
+        const resources = items.filter(item => item.category === 'resource').sort((a, b) => b.name.length - a.name.length);
+        for (const match of String(recipe || '').matchAll(/(?<!\w)(\d+)\s*x?\s+/g)) {
+          const start = match.index + match[0].length;
+          const resource = resources.find(entry => String(recipe).slice(start, start + entry.name.length).toLocaleLowerCase() === entry.name.toLocaleLowerCase());
+          if (resource) result.push({ name: resource.name, nameRu: resource.nameRu, qty: Number(match[1]), image: resource.image, category: 'resource' });
+        }
+        return result;
+      }
+      function ingredientCardHtml(ingredient) {
+        const resource = items.find(entry => entry.name === ingredient.name && entry.category === 'resource');
+        const resourceId = resource ? `data-resource="${escapeHtml(resource.id)}"` : '';
+        return `<button type="button" class="ingredient-card" ${resourceId} title="Открыть карточку ресурса: ${escapeHtml(displayIngredient(ingredient))}">${ingredient.image ? `<img src="${escapeHtml(ingredient.image)}" alt="" loading="lazy" />` : `<span class="ingredient-icon">●</span>`}<span class="ingredient-info"><b class="ingredient-qty">${ingredient.qty}×</b><span class="ingredient-name">${escapeHtml(displayIngredient(ingredient))}</span></span></button>`;
+      }
       function recipeHtml(item) {
         const ingredients = item.ingredients || [];
-        const source = clean(displayField(item, 'unlock') || displayField(item, 'source'));
+        const methods = item.craftingMethods || [];
+        const source = methods.length ? '' : clean(displayField(item, 'unlock') || displayField(item, 'source'));
         let recipeLine;
-        if (ingredients.length) {
-          recipeLine = `<div class="ingredient-list">${ingredients.map(ingredient => { const resource = items.find(entry => entry.name === ingredient.name && entry.category === 'resource'); const resourceId = resource ? `data-resource="${escapeHtml(resource.id)}"` : ''; return `<button type="button" class="ingredient-card" ${resourceId} title="Открыть карточку ресурса: ${escapeHtml(displayIngredient(ingredient))}">${ingredient.image ? `<img src="${escapeHtml(ingredient.image)}" alt="" loading="lazy" />` : `<span class="ingredient-icon">●</span>`}<span class="ingredient-info"><b class="ingredient-qty">${ingredient.qty}×</b><span class="ingredient-name">${escapeHtml(displayIngredient(ingredient))}</span></span></button>`; }).join('')}</div>`;
+        if (methods.length) {
+          recipeLine = methods.map(method => {
+            const methodIngredients = parseRecipeIngredients(method.recipe);
+            const station = stationRussian[method.station] || localizeText(method.station || 'Не указано');
+            const content = methodIngredients.length
+              ? `<div class="ingredient-list">${methodIngredients.map(ingredientCardHtml).join('')}</div>`
+              : `<div class="recipe-text">${escapeHtml(localizeText(method.recipe || 'Ресурсы не указаны'))}</div>`;
+            return `<div class="craft-method"><div class="method-label">С помощью: ${escapeHtml(station)}</div>${content}</div>`;
+          }).join('');
+        } else if (ingredients.length) {
+          recipeLine = `<div class="ingredient-list">${ingredients.map(ingredientCardHtml).join('')}</div>`;
         } else if (displayField(item, 'recipe')) {
           recipeLine = `<div class="recipe-text">${escapeHtml(displayField(item, 'recipe'))}</div>`;
         } else {
           recipeLine = `<div class="recipe-text empty">${item.category === 'building' ? 'Рецепт не указан' : 'Не создаётся вручную'}</div>`;
         }
+        const sourceLink = hasLocation(item) ? `<a class="inline-map-link" href="${mapUrl}" target="_blank" rel="noreferrer">⌖ Точка на карте</a>` : '';
         const sourceLine = source ? `<span class="source-text">${escapeHtml(truncate(source, 145))}</span>` : '';
-        return recipeLine + sourceLine;
+        return recipeLine + sourceLine + sourceLink;
       }
       function imageHtml(item, modal = false) {
         return `<div class="item-art ${modal ? 'modal-art' : ''}"><span class="art-symbol">${itemLetter(item)}</span>${item.image ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(displayName(item))}" loading="lazy" />` : ''}</div>`;
@@ -769,5 +804,5 @@
       render();
     })();
   </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a31b92655b4c2332',t:'MTc4NzgzODkwNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a31ba273ec192332',t:'MTc4NzgzOTU2Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
