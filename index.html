@@ -436,7 +436,6 @@
     .map-window-close:hover { color: var(--text); background: var(--panel-hover); }
     .map-frame-wrap { position: relative; min-height: 0; overflow: hidden; }
     .map-frame { display: block; width: 100%; height: 100%; min-height: 0; border: 0; background: #0d1814; }
-    .map-ad-cover { position: absolute; right: 0; bottom: 0; z-index: 2; width: 285px; height: 120px; background: var(--panel-strong); border-top: 1px solid var(--line); border-left: 1px solid var(--line); border-radius: 12px 0 0 0; pointer-events: none; }
     .map-fallback { padding: 8px 15px; color: var(--muted-2); font-size: 10px; border-top: 1px solid var(--line); }
     .map-fallback a { color: var(--lime); }
     .toast { position: fixed; bottom: 22px; left: 50%; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; background: var(--text); color: var(--bg); border-radius: 11px; padding: 10px 14px; font-size: 11px; font-weight: 700; transition: .25s ease; z-index: 70; }
@@ -529,7 +528,6 @@
       .map-modal { padding: 8px; }
       .map-window { height: 94vh; border-radius: 15px; }
       .map-window-external { display: none; }
-      .map-ad-cover { width: 190px; height: 84px; }
       .modal-head, .modal-body { padding-left: 17px; padding-right: 17px; }
     }
   </style>
@@ -630,7 +628,7 @@
   <div class="map-modal" id="mapModal" hidden role="dialog" aria-modal="true" aria-label="Интерактивная карта">
     <div class="map-window">
       <div class="map-window-head"><span class="map-window-title" id="mapWindowTitle">Интерактивная карта</span><div class="map-window-actions"><a class="map-window-external" id="mapWindowExternal" href="#" target="_blank" rel="noreferrer">Открыть отдельно ↗</a><button class="map-window-close" id="mapWindowClose" aria-label="Закрыть карту">×</button></div></div>
-      <div class="map-frame-wrap"><iframe class="map-frame" id="mapFrame" title="Интерактивная карта Grounded 2" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe><div class="map-ad-cover" aria-hidden="true"></div></div>
+      <div class="map-frame-wrap"><iframe class="map-frame" id="mapFrame" title="Интерактивная карта Grounded 2" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
       <div class="map-fallback">Если карта не загрузилась внутри окна, открой её отдельно: <a id="mapFallbackLink" href="#" target="_blank" rel="noreferrer">перейти к карте ↗</a></div>
     </div>
   </div>
@@ -964,9 +962,10 @@
         const points = mapPointsPercent(item);
         const pins = points.map(point => `<span class="map-pin" style="left:${point.x}%;top:${point.y}%"></span>`).join('');
         const visualMapAttrs = `href="${escapeHtml(itemMapUrl(item))}" data-map-open="${escapeHtml(itemMapUrl(item))}" data-map-title="${escapeHtml(displayName(item))}"`;
+        const mapImage = item.mapProvider === 'MapGenie' ? 'https://media.mapgenie.io/v2/assets/prod/games/grounded-2/maps/brookhollow-park/preview.jpg' : mapPreviewUrl;
         const visual = item.mapScreenshot
           ? `<a class="location-map-visual" ${visualMapAttrs}><img class="location-screenshot" src="${escapeHtml(item.mapScreenshot)}" alt="Скриншот расположения: ${escapeHtml(displayName(item))}" loading="lazy" /></a>`
-          : `<a class="location-map-visual" ${visualMapAttrs}><div class="mini-map"><img src="${mapPreviewUrl}" alt="Карта парка" /><div class="map-road"></div>${pins}<span class="map-label" style="left:${region.x}%;top:${region.y}%">${escapeHtml(item.mapPoints?.length > 1 ? `Показано точек: ${item.mapPoints.length}` : region.label)}</span></div></a>`;
+          : `<a class="location-map-visual" ${visualMapAttrs}><div class="mini-map"><img src="${mapImage}" alt="Карта парка" /><div class="map-road"></div>${pins}<span class="map-label" style="left:${region.x}%;top:${region.y}%">${escapeHtml(item.mapPoints?.length > 1 ? `Показано точек: ${item.mapPoints.length}` : region.label)}</span></div></a>`;
         const exactLabel = item.mapLocationIds?.length ? `точные точки: ${item.mapLocationIds.length}` : (exact ? 'точная точка' : 'ориентир по описанию');
         return `<div class="location-card"><div class="location-head"><div class="location-title">Расположение <span>${exactLabel}</span></div><a class="map-link" href="${itemMapUrl(item)}" data-map-open="${itemMapUrl(item)}" data-map-title="${escapeHtml(displayName(item))}">${mapLabel}</a></div>${visual}<div class="location-copy">${escapeHtml(truncate(locationText, 360))}</div></div>`;
       }
@@ -1283,5 +1282,5 @@
       render();
     })();
   </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a32f463c793f38bf',t:'MTc4ODA0NTUwMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a32f6511d9edd614',t:'MTc4ODA0Njc2Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
