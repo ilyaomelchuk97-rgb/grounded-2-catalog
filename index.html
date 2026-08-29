@@ -150,7 +150,15 @@
     .community-nav { margin-top: 7px; border-color: rgba(246,163,94,.18); background: rgba(246,163,94,.045); }
     .community-nav:hover, .community-nav.active { color: var(--orange); border-color: rgba(246,163,94,.35); background: rgba(246,163,94,.10); }
     .community-nav.active .nav-count, .community-nav.active .nav-icon { color: var(--orange); }
-    .sidebar-foot { margin-top: auto; padding: 19px 12px 0; color: var(--muted-2); font-size: 10px; line-height: 1.6; }
+    .external-maps { margin-top: 21px; }
+    .external-maps .nav-label { padding-bottom: 8px; }
+    .map-source-btn { width: 100%; display: flex; align-items: center; gap: 9px; padding: 9px 11px; margin-top: 4px; border: 1px solid transparent; border-radius: 10px; background: transparent; color: var(--muted); text-align: left; font-size: 11px; transition: .2s ease; }
+    .map-source-btn:hover { color: var(--text); border-color: rgba(146,201,233,.24); background: rgba(146,201,233,.08); }
+    .map-source-icon { width: 20px; color: var(--blue); text-align: center; font-size: 14px; }
+    .map-source-btn span:nth-child(2) { flex: 1; }
+    .map-source-btn b { color: var(--muted-2); font-size: 12px; font-weight: 500; }
+    body.light .map-source-btn:hover { border-color: rgba(47,111,209,.25); background: rgba(47,111,209,.08); }
+    .sidebar-foot {  margin-top: auto; padding: 19px 12px 0; color: var(--muted-2); font-size: 10px; line-height: 1.6; }
     .sidebar-foot a { color: var(--muted); text-decoration: none; border-bottom: 1px dotted var(--muted-2); }
     .main { min-width: 0; padding: 38px clamp(22px, 4vw, 60px) 72px; max-width: 1600px; width: 100%; margin: 0 auto; }
     .hero { min-height: 184px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: space-between; padding: 27px 34px; border: 1px solid var(--line); border-radius: 25px; background: linear-gradient(115deg, rgba(30,44,33,.92) 0%, rgba(25,35,28,.92) 51%, rgba(52,65,37,.68) 100%); box-shadow: var(--shadow); animation: rise-in .55s ease both; }
@@ -401,6 +409,9 @@
     .location-title span { color: var(--muted-2); font-size: 10px; font-weight: 500; margin-left: 5px; }
     .map-link { color: var(--lime); text-decoration: none; border: 1px solid rgba(216,241,123,.22); background: rgba(216,241,123,.07); padding: 7px 9px; border-radius: 9px; font-size: 10px; white-space: nowrap; }
     .map-link:hover { border-color: var(--lime); }
+    .location-map-visual { display: block; border-radius: 11px; text-decoration: none; transition: transform .2s ease, filter .2s ease; }
+    .location-map-visual:hover { transform: translateY(-1px); filter: brightness(1.08); }
+    .location-screenshot { display: block; width: 100%; height: 220px; object-fit: cover; object-position: center; border-radius: 11px; border: 1px solid var(--line); background: #243b31; }
     .mini-map { height: 184px; position: relative; overflow: hidden; border-radius: 11px; background: #243b31; border: 1px solid var(--line); }
     .mini-map::before { content: ""; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(40,76,50,.92), rgba(23,55,55,.86)), repeating-linear-gradient(30deg, transparent 0 24px, rgba(216,241,123,.05) 25px 26px); }
     .mini-map img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .62; mix-blend-mode: screen; }
@@ -414,7 +425,19 @@
     body.light .mini-map::before { background: linear-gradient(135deg, rgba(81,137,183,.84), rgba(73,105,164,.80)), repeating-linear-gradient(30deg, transparent 0 24px, rgba(255,255,255,.14) 25px 26px); }
     body.light .map-road { background: rgba(255,255,255,.44); box-shadow: 0 26px 0 rgba(255,255,255,.18), 0 -37px 0 rgba(255,255,255,.14); }
     body.light .map-label { background: rgba(17,42,77,.80); }
-    .toast { position: fixed; bottom: 22px; left: 50%; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; background: var(--text); color: var(--bg); border-radius: 11px; padding: 10px 14px; font-size: 11px; font-weight: 700; transition: .25s ease; z-index: 50; }
+    .map-modal { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 24px; background: rgba(3,8,5,.78); backdrop-filter: blur(8px); animation: rise-in .22s ease both; }
+    .map-window { width: min(1180px, 100%); height: min(820px, 92vh); display: grid; grid-template-rows: auto 1fr auto; overflow: hidden; border: 1px solid var(--line-strong); border-radius: 20px; background: var(--panel-strong); box-shadow: 0 30px 100px rgba(0,0,0,.55); }
+    .map-window-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 15px; border-bottom: 1px solid var(--line); }
+    .map-window-title { font-size: 13px; font-weight: 800; }
+    .map-window-actions { display: flex; align-items: center; gap: 7px; }
+    .map-window-external, .map-window-close { height: 32px; border-radius: 9px; padding: 0 10px; font-size: 10px; }
+    .map-window-external { color: var(--lime); text-decoration: none; border: 1px solid rgba(216,241,123,.24); background: rgba(216,241,123,.07); }
+    .map-window-close { width: 32px; padding: 0; color: var(--muted); background: transparent; border: 1px solid var(--line); font-size: 18px; }
+    .map-window-close:hover { color: var(--text); background: var(--panel-hover); }
+    .map-frame { width: 100%; height: 100%; min-height: 0; border: 0; background: #0d1814; }
+    .map-fallback { padding: 8px 15px; color: var(--muted-2); font-size: 10px; border-top: 1px solid var(--line); }
+    .map-fallback a { color: var(--lime); }
+    .toast { position: fixed; bottom: 22px; left: 50%; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; background: var(--text); color: var(--bg); border-radius: 11px; padding: 10px 14px; font-size: 11px; font-weight: 700; transition: .25s ease; z-index: 70; }
     .toast.show { transform: translate(-50%, 0); opacity: 1; }
     @media (max-width: 1100px) {
       .topbar { padding: 0 22px; gap: 15px; }
@@ -499,7 +522,11 @@
       .location-head { align-items: flex-start; flex-direction: column; }
       .map-link { width: 100%; text-align: center; }
       .mini-map { height: 170px; }
+      .location-screenshot { height: 180px; }
       .modal-grid { grid-template-columns: 1fr; }
+      .map-modal { padding: 8px; }
+      .map-window { height: 94vh; border-radius: 15px; }
+      .map-window-external { display: none; }
       .modal-head, .modal-body { padding-left: 17px; padding-right: 17px; }
     }
   </style>
@@ -521,7 +548,7 @@
         <button class="icon-btn" id="themeBtn" title="Переключить тему" aria-label="Переключить тему">☼</button>
         <button class="icon-btn" id="favoritesBtn" title="Избранное" aria-label="Показать избранное">☆</button>
       </div>
-      <a class="map-btn" href="https://grounded2.th.gl/maps/Brookhollow%20Park" target="_blank" rel="noreferrer" title="Открыть интерактивную карту Grounded 2">⌖ <span>Интерактивная карта</span> ↗</a>
+      <a class="map-btn" href="https://grounded2.th.gl/maps/Brookhollow%20Park" data-map-open="https://grounded2.th.gl/maps/Brookhollow%20Park" data-map-title="Интерактивная карта Grounded 2" title="Открыть интерактивную карту Grounded 2">⌖ <span>Интерактивная карта</span> ↗</a>
     </header>
 
     <div class="layout" id="top">
@@ -537,6 +564,7 @@
         <nav class="nav-list" id="categoryNav"></nav>
         <button class="nav-item sets-nav" id="setsNav" data-sets="true"><span class="nav-icon">♙</span><span class="nav-text">Сэты</span><span class="nav-count">3</span></button>
         <button class="nav-item community-nav" id="communityNav" data-community="true"><span class="nav-icon">✺</span><span class="nav-text">Советы сообщества</span><span class="nav-count">★</span></button>
+        <div class="external-maps"><div class="nav-label">ИНТЕРАКТИВНЫЕ КАРТЫ</div><button class="map-source-btn" data-map-open="https://www.ign.com/maps/grounded-2/brookhollow-park" data-map-title="Карта IGN"><span class="map-source-icon">◉</span><span>Карта IGN</span><b>↗</b></button><button class="map-source-btn" data-map-open="https://mapgenie.io/grounded-2/maps/brookhollow-park" data-map-title="Карта MapGenie"><span class="map-source-icon">◈</span><span>Карта MapGenie</span><b>↗</b></button><button class="map-source-btn" data-map-open="https://metaforge.app/grounded-2/map/main" data-map-title="Карта MetaForge"><span class="map-source-icon">✦</span><span>Карта MetaForge</span><b>↗</b></button></div>
         <div class="sidebar-foot">Данные собраны из открытых игровых справочников. Изображения предметов загружаются из внешнего каталога.<br><br><a href="https://grounded.wiki.gg/wiki/Grounded_2" target="_blank" rel="noreferrer">Открыть первоисточник ↗</a></div>
       </aside>
 
@@ -596,6 +624,13 @@
     </div>
     <div class="modal-body" id="modalBody"></div>
   </dialog>
+  <div class="map-modal" id="mapModal" hidden role="dialog" aria-modal="true" aria-label="Интерактивная карта">
+    <div class="map-window">
+      <div class="map-window-head"><span class="map-window-title" id="mapWindowTitle">Интерактивная карта</span><div class="map-window-actions"><a class="map-window-external" id="mapWindowExternal" href="#" target="_blank" rel="noreferrer">Открыть отдельно ↗</a><button class="map-window-close" id="mapWindowClose" aria-label="Закрыть карту">×</button></div></div>
+      <iframe class="map-frame" id="mapFrame" title="Интерактивная карта Grounded 2" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      <div class="map-fallback">Если карта не загрузилась внутри окна, открой её отдельно: <a id="mapFallbackLink" href="#" target="_blank" rel="noreferrer">перейти к карте ↗</a></div>
+    </div>
+  </div>
   <div class="toast" id="toast"></div>
 
   <script src="data.js"></script>
@@ -657,7 +692,7 @@
       const state = {
         category: 'weapon', query: '', subtype: 'all', tier: 'all', crafted: false, favoritesOnly: false,
         lang: localStorage.getItem('grounded-lang') || 'ru',
-        previousCategory: 'weapon', showSets: false, showCommunity: false, setWeapon: '', setArmor: '', setHead: '', setBody: '', setLegs: '', setShield: '', setTrinket: '', armorProfile: 'auto', avatarTurned: false,
+        previousCategory: 'weapon', showSets: false, showCommunity: false, setWeapon: '', setArmor: '', setHead: '', setBody: '', setLegs: '', setShield: '', setTrinket: '', armorProfile: 'auto',
         favorites: new Set(JSON.parse(localStorage.getItem('grounded-favorites') || '[]')), visible: 80
       };
       const $ = (id) => document.getElementById(id);
@@ -665,6 +700,25 @@
       const rows = $('itemRows');
       const emptyState = $('emptyState');
       const dialog = $('detailDialog');
+      const mapModal = $('mapModal');
+      const mapFrame = $('mapFrame');
+      const mapWindowTitle = $('mapWindowTitle');
+      const mapWindowExternal = $('mapWindowExternal');
+      const mapFallbackLink = $('mapFallbackLink');
+      function openMapOverlay(url, title = 'Интерактивная карта') {
+        if (!url || url === '#') return;
+        mapWindowTitle.textContent = title;
+        mapWindowExternal.href = url;
+        mapFallbackLink.href = url;
+        mapFrame.src = url;
+        mapModal.hidden = false;
+        document.body.style.overflow = 'hidden';
+      }
+      function closeMapOverlay() {
+        mapModal.hidden = true;
+        mapFrame.src = 'about:blank';
+        document.body.style.overflow = '';
+      }
 
       const countBy = (category) => items.filter(item => item.category === category).length;
       const escapeHtml = (value = '') => String(value).replace(/[&<>'"]/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[char]));
@@ -849,7 +903,7 @@
         } else {
           recipeLine = `<div class="recipe-text empty">${item.category === 'building' ? 'Рецепт не указан' : 'Не создаётся вручную'}</div>`;
         }
-        const sourceLink = hasLocation(item) ? `<a class="inline-map-link" href="${itemMapUrl(item)}" target="_blank" rel="noreferrer">⌖ ${item.mapUrl ? 'Точная точка на карте' : 'Открыть карту по описанию'}</a>` : '';
+        const sourceLink = hasLocation(item) ? `<a class="inline-map-link" href="${itemMapUrl(item)}" data-map-open="${itemMapUrl(item)}" data-map-title="${escapeHtml(displayName(item))}">⌖ ${item.mapUrl ? 'Точная точка на карте' : 'Открыть карту по описанию'}</a>` : '';
         const sourceLine = source ? `<span class="source-text">${escapeHtml(truncate(source, 145))}</span>` : '';
         return recipeLine + sourceLine + sourceLink;
       }
@@ -859,11 +913,23 @@
       const mapPreviewUrl = 'https://cdn.th.gl/grounded2/map-tiles/brookhollow-park/preview.webp';
       const mapUrl = 'https://grounded2.th.gl/maps/Brookhollow%20Park';
       const mapBounds = { minX: -261299, maxX: 73699, minY: -137499, maxY: 197499 };
+      const mapGenieBounds = { minLat: 0.67017156609408, maxLat: 0.87656302269395, minLng: -0.83917837917899, maxLng: -0.60783195648654 };
       const itemMapUrl = (item) => item.mapUrl || mapUrl;
-      const mapPointPercent = (item) => item.mapX == null || item.mapY == null ? null : {
-        x: Math.max(5, Math.min(95, ((item.mapX - mapBounds.minX) / (mapBounds.maxX - mapBounds.minX)) * 100)),
-        y: Math.max(8, Math.min(92, ((mapBounds.maxY - item.mapY) / (mapBounds.maxY - mapBounds.minY)) * 100))
+      const pointToPercent = (lat, lng) => ({
+        x: Math.max(5, Math.min(95, ((lng - mapGenieBounds.minLng) / (mapGenieBounds.maxLng - mapGenieBounds.minLng)) * 100)),
+        y: Math.max(8, Math.min(92, ((mapGenieBounds.maxLat - lat) / (mapGenieBounds.maxLat - mapGenieBounds.minLat)) * 100))
+      });
+      const mapPointPercent = (item) => {
+        if (item.mapLat != null && item.mapLng != null) return pointToPercent(item.mapLat, item.mapLng);
+        if (item.mapX == null || item.mapY == null) return null;
+        return {
+          x: Math.max(5, Math.min(95, ((item.mapX - mapBounds.minX) / (mapBounds.maxX - mapBounds.minX)) * 100)),
+          y: Math.max(8, Math.min(92, ((mapBounds.maxY - item.mapY) / (mapBounds.maxY - mapBounds.minY)) * 100))
+        };
       };
+      const mapPointsPercent = (item) => item.mapPoints?.length
+        ? item.mapPoints.map(point => pointToPercent(point.lat, point.lng))
+        : (mapPointPercent(item) ? [mapPointPercent(item)] : []);
       const mapRegions = [
         { keys: ['fire pit', 'костер', 'костра'], label: 'Яма для костра', x: 68, y: 72 },
         { keys: ['pine hill', 'соснов', 'pine'], label: 'Сосновый холм', x: 30, y: 29 },
@@ -883,17 +949,22 @@
         return mapRegions.find(region => region.keys.some(key => text.includes(key))) || { label: 'Парк Брукхоллоу', x: 51, y: 51 };
       }
       function hasLocation(item) {
-        if (item.mapUrl) return true;
-        const text = [item.unlock, item.source, item.unlockRu, item.sourceRu].filter(Boolean).join(' ').toLocaleLowerCase('ru-RU');
-        if (!text) return false;
-        return !/(анализ|анализиру|уровн|рецепт|крафт|brainpower|analyz|recipe|workbench|верстак|достиж)/i.test(text);
+        // Never show an approximate pin: only verified map data is allowed to create a map link.
+        return Boolean(item.mapLocationIds?.length || item.mapUrl);
       }
       function locationHtml(item) {
         const region = locationRegion(item);
-        const exact = Boolean(item.mapUrl);
+        const exact = Boolean(item.mapLocationIds?.length || item.mapUrl);
         const locationText = displayField(item, 'unlock') || displayField(item, 'source') || 'Точное описание пока не добавлено.';
         const mapLabel = exact ? '⌖ Открыть точку на карте Grounded 2 ↗' : '⌖ Открыть карту Grounded 2 ↗';
-        return `<div class="location-card"><div class="location-head"><div class="location-title">Расположение <span>${exact ? 'точная точка' : 'ориентир по описанию'}</span></div><a class="map-link" href="${itemMapUrl(item)}" target="_blank" rel="noreferrer">${mapLabel}</a></div><div class="mini-map"><img src="${mapPreviewUrl}" alt="Карта парка" /><div class="map-road"></div><span class="map-pin" style="left:${region.x}%;top:${region.y}%"></span><span class="map-label" style="left:${region.x}%;top:${region.y}%">${escapeHtml(region.label)}</span></div><div class="location-copy">${escapeHtml(truncate(locationText, 360))}</div></div>`;
+        const points = mapPointsPercent(item);
+        const pins = points.map(point => `<span class="map-pin" style="left:${point.x}%;top:${point.y}%"></span>`).join('');
+        const visualMapAttrs = `href="${escapeHtml(itemMapUrl(item))}" data-map-open="${escapeHtml(itemMapUrl(item))}" data-map-title="${escapeHtml(displayName(item))}"`;
+        const visual = item.mapScreenshot
+          ? `<a class="location-map-visual" ${visualMapAttrs}><img class="location-screenshot" src="${escapeHtml(item.mapScreenshot)}" alt="Скриншот расположения: ${escapeHtml(displayName(item))}" loading="lazy" /></a>`
+          : `<a class="location-map-visual" ${visualMapAttrs}><div class="mini-map"><img src="${mapPreviewUrl}" alt="Карта парка" /><div class="map-road"></div>${pins}<span class="map-label" style="left:${region.x}%;top:${region.y}%">${escapeHtml(item.mapPoints?.length > 1 ? `Показано точек: ${item.mapPoints.length}` : region.label)}</span></div></a>`;
+        const exactLabel = item.mapLocationIds?.length ? `точные точки: ${item.mapLocationIds.length}` : (exact ? 'точная точка' : 'ориентир по описанию');
+        return `<div class="location-card"><div class="location-head"><div class="location-title">Расположение <span>${exactLabel}</span></div><a class="map-link" href="${itemMapUrl(item)}" data-map-open="${itemMapUrl(item)}" data-map-title="${escapeHtml(displayName(item))}">${mapLabel}</a></div>${visual}<div class="location-copy">${escapeHtml(truncate(locationText, 360))}</div></div>`;
       }
       function rowHtml(item, index) {
         const favorite = state.favorites.has(item.id);
@@ -953,9 +1024,6 @@
         const specialClass = className === 'weapon' ? 'avatar-weapon' : className === 'trinket' ? 'avatar-trinket' : '';
         return item?.image ? `<img class="avatar-gear ${className} ${specialClass}" src="${escapeHtml(item.image)}" alt="${escapeHtml(displayName(item))}" loading="lazy" />` : '';
       }
-      function equipmentOverlay(item, slot) {
-        return item?.image ? `<img class="equipment-overlay ${slot}" data-equipment-id="${escapeHtml(item.id)}" src="${escapeHtml(item.image)}" alt="${escapeHtml(displayName(item))}" title="${escapeHtml(displayName(item))}" loading="lazy" />` : '';
-      }
       function setItemCard(label, item, extra = '') {
         if (!item) return `<article class="set-item-card"><div class="set-item-label">${label}</div><div class="set-item-name">Не выбрано</div></article>`;
         const effect = displayField(item, 'effect') || 'Дополнительный эффект не указан.';
@@ -969,7 +1037,8 @@
         { id: 'rogue', label: 'Разбойник · криты и яд', tags: ['dual', 'crit', 'venom'] },
         { id: 'ranger', label: 'Стрелок · дальний бой', tags: ['bow', 'stamina'] },
         { id: 'mage', label: 'Маг · стихийный урон', tags: ['staff', 'spicy', 'fresh', 'sour'] },
-        { id: 'explorer', label: 'Исследователь · защита', tags: ['heal', 'stamina', 'block'] }
+        { id: 'explorer', label: 'Исследователь · защита', tags: ['heal', 'stamina', 'block'] },
+        { id: 'manual', label: 'Ручной выбор', tags: [] }
       ];
       function armorPieceScore(piece, loadout, profile) {
         const bases = [loadout.weapon, loadout.shield, loadout.trinket].filter(Boolean);
@@ -1011,7 +1080,7 @@
         const tagLabels = {venom:'яд',spicy:'пряность',fresh:'свежесть',sour:'кислота',shock:'шок',bow:'дальний бой',staff:'посох',dual:'парное оружие',block:'блок',crit:'крит',heal:'лечение',stamina:'выносливость',sizzle:'шипение'};
         const armorSelect = (slot, selected) => items.filter(item => item.category === 'armor' && item.subtype === slot && item.set !== 'Individual').sort((a,b) => armorPieceScore(b,loadout,profile)-armorPieceScore(a,loadout,profile)).map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(displayName(item))} · ${escapeHtml(item.setRu || item.set)}</option>`).join('');
         const synergy = selectedArmor.reduce((total, item) => total + [weapon, shield, trinket].filter(Boolean).reduce((score, base) => score + synergyScore(base, item), 0), 0);
-        $('setsPanel').innerHTML = `<div class="set-controls"><h3>Сборщик сэта</h3><p class="set-controls-copy">Сочетания брони подбираются по характеристикам выбранного оружия, щита и тринкета. Можно оставить автоподбор или вручную заменить любой элемент.</p><div class="set-field"><label for="setWeaponSelect">Оружие</label><select id="setWeaponSelect" data-set-select="weapon">${weapons.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(displayName(item))}</option>`).join('')}</select></div>${oneHanded ? `<div class="set-field"><label for="setShieldSelect">Щит для одноручного оружия</label><select id="setShieldSelect" data-set-select="shield">${shields.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(displayName(item))}</option>`).join('')}</select></div>` : dualWield ? `<div class="synergy-note">Парное оружие занимает обе руки — второе лезвие добавлено автоматически.</div>` : `<div class="synergy-note">Для двуручного оружия щит не добавляется.</div>`}<div class="set-field"><label for="setTrinketSelect">Тринкет</label><select id="setTrinketSelect" data-set-select="trinket">${trinkets.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(displayName(item))}</option>`).join('')}</select></div><div class="set-field"><label for="setHeadSelect">Шлем</label><select id="setHeadSelect" data-set-select="head">${armorSelect('Head',head)}</select></div><div class="set-field"><label for="setBodySelect">Нагрудник</label><select id="setBodySelect" data-set-select="body">${armorSelect('Body',body)}</select></div><div class="set-field"><label for="setLegsSelect">Поножи</label><select id="setLegsSelect" data-set-select="legs">${armorSelect('Legs',legs)}</select></div><div class="set-field"><label for="armorProfileSelect">Подготовленное сочетание брони</label><select id="armorProfileSelect" data-set-select="profile">${armorProfiles.map(item => `<option value="${item.id}">${item.label}</option>`).join('')}</select></div><div class="synergy-note"><strong>Синергия: ${synergy} баллов</strong><br>${tags.length ? tags.map(tag => escapeHtml(tagLabels[tag] || tag)).join(' · ') : 'Выбери предметы, чтобы увидеть совместимость.'}</div></div><div class="set-preview"><div class="set-preview-top"><div><h3>Персонаж и экипировка</h3><span class="modal-meta">Персонаж из игры · выбранные предметы показаны ниже</span></div></div><div class="avatar-stage"><div class="character-frame"><img class="character-image" src="grounded2-character.png" alt="Персонаж Grounded 2" loading="lazy" />${equipmentOverlay(head,'head')}${equipmentOverlay(body,'body')}${equipmentOverlay(legs,'legs')}${equipmentOverlay(weapon,'weapon')}${dualWield ? equipmentOverlay(weapon,'weapon-copy') : equipmentOverlay(shield,'shield')}${equipmentOverlay(trinket,'trinket')}<span class="character-caption">Персонаж из игры</span></div><span class="equipment-legend">Нажми на иконку экипировки<br />для открытия карточки</span></div><div class="set-items">${setItemCard('Оружие', weapon, displaySubtype(weapon?.subtype))}${oneHanded ? setItemCard('Щит', shield, displaySubtype(shield?.subtype)) : dualWield ? setItemCard('Второе оружие', weapon, 'Копия парного оружия') : setItemCard('Щит', null, 'Не требуется')}${setItemCard('Броня · шлем', head, head?.setRu || head?.set)}${setItemCard('Броня · нагрудник', body, body?.setRu || body?.set)}${setItemCard('Броня · поножи', legs, legs?.setRu || legs?.set)}${setItemCard('Тринкет', trinket, displaySubtype(trinket?.subtype))}</div></div>`;
+        $('setsPanel').innerHTML = `<div class="set-controls"><h3>Сборщик сэта</h3><p class="set-controls-copy">Сочетания брони подбираются по характеристикам выбранного оружия, щита и тринкета. Можно оставить автоподбор или вручную заменить любой элемент.</p><div class="set-field"><label for="setWeaponSelect">Оружие</label><select id="setWeaponSelect" data-set-select="weapon">${weapons.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(displayName(item))}</option>`).join('')}</select></div>${oneHanded ? `<div class="set-field"><label for="setShieldSelect">Щит для одноручного оружия</label><select id="setShieldSelect" data-set-select="shield">${shields.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(displayName(item))}</option>`).join('')}</select></div>` : dualWield ? `<div class="synergy-note">Парное оружие занимает обе руки — второе лезвие добавлено автоматически.</div>` : `<div class="synergy-note">Для двуручного оружия щит не добавляется.</div>`}<div class="set-field"><label for="setTrinketSelect">Тринкет</label><select id="setTrinketSelect" data-set-select="trinket">${trinkets.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(displayName(item))}</option>`).join('')}</select></div><div class="set-field"><label for="setHeadSelect">Шлем</label><select id="setHeadSelect" data-set-select="head">${armorSelect('Head',head)}</select></div><div class="set-field"><label for="setBodySelect">Нагрудник</label><select id="setBodySelect" data-set-select="body">${armorSelect('Body',body)}</select></div><div class="set-field"><label for="setLegsSelect">Поножи</label><select id="setLegsSelect" data-set-select="legs">${armorSelect('Legs',legs)}</select></div><div class="set-field"><label for="armorProfileSelect">Подготовленное сочетание брони</label><select id="armorProfileSelect" data-set-select="profile">${armorProfiles.map(item => `<option value="${item.id}">${item.label}</option>`).join('')}</select></div><div class="synergy-note"><strong>Синергия: ${synergy} баллов</strong><br>${tags.length ? tags.map(tag => escapeHtml(tagLabels[tag] || tag)).join(' · ') : 'Выбери предметы, чтобы увидеть совместимость.'}</div></div><div class="set-preview"><div class="set-preview-top"><div><h3>Выбранная экипировка</h3><span class="modal-meta">Предметы отсортированы по совместимости эффектов</span></div></div><div class="set-items">${setItemCard('Оружие', weapon, displaySubtype(weapon?.subtype))}${oneHanded ? setItemCard('Щит', shield, displaySubtype(shield?.subtype)) : dualWield ? setItemCard('Второе оружие', weapon, 'Копия парного оружия') : setItemCard('Щит', null, 'Не требуется')}${setItemCard('Броня · шлем', head, head?.setRu || head?.set)}${setItemCard('Броня · нагрудник', body, body?.setRu || body?.set)}${setItemCard('Броня · поножи', legs, legs?.setRu || legs?.set)}${setItemCard('Тринкет', trinket, displaySubtype(trinket?.subtype))}</div></div>`;
         $('setWeaponSelect').value = state.setWeapon;
         if ($('setShieldSelect')) $('setShieldSelect').value = state.setShield;
         $('setTrinketSelect').value = state.setTrinket;
@@ -1060,6 +1129,12 @@
         $('loadMore').classList.toggle('visible', shown.length < pool.length);
         $('updatedDate').textContent = DATA.updated || '—';
         rows.querySelectorAll('tr').forEach(row => row.addEventListener('click', event => {
+          const mapTrigger = event.target.closest('[data-map-open]');
+          if (mapTrigger) {
+            event.preventDefault();
+            openMapOverlay(mapTrigger.dataset.mapOpen, mapTrigger.dataset.mapTitle || 'Интерактивная карта');
+            return;
+          }
           const resourceButton = event.target.closest('[data-resource]');
           if (resourceButton) {
             const resource = items.find(entry => entry.id === resourceButton.dataset.resource);
@@ -1130,13 +1205,13 @@
       $('setsPanel').addEventListener('change', event => {
         const select = event.target.closest('[data-set-select]');
         if (!select) return;
-        if (select.dataset.setSelect === 'weapon') { state.setWeapon = select.value; state.setShield = ''; state.setHead = ''; state.setBody = ''; state.setLegs = ''; }
-        if (select.dataset.setSelect === 'shield') { state.setShield = select.value; state.setHead = ''; state.setBody = ''; state.setLegs = ''; }
-        if (select.dataset.setSelect === 'trinket') { state.setTrinket = select.value; state.setHead = ''; state.setBody = ''; state.setLegs = ''; }
+        if (select.dataset.setSelect === 'weapon') { state.setWeapon = select.value; state.setShield = ''; if (state.armorProfile !== 'manual') { state.setHead = ''; state.setBody = ''; state.setLegs = ''; } }
+        if (select.dataset.setSelect === 'shield') { state.setShield = select.value; if (state.armorProfile !== 'manual') { state.setHead = ''; state.setBody = ''; state.setLegs = ''; } }
+        if (select.dataset.setSelect === 'trinket') { state.setTrinket = select.value; if (state.armorProfile !== 'manual') { state.setHead = ''; state.setBody = ''; state.setLegs = ''; } }
         if (select.dataset.setSelect === 'profile') { state.armorProfile = select.value; state.setHead = ''; state.setBody = ''; state.setLegs = ''; }
-        if (select.dataset.setSelect === 'head') state.setHead = select.value;
-        if (select.dataset.setSelect === 'body') state.setBody = select.value;
-        if (select.dataset.setSelect === 'legs') state.setLegs = select.value;
+        if (select.dataset.setSelect === 'head') { state.setHead = select.value; state.armorProfile = 'manual'; }
+        if (select.dataset.setSelect === 'body') { state.setBody = select.value; state.armorProfile = 'manual'; }
+        if (select.dataset.setSelect === 'legs') { state.setLegs = select.value; state.armorProfile = 'manual'; }
         renderSets();
       });
       $('communityNav').addEventListener('click', () => {
@@ -1172,22 +1247,37 @@
         render();
         showToast(active ? 'Добавлено в избранное' : 'Убрано из избранного');
       });
+      document.addEventListener('click', event => {
+        const mapTrigger = event.target.closest('[data-map-open]');
+        if (!mapTrigger || event.defaultPrevented) return;
+        event.preventDefault();
+        openMapOverlay(mapTrigger.dataset.mapOpen, mapTrigger.dataset.mapTitle || 'Интерактивная карта');
+      });
       $('modalBody').addEventListener('click', event => {
+        const mapTrigger = event.target.closest('[data-map-open]');
+        if (mapTrigger) {
+          event.preventDefault();
+          openMapOverlay(mapTrigger.dataset.mapOpen, mapTrigger.dataset.mapTitle || 'Интерактивная карта');
+          return;
+        }
         const resourceButton = event.target.closest('[data-resource]');
         if (!resourceButton) return;
         const resource = items.find(entry => entry.id === resourceButton.dataset.resource);
         if (resource) openDetail(resource);
       });
       dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
+      $('mapWindowClose').addEventListener('click', closeMapOverlay);
+      mapModal.addEventListener('click', event => { if (event.target === mapModal) closeMapOverlay(); });
       document.addEventListener('keydown', event => {
         if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); searchInput.focus(); }
         if (event.key === '/' && document.activeElement !== searchInput) { event.preventDefault(); searchInput.focus(); }
         if (event.key === 'Escape' && dialog.open) dialog.close();
+        if (event.key === 'Escape' && !mapModal.hidden) closeMapOverlay();
       });
       if (localStorage.getItem('grounded-theme') === 'light') document.body.classList.add('light');
       renderStats();
       render();
     })();
   </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a31d4566fc3eef1a',t:'MTc4Nzg1NjcyMw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a32f37e13acd02a0',t:'MTc4ODA0NDkxMg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
