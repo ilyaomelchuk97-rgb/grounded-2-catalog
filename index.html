@@ -425,7 +425,7 @@
     body.light .mini-map::before { background: linear-gradient(135deg, rgba(81,137,183,.84), rgba(73,105,164,.80)), repeating-linear-gradient(30deg, transparent 0 24px, rgba(255,255,255,.14) 25px 26px); }
     body.light .map-road { background: rgba(255,255,255,.44); box-shadow: 0 26px 0 rgba(255,255,255,.18), 0 -37px 0 rgba(255,255,255,.14); }
     body.light .map-label { background: rgba(17,42,77,.80); }
-    .map-modal { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 24px; background: rgba(3,8,5,.78); backdrop-filter: blur(8px); animation: rise-in .22s ease both; }
+    .map-modal { position: fixed; inset: 0; z-index: 10000; display: grid; place-items: center; padding: 24px; background: rgba(3,8,5,.78); backdrop-filter: blur(8px); animation: rise-in .22s ease both; }
     .map-window { width: min(1180px, 100%); height: min(820px, 92vh); display: grid; grid-template-rows: auto 1fr auto; overflow: hidden; border: 1px solid var(--line-strong); border-radius: 20px; background: var(--panel-strong); box-shadow: 0 30px 100px rgba(0,0,0,.55); }
     .map-window-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 15px; border-bottom: 1px solid var(--line); }
     .map-window-title { font-size: 13px; font-weight: 800; }
@@ -434,7 +434,9 @@
     .map-window-external { color: var(--lime); text-decoration: none; border: 1px solid rgba(216,241,123,.24); background: rgba(216,241,123,.07); }
     .map-window-close { width: 32px; padding: 0; color: var(--muted); background: transparent; border: 1px solid var(--line); font-size: 18px; }
     .map-window-close:hover { color: var(--text); background: var(--panel-hover); }
-    .map-frame { width: 100%; height: 100%; min-height: 0; border: 0; background: #0d1814; }
+    .map-frame-wrap { position: relative; min-height: 0; overflow: hidden; }
+    .map-frame { display: block; width: 100%; height: 100%; min-height: 0; border: 0; background: #0d1814; }
+    .map-ad-cover { position: absolute; right: 0; bottom: 0; z-index: 2; width: 285px; height: 120px; background: var(--panel-strong); border-top: 1px solid var(--line); border-left: 1px solid var(--line); border-radius: 12px 0 0 0; pointer-events: none; }
     .map-fallback { padding: 8px 15px; color: var(--muted-2); font-size: 10px; border-top: 1px solid var(--line); }
     .map-fallback a { color: var(--lime); }
     .toast { position: fixed; bottom: 22px; left: 50%; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; background: var(--text); color: var(--bg); border-radius: 11px; padding: 10px 14px; font-size: 11px; font-weight: 700; transition: .25s ease; z-index: 70; }
@@ -527,6 +529,7 @@
       .map-modal { padding: 8px; }
       .map-window { height: 94vh; border-radius: 15px; }
       .map-window-external { display: none; }
+      .map-ad-cover { width: 190px; height: 84px; }
       .modal-head, .modal-body { padding-left: 17px; padding-right: 17px; }
     }
   </style>
@@ -564,7 +567,7 @@
         <nav class="nav-list" id="categoryNav"></nav>
         <button class="nav-item sets-nav" id="setsNav" data-sets="true"><span class="nav-icon">♙</span><span class="nav-text">Сэты</span><span class="nav-count">3</span></button>
         <button class="nav-item community-nav" id="communityNav" data-community="true"><span class="nav-icon">✺</span><span class="nav-text">Советы сообщества</span><span class="nav-count">★</span></button>
-        <div class="external-maps"><div class="nav-label">ИНТЕРАКТИВНЫЕ КАРТЫ</div><button class="map-source-btn" data-map-open="https://www.ign.com/maps/grounded-2/brookhollow-park" data-map-title="Карта IGN"><span class="map-source-icon">◉</span><span>Карта IGN</span><b>↗</b></button><button class="map-source-btn" data-map-open="https://mapgenie.io/grounded-2/maps/brookhollow-park" data-map-title="Карта MapGenie"><span class="map-source-icon">◈</span><span>Карта MapGenie</span><b>↗</b></button><button class="map-source-btn" data-map-open="https://metaforge.app/grounded-2/map/main" data-map-title="Карта MetaForge"><span class="map-source-icon">✦</span><span>Карта MetaForge</span><b>↗</b></button></div>
+        <div class="external-maps"><div class="nav-label">ИНТЕРАКТИВНЫЕ КАРТЫ</div><button class="map-source-btn" data-map-open="https://mapgenie.io/grounded-2/maps/brookhollow-park" data-map-title="Карта MapGenie"><span class="map-source-icon">◈</span><span>Карта MapGenie</span><b>↗</b></button><button class="map-source-btn" data-map-open="https://metaforge.app/grounded-2/map/main" data-map-title="Карта MetaForge"><span class="map-source-icon">✦</span><span>Карта MetaForge</span><b>↗</b></button></div>
         <div class="sidebar-foot">Данные собраны из открытых игровых справочников. Изображения предметов загружаются из внешнего каталога.<br><br><a href="https://grounded.wiki.gg/wiki/Grounded_2" target="_blank" rel="noreferrer">Открыть первоисточник ↗</a></div>
       </aside>
 
@@ -627,7 +630,7 @@
   <div class="map-modal" id="mapModal" hidden role="dialog" aria-modal="true" aria-label="Интерактивная карта">
     <div class="map-window">
       <div class="map-window-head"><span class="map-window-title" id="mapWindowTitle">Интерактивная карта</span><div class="map-window-actions"><a class="map-window-external" id="mapWindowExternal" href="#" target="_blank" rel="noreferrer">Открыть отдельно ↗</a><button class="map-window-close" id="mapWindowClose" aria-label="Закрыть карту">×</button></div></div>
-      <iframe class="map-frame" id="mapFrame" title="Интерактивная карта Grounded 2" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      <div class="map-frame-wrap"><iframe class="map-frame" id="mapFrame" title="Интерактивная карта Grounded 2" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe><div class="map-ad-cover" aria-hidden="true"></div></div>
       <div class="map-fallback">Если карта не загрузилась внутри окна, открой её отдельно: <a id="mapFallbackLink" href="#" target="_blank" rel="noreferrer">перейти к карте ↗</a></div>
     </div>
   </div>
@@ -707,6 +710,7 @@
       const mapFallbackLink = $('mapFallbackLink');
       function openMapOverlay(url, title = 'Интерактивная карта') {
         if (!url || url === '#') return;
+        if (dialog.open) dialog.close();
         mapWindowTitle.textContent = title;
         mapWindowExternal.href = url;
         mapFallbackLink.href = url;
@@ -1279,5 +1283,5 @@
       render();
     })();
   </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a32f37e13acd02a0',t:'MTc4ODA0NDkxMg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a32f463c793f38bf',t:'MTc4ODA0NTUwMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
