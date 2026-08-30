@@ -175,11 +175,12 @@
     .hero-kicker { display: inline-flex; align-items: center; gap: 8px; font-size: 10px; color: var(--lime); letter-spacing: .16em; font-weight: 800; margin-bottom: 13px; }
     .hero-kicker i { display: block; width: 18px; height: 2px; background: var(--lime); border-radius: 9px; }
     h1 { font-size: clamp(30px, 3.5vw, 54px); line-height: .98; letter-spacing: -.065em; margin: 0 0 14px; max-width: 620px; }
-    h1 em { color: var(--lime); font-style: normal; }
+    h1 em { color: var(--lime); font-style: normal; font-size: .9em; }
     .hero-description { font-size: 13px; color: var(--muted); max-width: 530px; line-height: 1.6; margin: 0; }
     .hero-bubbles { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 20px; }
     .bubble { border: 1px solid var(--line-strong); background: rgba(255,255,255,.035); border-radius: 30px; padding: 6px 10px; color: var(--muted); font-size: 10px; }
-    .hero-art { width: 235px; height: 155px; position: relative; flex: 0 0 auto; z-index: 1; opacity: .95; animation: hero-float 6s ease-in-out infinite; }
+    .hero-art { width: min(44%, 430px); height: 235px; position: relative; flex: 0 0 min(44%, 430px); z-index: 1; opacity: .98; animation: hero-float 6s ease-in-out infinite; display: flex; align-items: center; justify-content: flex-end; }
+    .hero-art img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: right center; filter: drop-shadow(0 14px 20px rgba(0,0,0,.28)); }
     .leaf { position: absolute; border-radius: 100% 0 100% 0; transform: rotate(30deg); background: linear-gradient(140deg, #9bc657, #395e35); filter: drop-shadow(14px 20px 18px rgba(0,0,0,.24)); }
     .leaf.one { width: 126px; height: 64px; right: 49px; top: 13px; transform: rotate(28deg); }
     .leaf.two { width: 178px; height: 80px; right: 12px; top: 89px; transform: rotate(-21deg); background: linear-gradient(140deg, #c0df65, #3c784a); }
@@ -234,8 +235,12 @@
     table { width: 100%; border-collapse: collapse; min-width: 920px; }
     th { color: var(--muted-2); text-transform: uppercase; letter-spacing: .10em; font-size: 9px; font-weight: 750; text-align: left; padding: 13px 15px; background: rgba(0,0,0,.09); border-bottom: 1px solid var(--line); }
     th:first-child, td:first-child { padding-left: 20px; }
-    th:last-child, td:last-child { padding-right: 18px; width: 44px; }
-    td { vertical-align: top; padding: 15px 15px; border-bottom: 1px solid var(--line); font-size: 12px; }
+    th:last-child, td:last-child { padding-right: 18px; width: 82px; }
+    .row-actions { display: flex; align-items: center; gap: 3px; }
+    .compare-btn { width: 30px; height: 30px; border: 0; border-radius: 9px; color: var(--muted-2); background: transparent; font-size: 16px; transition: .2s ease; }
+    .compare-btn:hover, .compare-btn.active { color: var(--blue); background: rgba(146,201,233,.11); }
+    body.light .compare-btn:hover, body.light .compare-btn.active { background: rgba(47,111,209,.10); }
+    td {  vertical-align: top; padding: 15px 15px; border-bottom: 1px solid var(--line); font-size: 12px; }
     tbody tr { transition: .18s ease; cursor: pointer; animation: row-in .4s ease both; animation-delay: calc(var(--row-index, 0) * 18ms); }
     tbody tr:hover { background: var(--panel-hover); }
     tbody tr:last-child td { border-bottom: 0; }
@@ -250,7 +255,27 @@
     .tier-badge { color: var(--lime); border: 1px solid rgba(216,241,123,.22); padding: 2px 5px; border-radius: 5px; background: rgba(216,241,123,.06); }
     .cell-label { display: none; color: var(--muted-2); font-size: 9px; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 5px; }
     .stat-list { display: flex; flex-wrap: wrap; gap: 5px; min-width: 210px; }
-    .stat-pill { color: var(--muted); border: 1px solid var(--line); border-radius: 7px; background: rgba(255,255,255,.025); padding: 6px 7px; white-space: nowrap; font-size: 11px; }
+    .weapon-bars { display: grid; gap: 7px; min-width: 245px; }
+    .defensive-bars { display: grid; gap: 7px; min-width: 245px; }
+    .weapon-detail-block .weapon-bars, .defensive-detail-block .defensive-bars { width: 100%; min-width: 0; }
+    .weapon-bar-row { display: grid; grid-template-columns: 105px 120px max-content; align-items: center; gap: 8px; width: 100%; }
+    .defensive-bars .weapon-bar-row { grid-template-columns: 110px 120px max-content; }
+    .weapon-bar-label { color: var(--muted); font-size: 10px; white-space: nowrap; }
+    .defensive-bars .weapon-bar-label { white-space: normal; line-height: 1.15; }
+    .bar-track { display: grid; grid-template-columns: repeat(8, 1fr); gap: 3px; width: 120px; min-width: 120px; box-sizing: border-box; height: 11px; padding: 2px; border: 1px solid var(--line-strong); background: rgba(255,255,255,.03); }
+    .bar-segment { background: rgba(146,201,233,.14); }
+    .bar-segment.unavailable { background: rgba(146,201,233,.07); }
+    .bar-segment.filled.damage, .bar-segment.filled.stun, .bar-segment.filled.block { background: #ef5457; box-shadow: inset 0 -2px 0 rgba(128,22,35,.28); }
+    .bar-segment.filled.speed, .bar-segment.filled.crit, .bar-segment.filled.resistance { background: #b7ef18; box-shadow: inset 0 -2px 0 rgba(65,117,0,.28); }
+    .bar-segment.filled.stamina { background: #f6a35e; box-shadow: inset 0 -2px 0 rgba(128,65,22,.28); }
+    .bar-segment.filled.defense { background: #92c9e9; box-shadow: inset 0 -2px 0 rgba(32,88,123,.28); }
+    .resistance-icons, .damage-icons { display: inline-flex; align-items: center; gap: 2px; margin-left: 4px; vertical-align: middle; }
+    .resistance-icon, .damage-icon { display: inline-grid; place-items: center; width: 15px; height: 15px; font-size: 12px; line-height: 1; border-radius: 4px; background: rgba(246,163,94,.10); }
+    .effect-type { display: flex; align-items: center; gap: 6px; }
+    .effect-type strong { color: var(--text); }
+    body.light .resistance-icon, body.light .damage-icon { background: rgba(47,111,209,.10); }
+    .bar-value { color: var(--muted-2); font-size: 9px; white-space: nowrap; }
+    .stat-pill {  color: var(--muted); border: 1px solid var(--line); border-radius: 7px; background: rgba(255,255,255,.025); padding: 6px 7px; white-space: nowrap; font-size: 11px; }
     .effect-stack { display: grid; gap: 5px; max-width: 310px; }
     .effect-line { color: var(--muted); font-size: 12px; line-height: 1.5; white-space: normal; overflow-wrap: anywhere; }
     .effect-line strong { color: var(--lime); font-weight: 700; }
@@ -305,6 +330,15 @@
     .set-field label { color: var(--muted-2); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; font-weight: 800; }
     .set-field select { width: 100%; }
     .synergy-note { margin-top: 14px; padding: 10px 11px; border: 1px solid rgba(216,241,123,.18); border-radius: 11px; color: var(--muted); background: rgba(216,241,123,.045); font-size: 10px; line-height: 1.45; }
+    .set-extra-actions { display: flex; gap: 7px; margin-top: 12px; }
+    .set-extra-actions button { flex: 1; padding: 8px 9px; border: 1px solid var(--line-strong); border-radius: 9px; color: var(--muted); background: transparent; font-size: 10px; }
+    .set-extra-actions button:hover { color: var(--lime); border-color: rgba(216,241,123,.35); background: rgba(216,241,123,.08); }
+    .required-materials { margin-top: 14px; padding-top: 13px; border-top: 1px solid var(--line); }
+    .required-materials-title { color: var(--muted-2); font-size: 9px; text-transform: uppercase; letter-spacing: .11em; margin-bottom: 8px; }
+    .required-material-list { display: grid; gap: 5px; max-height: 170px; overflow: auto; }
+    .required-material { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 10px; }
+    .required-material img { width: 25px; height: 25px; object-fit: contain; border-radius: 6px; background: rgba(216,241,123,.07); }
+    .required-material b { margin-left: auto; color: var(--lime); }
     body.light .synergy-note { border-color: rgba(47,111,209,.18); background: rgba(47,111,209,.045); }
     .set-preview { padding: 18px; min-width: 0; }
     .set-preview-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
@@ -421,6 +455,9 @@
     body.light .usage-item img, body.light .usage-item-icon { background: rgba(47,111,209,.07); }
     .modal-source { font-size: 10px; line-height: 1.5; color: var(--muted-2); border-top: 1px solid var(--line); padding-top: 14px; }
     .modal-source a { color: var(--lime); }
+    .modal-source-actions { display: inline-flex; align-items: center; gap: 8px; margin-left: 8px; }
+    .copy-link-btn { border: 0; border-bottom: 1px dotted var(--muted-2); padding: 0; color: var(--muted); background: transparent; font-size: 10px; cursor: pointer; }
+    .copy-link-btn:hover { color: var(--lime); }
     .location-card { border: 1px solid var(--line); border-radius: 15px; padding: 13px; background: rgba(255,255,255,.018); }
     .location-source-creature { display: flex; flex-direction: column; align-items: center; gap: 5px; margin: 12px 0 0; padding: 10px; border: 1px solid rgba(246,163,94,.20); border-radius: 11px; background: rgba(246,163,94,.055); text-decoration: none; transition: .2s ease; }
     .location-source-creature:hover { border-color: rgba(246,163,94,.48); background: rgba(246,163,94,.11); transform: translateY(-1px); }
@@ -476,6 +513,20 @@
     .panel-window-body { min-height: 0; overflow: auto; padding: 18px; }
     .panel-window-body > .sets-panel, .panel-window-body > .community-panel { display: grid; }
     .panel-window-body > .sets-panel[hidden], .panel-window-body > .community-panel[hidden] { display: none !important; }
+    .compare-modal { position: fixed; inset: 0; z-index: 9500; display: grid; place-items: center; padding: 24px; background: rgba(3,8,5,.78); backdrop-filter: blur(8px); animation: rise-in .22s ease both; }
+    .compare-window { width: min(1040px, 100%); max-height: 92vh; overflow: auto; border: 1px solid var(--line-strong); border-radius: 20px; background: var(--panel-strong); box-shadow: 0 30px 100px rgba(0,0,0,.55); }
+    .compare-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 15px; border-bottom: 1px solid var(--line); }
+    .compare-head strong { font-size: 14px; }
+    .compare-body { padding: 16px; overflow-x: auto; }
+    .compare-table { min-width: 640px; width: 100%; border-collapse: collapse; }
+    .compare-table th, .compare-table td { border: 1px solid var(--line); padding: 10px; vertical-align: top; }
+    .compare-table th { min-width: 150px; text-transform: none; letter-spacing: 0; font-size: 11px; color: var(--text); background: var(--panel-hover); }
+    .compare-table td:first-child { width: 150px; color: var(--muted); font-weight: 700; }
+    .compare-item-head { display: grid; gap: 7px; justify-items: center; text-align: center; }
+    .compare-item-head img { width: 58px; height: 58px; object-fit: contain; border-radius: 12px; background: rgba(216,241,123,.07); }
+    .compare-item-name { font-size: 12px; line-height: 1.3; }
+    .compare-value { color: var(--muted); font-size: 11px; line-height: 1.45; }
+    .mobile-nav { display: none; }
     .toast { position: fixed; bottom: 22px; left: 50%; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; background: var(--text); color: var(--bg); border-radius: 11px; padding: 10px 14px; font-size: 11px; font-weight: 700; transition: .25s ease; z-index: 11000; }
     .toast.show { transform: translate(-50%, 0); opacity: 1; }
     body.glass {
@@ -519,6 +570,7 @@
       .main { padding-left: 30px; padding-right: 30px; }
     }
     @media (max-width: 820px) {
+      body { padding-bottom: 70px; }
       .topbar { height: auto; min-height: 72px; padding: 13px 16px; display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "brand language" "actions map" "search search"; gap: 12px 14px; }
       .brand { grid-area: brand; min-width: 0; }
       .language-switch { grid-area: language; margin-left: 0; justify-self: end; }
@@ -526,6 +578,12 @@
       .map-btn { grid-area: map; flex: none; width: auto; margin-left: 0; justify-self: end; justify-content: center; }
       .searchbox { grid-area: search; flex: none; width: 100%; max-width: none; }
       .layout { display: block; }
+      .mobile-nav { position: fixed; left: 8px; right: 8px; bottom: 8px; z-index: 40; display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 5px; border: 1px solid var(--line-strong); border-radius: 16px; background: rgba(18,26,22,.90); backdrop-filter: blur(18px); box-shadow: 0 12px 40px rgba(0,0,0,.30); }
+      .mobile-nav button { min-width: 0; height: 43px; border: 0; border-radius: 11px; background: transparent; color: var(--muted); font-size: 10px; font-weight: 750; }
+      .mobile-nav button:hover, .mobile-nav button.active { color: var(--lime); background: rgba(216,241,123,.10); }
+      body.light .mobile-nav { background: rgba(255,255,255,.91); }
+      body.light .mobile-nav button:hover, body.light .mobile-nav button.active { background: rgba(47,111,209,.10); }
+      body.glass .mobile-nav { background: rgba(7,18,28,.72); }
       .hero-dashboard { grid-template-columns: 1fr; gap: 18px; margin-bottom: 25px; }
       .sidebar { border-right: 0; border-bottom: 1px solid var(--line); padding: 16px; }
       .park-summary, .eyebrow, .sidebar-foot, .nav-label { display: none; }
@@ -576,7 +634,8 @@
       tbody tr:hover { background: var(--panel-hover); }
       td, td:first-child, td:last-child { display: block; width: 100%; padding: 8px 0; border: 0; font-size: 13px; }
       td:first-child { padding-right: 31px; padding-top: 0; }
-      td:last-child { position: absolute; right: 11px; top: 11px; width: 31px; padding: 0; }
+      td:last-child { position: absolute; right: 9px; top: 11px; width: 67px; padding: 0; }
+      .row-actions { justify-content: flex-end; }
       .cell-label { display: block; font-size: 10px; margin-top: 3px; margin-bottom: 6px; }
       .item-cell { min-width: 0; gap: 11px; }
       .item-art { width: 59px; height: 59px; flex-basis: 59px; }
@@ -645,6 +704,7 @@
               <h1>Мир большой.<br /><em>Ты — крошечный.</em></h1>
               <p class="hero-description">Всё, что удалось рассмотреть под травой: от первой палки до редких находок Незнакомца.</p>
             </div>
+            <div class="hero-art" aria-hidden="true"><img src="coop-teens.webp" alt="" /></div>
           </section>
           <section class="stats-row" id="statsRow"></section>
         </div>
@@ -659,6 +719,9 @@
             <div class="select-wrap"><select id="tierSelect" aria-label="Фильтр по уровню"><option value="all">Все уровни</option></select></div>
             <div class="select-wrap"><select id="sortSelect" aria-label="Сортировка"><option value="name">По названию</option><option value="tier">Сначала высокий уровень</option><option value="name-desc">Название: Я—А</option></select></div>
             <button class="toggle" id="craftedToggle">⚒ Только с рецептом</button>
+            <button class="toggle" id="compareBtn">Сравнить <span id="compareCount">0</span></button>
+            <div class="select-wrap" id="favoriteFolderWrap" hidden><select id="favoriteFolderSelect" aria-label="Папка избранного"><option value="all">Все избранные</option><option value="weapon">Оружие</option><option value="consumable">Расходники</option><option value="armor">Доспехи</option><option value="trinket">Тринкеты</option><option value="building">Строительство</option><option value="resource">Материалы</option></select></div>
+            <button class="toggle" id="exportFavorites" hidden>Экспорт избранного</button>
           </div>
         </section>
         <div class="filters" id="quickFilters"></div>
@@ -702,6 +765,13 @@
       <div class="panel-window-body" id="panelModalBody"></div>
     </div>
   </div>
+  <div class="compare-modal" id="compareModal" hidden role="dialog" aria-modal="true" aria-label="Сравнение предметов">
+    <div class="compare-window">
+      <div class="compare-head"><strong>Сравнение предметов</strong><button class="map-window-close" id="compareClose" aria-label="Закрыть сравнение">×</button></div>
+      <div class="compare-body" id="compareBody"></div>
+    </div>
+  </div>
+  <nav class="mobile-nav" id="mobileNav" aria-label="Быстрая навигация"><button type="button" data-mobile-action="catalog">Каталог</button><button type="button" data-mobile-action="sets">Сэты</button><button type="button" data-mobile-action="favorites">Избранное</button><button type="button" data-mobile-action="map">Карта</button></nav>
   <div class="toast" id="toast"></div>
 
   <script src="data.js"></script>
@@ -711,13 +781,18 @@
       const items = DATA.items || [];
       const categoryMeta = {
         all: { label: 'Все предметы', icon: '◌', subtitle: 'Полная база предметов Brookhollow Park.' },
-        weapon: { label: 'Оружие', icon: '⚔', subtitle: 'Удары, выстрелы, ставы и боеприпасы для каждой встречи.' },
+        weapon: { label: 'Оружие', icon: '⚔', subtitle: 'Удары, выстрелы, ставы и щиты для каждой встречи.' },
+        consumable: { label: 'Расходники', icon: '➹', subtitle: 'Стрелы, болты, патроны и другие боеприпасы.' },
         armor: { label: 'Доспехи', icon: '◈', subtitle: 'Комплекты, отдельные элементы и бонусы экипировки.' },
         trinket: { label: 'Тринкеты', icon: '✦', subtitle: 'Пассивные эффекты, редкие находки и полезные аксессуары.' },
         building: { label: 'Строительство', icon: '⌂', subtitle: 'Стены, полы, крыши, мебель и всё для базы.' },
         resource: { label: 'Материалы', icon: '●', subtitle: 'Ресурсы, ингредиенты и материалы для крафта.' }
       };
-      const symbols = { weapon: '⚔', armor: '◈', trinket: '✦', building: '⌂', resource: '●' };
+      const symbols = { weapon: '⚔', consumable: '➹', armor: '◈', trinket: '✦', building: '⌂', resource: '●' };
+      const consumableNamePattern = /(?:arrow|bolt|rounds?|ammo|ammunition|cartridge|bullet|dart|стрел|болт|патрон)/i;
+      const isConsumable = (item) => Boolean(item && item.category === 'weapon' && (item.subtype === 'Turret ammo' || consumableNamePattern.test(`${item.name || ''} ${item.nameRu || ''}`)));
+      const isShield = (item) => Boolean(item && item.category === 'weapon' && /shield/i.test(item.subtype || ''));
+      const itemCategoryKey = (item) => isConsumable(item) ? 'consumable' : item?.category;
       const communityTips = [
         {
           icon: '◈', title: 'Редкие ресурсы', tag: 'добыча',
@@ -763,8 +838,8 @@
       const state = {
         category: 'weapon', query: '', subtype: 'all', tier: 'all', crafted: false, favoritesOnly: false,
         lang: localStorage.getItem('grounded-lang') || 'ru',
-        previousCategory: 'weapon', showSets: false, showCommunity: false, setWeapon: '', setArmor: '', setHead: '', setBody: '', setLegs: '', setShield: '', setTrinket: '', armorProfile: 'auto',
-        favorites: new Set(JSON.parse(localStorage.getItem('grounded-favorites') || '[]')), visible: 80
+        previousCategory: 'weapon', showSets: false, showCommunity: false, setWeapon: '', setArmor: '', setHead: '', setBody: '', setLegs: '', setShield: '', setTrinket: '', armorProfile: 'auto', favoriteFolder: 'all',
+        compare: new Set(), favorites: new Set(JSON.parse(localStorage.getItem('grounded-favorites') || '[]')), visible: 80
       };
       const $ = (id) => document.getElementById(id);
       const searchInput = $('searchInput');
@@ -806,6 +881,7 @@
       const panelModal = $('panelModal');
       const panelModalBody = $('panelModalBody');
       const panelWindowTitle = $('panelWindowTitle');
+      const compareModal = $('compareModal');
       function openPanelOverlay(kind) {
         if (dialog.open) dialog.close();
         const panel = kind === 'sets' ? $('setsPanel') : $('communityPanel');
@@ -833,12 +909,18 @@
         renderNav();
       }
 
-      const countBy = (category) => items.filter(item => item.category === category).length;
+      const itemsForCategory = (category) => {
+        if (category === 'all') return items;
+        if (category === 'weapon') return items.filter(item => item.category === 'weapon' && !isConsumable(item));
+        if (category === 'consumable') return items.filter(isConsumable);
+        return items.filter(item => item.category === category);
+      };
+      const countBy = (category) => itemsForCategory(category).length;
       const escapeHtml = (value = '') => String(value).replace(/[&<>'"]/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[char]));
       const clean = (value = '') => String(value).replace(/\s+/g, ' ').trim();
       const truncate = (value = '', max = 180) => value.length > max ? value.slice(0, max - 1).trimEnd() + '…' : value;
-      const itemLetter = (item) => symbols[item.category] || '•';
-      const categoryLabel = (item) => categoryMeta[item.category]?.label || 'Предмет';
+      const itemLetter = (item) => symbols[itemCategoryKey(item)] || '•';
+      const categoryLabel = (item) => categoryMeta[itemCategoryKey(item)]?.label || 'Предмет';
       const subtypeRu = {
         'One-handed': 'Одноручное', 'Two-handed': 'Двуручное', 'Dual wield': 'Парное оружие',
         'Shield': 'Щит', 'Bow': 'Лук', 'Greatbow': 'Большой лук', 'Candy staff': 'Конфетный посох',
@@ -854,6 +936,17 @@
         'Upgrade material': 'Материал улучшения', 'Natural resource': 'Природный ресурс', 'Crafting material': 'Материал для крафта', 'Buggy egg': 'Яйцо для выращивания багги'
       };
       const displaySubtype = (value) => subtypeRu[value] || value || 'Общее';
+      const displaySubtypeForItem = (item) => {
+        if (!isConsumable(item)) return displaySubtype(item?.subtype);
+        const text = `${item.name || ''} ${item.nameRu || ''}`;
+        if (/bolt|болт/i.test(text)) return 'Болты';
+        if (/arrow|стрел/i.test(text)) return 'Стрелы';
+        if (/rounds?|ammo|патрон/i.test(text) || item.subtype === 'Turret ammo') return 'Патроны';
+        return 'Расходник';
+      };
+      const displaySubtypeFilter = (value) => state.category === 'consumable'
+        ? ({ Bow: 'Стрелы и болты', Greatbow: 'Большие стрелы', 'Turret ammo': 'Патроны' }[value] || displaySubtype(value))
+        : displaySubtype(value);
       const nameOverrides = {
         'Shellshocker': 'Шеллшокер', 'Toe Biter Coat': 'Пальто кусателя пальцев ног', 'Grub Leggings': 'Леггинсы личинки',
         'Red Ant Knee Guards': 'Наколенники красного муравья', 'Lean-To': 'Навес', 'Grass Half Wall A and B': 'Половина стены из травы · варианты 1 и 2',
@@ -870,7 +963,7 @@
       const fallbackRussian = {
         'Workbench': 'Верстак', 'By Hand': 'Вручную', 'Oven': 'Печь', 'Grinder': 'Измельчитель',
         'Jerky Rack': 'Сушилка', 'Spinning Wheel': 'Прялка', 'Glue Masher': 'Мешалка для клея',
-        'Shard Recipe': 'Рецепт из осколков', 'Bug Part Recipe': 'Рецепт из частей существа', 'N/A': 'Не указано',
+        'Shard Recipe': 'Рецепт из осколков', 'Bug Part Recipe': 'Рецепт из частей существа', 'N/A': 'Не указано', 'Fast': 'Быстро', 'Average': 'Средне', 'Slow': 'Медленно',
         'Resource used in crafting recipes.': 'Ресурс используется в рецептах создания.'
       };
       const russianTerms = [
@@ -900,7 +993,7 @@
       const findText = (item) => [item.name, item.nameRu, item.set, item.setRu, item.subtype, displaySubtype(item.subtype), item.recipe, item.effect, item.effectRu, item.unlock, item.unlockRu, item.source, item.sourceRu].filter(Boolean).join(' ');
 
       function renderNav() {
-        const categories = ['all', 'weapon', 'armor', 'trinket', 'building', 'resource'];
+        const categories = ['all', 'weapon', 'consumable', 'armor', 'trinket', 'building', 'resource'];
         $('categoryNav').innerHTML = categories.map(key => {
           const count = key === 'all' ? items.length : countBy(key);
           const meta = categoryMeta[key];
@@ -921,15 +1014,17 @@
       }
 
       function currentPool() {
+        const categoryPool = new Set(itemsForCategory(state.category));
         return items.filter(item => {
-          const categoryMatch = state.category === 'all' || item.category === state.category;
+          const categoryMatch = categoryPool.has(item);
           const query = state.query.toLocaleLowerCase('ru-RU');
           const queryMatch = !query || findText(item).toLocaleLowerCase('ru-RU').includes(query);
           const subtypeMatch = state.subtype === 'all' || item.subtype === state.subtype;
           const tierMatch = state.tier === 'all' || item.tier === state.tier;
           const craftedMatch = !state.crafted || hasRecipe(item);
           const favoriteMatch = !state.favoritesOnly || state.favorites.has(item.id);
-          return categoryMatch && queryMatch && subtypeMatch && tierMatch && craftedMatch && favoriteMatch;
+          const folderMatch = state.favoriteFolder === 'all' || (state.favoriteFolder === 'consumable' ? isConsumable(item) : state.favoriteFolder === 'weapon' ? item.category === 'weapon' && !isConsumable(item) : item.category === state.favoriteFolder);
+          return categoryMatch && queryMatch && subtypeMatch && tierMatch && craftedMatch && favoriteMatch && folderMatch;
         }).sort((a, b) => {
           const byTier = (Number(b.tier) || 0) - (Number(a.tier) || 0);
           if ($('sortSelect')?.value === 'tier') return byTier || a.name.localeCompare(b.name);
@@ -939,25 +1034,168 @@
       }
 
       function updateSelects(pool) {
-        const source = state.category === 'all' ? items : items.filter(item => item.category === state.category);
+        const source = itemsForCategory(state.category);
         const subtypes = [...new Set(source.map(item => item.subtype).filter(Boolean))].sort((a,b) => a.localeCompare(b));
         const tiers = [...new Set(source.map(item => item.tier).filter(Boolean))].sort((a,b) => Number(a)-Number(b));
         if (!subtypes.includes(state.subtype)) state.subtype = 'all';
         if (!tiers.includes(state.tier)) state.tier = 'all';
-        $('subtypeSelect').innerHTML = `<option value="all">Все типы</option>` + subtypes.map(value => `<option value="${escapeHtml(value)}">${escapeHtml(displaySubtype(value))}</option>`).join('');
+        $('subtypeSelect').innerHTML = `<option value="all">Все типы</option>` + subtypes.map(value => `<option value="${escapeHtml(value)}">${escapeHtml(displaySubtypeFilter(value))}</option>`).join('');
         $('tierSelect').innerHTML = `<option value="all">Все уровни</option>` + tiers.map(value => `<option value="${escapeHtml(value)}">Уровень ${escapeHtml(value)}</option>`).join('');
         $('subtypeSelect').value = state.subtype;
         $('tierSelect').value = state.tier;
       }
 
       function renderQuickFilters() {
-        const source = state.category === 'all' ? items : items.filter(item => item.category === state.category);
+        const source = itemsForCategory(state.category);
         const values = [...new Set(source.map(item => item.subtype).filter(Boolean))].sort((a,b) => a.localeCompare(b));
         const all = ['all', ...values];
-        $('quickFilters').innerHTML = all.slice(0, 14).map((value, index) => `<button class="filter-chip ${state.subtype === value || (index === 0 && state.subtype === 'all') ? 'active' : ''}" data-subtype="${escapeHtml(value)}">${value === 'all' ? 'Все подкатегории' : escapeHtml(displaySubtype(value))}</button>`).join('');
+        $('quickFilters').innerHTML = all.slice(0, 14).map((value, index) => `<button class="filter-chip ${state.subtype === value || (index === 0 && state.subtype === 'all') ? 'active' : ''}" data-subtype="${escapeHtml(value)}">${value === 'all' ? 'Все подкатегории' : escapeHtml(displaySubtypeFilter(value))}</button>`).join('');
         if (values.length > 13) $('quickFilters').insertAdjacentHTML('beforeend', `<button class="filter-chip" data-open-types="true">+ ещё ${values.length - 13}</button>`);
       }
 
+      function numberValues(text = '') {
+        return [...String(text).matchAll(/(?:\d+(?:\.\d+)?|\.\d+)/g)]
+          .map(match => Number(match[0]))
+          .filter(Number.isFinite);
+      }
+      function statPart(raw, pattern) {
+        return String(raw || '').match(pattern)?.[1]?.trim() || '';
+      }
+      function applicableNumber(part) {
+        if (!part || /^(?:n\/?a|н\/?д|неприменимо|нет|—|-)$/i.test(part.trim())) return null;
+        return numberValues(part)[0] ?? null;
+      }
+      function weaponBarRow(label, value, max, type, display, applicable = true) {
+        const hasValue = applicable && value != null && Number.isFinite(value);
+        const filled = hasValue ? Math.max(0, Math.min(8, Math.round((value / max) * 8))) : 0;
+        const segments = Array.from({ length: 8 }, (_, index) => `<span class="bar-segment ${hasValue && index < filled ? `filled ${type}` : 'unavailable'}"></span>`).join('');
+        const shownValue = hasValue ? display : 'н/д';
+        return `<div class="weapon-bar-row" title="${hasValue ? '' : 'Параметр неприменим для этого предмета'}"><span class="weapon-bar-label">${label}</span><span class="bar-track">${segments}</span><span class="bar-value">${escapeHtml(shownValue)}</span></div>`;
+      }
+      const resistanceTypeMeta = [
+        { key: 'cold', pattern: /chill(?:ing)?|cold|freeze|ice|холод|охлажд/i, icon: '❄', label: 'Холод' },
+        { key: 'fire', pattern: /sizzle|heat|fire|burn|жар|огн|шипен/i, icon: '🔥', label: 'Огонь и жар' },
+        { key: 'venom', pattern: /venom|poison|toxic|яд/i, icon: '☠', label: 'Яд' },
+        { key: 'shock', pattern: /shock|electric|электр|шок/i, icon: '⚡', label: 'Электричество' },
+        { key: 'sour', pattern: /\bsour\b|acid|кислот|кисл/i, icon: '🧪', label: 'Кислота' },
+        { key: 'tang', pattern: /\btang\b|танг/i, icon: '🧪', label: 'Кислый урон' },
+        { key: 'gas', pattern: /gas|woozy|газ|одур|дурман/i, icon: '☣', label: 'Газ и одурение' },
+        { key: 'slash', pattern: /slash|рубящ|режущ/i, icon: '🗡', label: 'Рубящий урон' },
+        { key: 'stab', pattern: /stab|колющ|пронз/i, icon: '🗡', label: 'Колющий урон' },
+        { key: 'smash', pattern: /smash|сокруш|дробящ/i, icon: '🔨', label: 'Сокрушающий урон' }
+      ];
+      const knownArmorResistances = {
+        'Roach': ['cold', 'fire', 'venom', 'gas'], 'Rusty': ['tang'], 'Butterfly': ['cold'],
+        'Wyrm Slayer': ['fire'], 'Snail Shell': ['slash'], 'Shell Shocker': ['shock'],
+        'Praying Mantis': ['venom', 'gas'], 'Koi Scale': ['cold'], 'Diving': ['cold'],
+        'Fuzzy': ['cold'], 'Sizzling': ['fire'], 'Mitey Muffs': ['cold'], 'Gas Mask': ['gas'], 'Tin Foil Hat': ['fire']
+      };
+      function resistanceIcons(item) {
+        const texts = [item?.effect, item?.effectRu, item?.sleek, item?.sleekRu, item?.setBonus, item?.setBonusRu, item?.class, item?.classRu].filter(Boolean).map(String);
+        const context = /resist|reduc|decreas|damage reduction|remove|immune|сопротив|снижен|уменьш|убира/i;
+        const known = new Set(knownArmorResistances[item?.set] || knownArmorResistances[item?.name] || []);
+        const found = resistanceTypeMeta.filter(type => known.has(type.key) || texts.some(text => context.test(text) && type.pattern.test(text)));
+        if (!found.length) return '';
+        return `<span class="resistance-icons" aria-label="Тип сопротивления">${found.map(type => `<span class="resistance-icon" title="${type.label}">${type.icon}</span>`).join('')}</span>`;
+      }
+      const weaponDamageTypeMeta = [
+        { pattern: /fresh damage|fresh candy|mint arrow|glacial sting|мятн.*урон|свеж.*урон/i, icon: '💧', label: 'Свежий урон' },
+        { pattern: /chill(?:ing)?|frigid|cold snap|fresh damage|охлажд|холодн.*урон/i, icon: '❄', label: 'Холодный урон' },
+        { pattern: /spicy|sizzle|burn|fire damage|scorch|sear|heatwave|огнен|обжига|шипен|жар/i, icon: '🔥', label: 'Пряный и огненный урон' },
+        { pattern: /sour|tang|acid ruin|acid damage|кислот|кислый урон|танг/i, icon: '🧪', label: 'Кислый урон' },
+        { pattern: /venom|poison|toxic|ядовит|токсич.*урон|урон ядом/i, icon: '☠', label: 'Ядовитый урон' },
+        { pattern: /shock|electric|электр|шоков.*урон/i, icon: '⚡', label: 'Электрический урон' },
+        { pattern: /gas cloud|gas zone|gas damage|poison gas|газов.*урон|газовое облако|газовая зона/i, icon: '☣', label: 'Газовый урон' },
+        { pattern: /salty sizzle|salt damage|солён.*урон|солёное шипение/i, icon: '🧂', label: 'Солёный урон' }
+      ];
+      function weaponDamageIcons(item) {
+        if (!item || item.category !== 'weapon') return '';
+        // Для определения типа урона используем исходные английские поля: русские
+        // переводы некоторых описаний могут содержать лишние слова вроде «кислотой».
+        const text = [item.name, item.stats, item.effect, item.sleek, item.setBonus].filter(Boolean).join(' ');
+        const found = weaponDamageTypeMeta.filter(type => type.pattern.test(text));
+        if (!found.length) return '';
+        return `<span class="damage-icons" aria-label="Типы урона">${found.map(type => `<span class="damage-icon" title="${type.label}">${type.icon}</span>`).join('')}</span>`;
+      }
+      function defensiveBarRow(label, value, max, type, display, applicable = true, icons = '') {
+        return weaponBarRow(`${label}${icons}`, value, max, type, display, applicable);
+      }
+      function armorSlotPart(text, item) {
+        if (!text) return '';
+        const body = String(text).match(/(?:Body|Тело):\s*([^•]+)/i)?.[1]?.trim() || '';
+        const headLegs = String(text).match(/(?:Head\s*&\s*Legs|Голова\s+и\s+ноги):\s*([^•]+?)(?=\s+(?:Body|Тело):|$)/i)?.[1]?.trim() || '';
+        return String(item?.subtype).toLowerCase() === 'body' ? (body || text) : (headLegs || text);
+      }
+      function metricDisplay(text) {
+        return String(text || '').replace(/(\d)\.(\d)/g, '$1,$2');
+      }
+      function shieldBars(item) {
+        const raw = item.stats || item.statsRu || '';
+        const reductionText = statPart(raw, /(?:Block reduction|Снижение блока):\s*([^•]+)/i);
+        const staminaText = statPart(raw, /(?:Block stamina cost|Стоимость выносливости блока):\s*([^•]+)/i);
+        const reduction = applicableNumber(reductionText);
+        const stamina = applicableNumber(staminaText);
+        const rows = [
+          defensiveBarRow('Снижение блока', reduction, 100, 'block', reductionText ? metricDisplay(reductionText) : '', reduction != null),
+          defensiveBarRow('Стоимость выносливости блока', stamina, 34, 'stamina', staminaText ? metricDisplay(staminaText) : '', stamina != null)
+        ].join('');
+        return `<div class="defensive-bars">${rows}</div>`;
+      }
+      function armorBars(item) {
+        if (!item || item.category !== 'armor') return '';
+        const raw = item.stats || item.statsRu || '';
+        const defenseText = statPart(raw, /(?:Defense|Защита):\s*([^•]+)/i);
+        const resistanceText = statPart(raw, /(?:Resistance|Сопротивление):\s*([^•]+)/i);
+        const individual = String(item.subtype).toLowerCase() === 'individual';
+        const defenseSlotText = defenseText ? armorSlotPart(defenseText, item) : (individual ? raw : '');
+        const resistanceSlotText = resistanceText ? armorSlotPart(resistanceText, item) : (individual ? (item.effect || item.effectRu || '') : '');
+        const defense = applicableNumber(defenseSlotText);
+        const resistance = applicableNumber(resistanceSlotText);
+        const icons = resistanceIcons(item);
+        const rows = [
+          defensiveBarRow('Защита', defense, 20, 'defense', defenseSlotText ? metricDisplay(defenseSlotText) : '', defense != null),
+          defensiveBarRow('Сопротивление', resistance, 14.5, 'resistance', resistanceSlotText ? metricDisplay(resistanceSlotText) : '', resistance != null, icons)
+        ].join('');
+        return `<div class="defensive-bars">${rows}</div>`;
+      }
+      function weaponBars(item) {
+        if (!item || item.category !== 'weapon') return '';
+        if (isShield(item)) return shieldBars(item);
+        // Базовые значения берутся из оригинального поля stats: там сохраняются
+        // игровые названия параметров и значения, включая N/A для стрел.
+        const raw = item.stats || item.statsRu || '';
+        const damageText = statPart(raw, /(?:Damage|Arrow damage|Урон(?: от стрел)?):\s*([^•]+)/i);
+        const multiplierText = statPart(raw, /(?:Bow multiplier|Множитель лука):\s*([^•]+)/i);
+        const damageValues = numberValues(damageText);
+        const multiplierValue = applicableNumber(multiplierText);
+        const useMultiplier = !damageValues.length && multiplierValue != null;
+        const damageValue = useMultiplier ? multiplierValue : (damageValues.length ? Math.max(...damageValues) : null);
+        const damageApplicable = useMultiplier ? true : applicableNumber(damageText) != null;
+        const damageLabel = useMultiplier ? 'Усиление лука' : 'Урон';
+        const damageMax = useMultiplier ? 25 : 85;
+        const damageDisplay = useMultiplier ? `${multiplierValue}%` : (damageText || '');
+        const stunText = statPart(raw, /(?:Stun|Оглушение):\s*([^•]+)/i);
+        const stun = applicableNumber(stunText);
+        const critText = statPart(raw, /(?:Crit|Critical(?: chance| %)?|Крит(?:ический шанс|ический удар)?):\s*([^•]+)/i);
+        const crit = applicableNumber(critText);
+        const speedText = statPart(raw, /(?:Speed|Скорость):\s*([^•]+)/i);
+        const fireText = statPart(raw, /(?:Fire rate|Скорострельность):\s*([^•]+)/i);
+        const speedValue = speedText && !/^(?:n\/?a|н\/?д|неприменимо)$/i.test(speedText)
+          ? (/fast|быстр/i.test(speedText) ? 8 : /average|сред/i.test(speedText) ? 5 : /slow|медл/i.test(speedText) ? 3 : applicableNumber(speedText))
+          : (fireText ? Math.max(0, 8 - (applicableNumber(fireText) ?? 1)) : null);
+        const speedApplicable = speedValue != null && Number.isFinite(speedValue);
+        const speedLabelRaw = speedText && !/^(?:n\/?a|н\/?д|неприменимо)$/i.test(speedText) ? speedText : fireText;
+        const speedLabel = speedLabelRaw
+          ? (fallbackRussian[speedLabelRaw] || localizeText(speedLabelRaw)).replace(/\bSec\b/gi, 'сек.').replace(/(\d)\.(\d)/g, '$1,$2')
+          : '';
+        const rows = [
+          weaponBarRow(damageLabel, damageValue, damageMax, 'damage', damageDisplay, damageApplicable),
+          weaponBarRow('Оглушение', stun, 10, 'stun', stun != null ? String(stun) : '', stun != null),
+          weaponBarRow(fireText ? 'Скорострельность' : 'Скорость', speedValue, 8, 'speed', speedLabel, speedApplicable),
+          weaponBarRow('Критический шанс', crit, 10, 'crit', crit != null ? `${crit}%` : '', crit != null)
+        ].join('');
+        return `<div class="weapon-bars">${rows}</div>`;
+      }
       function formatStats(text) {
         if (!text) return '<span class="muted-dash">—</span>';
         const bits = clean(text).split(' • ').filter(Boolean);
@@ -965,6 +1203,8 @@
       }
       function effectHtml(item) {
         const lines = [];
+        const damageIcons = weaponDamageIcons(item);
+        if (damageIcons) lines.push(`<div class="effect-line effect-type"><strong>Тип урона</strong> ${damageIcons}</div>`);
         const effect = displayField(item, 'effect');
         const sleek = displayField(item, 'sleek');
         const setBonus = displayField(item, 'setBonus');
@@ -1127,17 +1367,17 @@
       }
       function rowHtml(item, index) {
         const favorite = state.favorites.has(item.id);
-        const meta = [categoryLabel(item), displaySubtype(item.subtype), item.tier ? `<span class="tier-badge">Ур. ${escapeHtml(item.tier)}</span>` : ''].filter(Boolean).join(' · ');
+        const meta = [categoryLabel(item), displaySubtypeForItem(item), item.tier ? `<span class="tier-badge">Ур. ${escapeHtml(item.tier)}</span>` : ''].filter(Boolean).join(' · ');
         return `<tr data-id="${escapeHtml(item.id)}" style="--row-index:${Math.min(index, 20)}">
           <td><div class="item-cell">${imageHtml(item)}<div class="item-text"><strong class="item-name">${escapeHtml(displayName(item))}</strong><span class="item-meta">${meta}</span>${item.set ? `<span class="item-meta">${escapeHtml(state.lang === 'en' ? item.set : item.setRu || item.set)} · комплект</span>` : ''}</div></div></td>
-          <td><span class="cell-label">Характеристики</span>${formatStats(displayField(item, 'stats'))}</td>
+          <td><span class="cell-label">Характеристики</span>${item.category === 'weapon' ? (weaponBars(item) || formatStats(displayField(item, 'stats'))) : item.category === 'armor' ? (armorBars(item) || formatStats(displayField(item, 'stats'))) : formatStats(displayField(item, 'stats'))}</td>
           <td><span class="cell-label">Доп. эффекты</span>${effectHtml(item)}</td>
           <td><span class="cell-label">Крафт / источник</span>${recipeHtml(item)}</td>
-          <td><button class="star-btn ${favorite ? 'active' : ''}" data-favorite="${escapeHtml(item.id)}" title="${favorite ? 'Убрать из избранного' : 'В избранное'}">${favorite ? '★' : '☆'}</button></td>
+          <td><div class="row-actions"><button class="compare-btn ${state.compare.has(item.id) ? 'active' : ''}" data-compare="${escapeHtml(item.id)}" title="Добавить или убрать из сравнения">＋</button><button class="star-btn ${favorite ? 'active' : ''}" data-favorite="${escapeHtml(item.id)}" title="${favorite ? 'Убрать из избранного' : 'В избранное'}">${favorite ? '★' : '☆'}</button></div></td>
         </tr>`;
       }
 
-      const setWeapons = items.filter(item => item.category === 'weapon' && item.subtype !== 'Turret ammo');
+      const setWeapons = itemsForCategory('weapon');
       const setTrinkets = items.filter(item => item.category === 'trinket');
       const setArmor = [...new Map(items.filter(item => item.category === 'armor' && item.set && item.set !== 'Individual').map(item => [item.set, item])).values()];
       function itemTags(item) {
@@ -1211,6 +1451,25 @@
         return items.filter(item => item.category === 'armor' && item.subtype === slot && item.set !== 'Individual')
           .sort((a, b) => armorPieceScore(b, loadout, profile) - armorPieceScore(a, loadout, profile) || Number(b.tier || 0) - Number(a.tier || 0) || a.name.localeCompare(b.name))[0];
       }
+      function loadoutMaterials(loadout) {
+        const totals = new Map();
+        [loadout.weapon, loadout.shield, loadout.head, loadout.body, loadout.legs, loadout.trinket].filter(Boolean).forEach(item => (item.ingredients || []).forEach(ingredient => {
+          const current = totals.get(ingredient.name) || { ...ingredient, qty: 0 };
+          current.qty += Number(ingredient.qty || 0);
+          totals.set(ingredient.name, current);
+        }));
+        return [...totals.values()].sort((a,b) => displayIngredient(a).localeCompare(displayIngredient(b)));
+      }
+      function loadoutMaterialsHtml(loadout) {
+        const materials = loadoutMaterials(loadout);
+        return `<div class="required-materials"><div class="required-materials-title">Всего ресурсов для сэта</div><div class="required-material-list">${materials.length ? materials.map(material => `<div class="required-material">${material.image ? `<img src="${escapeHtml(material.image)}" alt="" loading="lazy" />` : ''}<span>${escapeHtml(displayIngredient(material))}</span><b>${material.qty}×</b></div>`).join('') : '<span class="detail-value">Ресурсы не указаны.</span>'}</div></div>`;
+      }
+      function saveLoadout(loadout) {
+        const saved = JSON.parse(localStorage.getItem('grounded-saved-sets') || '[]');
+        saved.unshift({ name: `Сэт ${saved.length + 1}`, savedAt: new Date().toLocaleString('ru-RU'), ids: Object.fromEntries(Object.entries(loadout).filter(([, item]) => item).map(([key, item]) => [key, item.id])) });
+        localStorage.setItem('grounded-saved-sets', JSON.stringify(saved.slice(0, 20)));
+        showToast('Сэт сохранён');
+      }
       function renderSets() {
         const weapons = [...setWeapons].sort((a,b) => a.name.localeCompare(b.name));
         const shields = items.filter(item => item.category === 'weapon' && (item.subtype === 'Shield' || item.subtype === 'Stranger variant · shield')).sort((a,b) => a.name.localeCompare(b.name));
@@ -1239,7 +1498,8 @@
         const tagLabels = {venom:'яд',spicy:'пряность',fresh:'свежесть',sour:'кислота',shock:'шок',bow:'дальний бой',staff:'посох',dual:'парное оружие',block:'блок',crit:'крит',heal:'лечение',stamina:'выносливость',sizzle:'шипение'};
         const armorSelect = (slot, selected) => items.filter(item => item.category === 'armor' && item.subtype === slot && item.set !== 'Individual').sort((a,b) => armorPieceScore(b,loadout,profile)-armorPieceScore(a,loadout,profile)).map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(displayName(item))} · ${escapeHtml(item.setRu || item.set)}</option>`).join('');
         const synergy = selectedArmor.reduce((total, item) => total + [weapon, shield, trinket].filter(Boolean).reduce((score, base) => score + synergyScore(base, item), 0), 0);
-        $('setsPanel').innerHTML = `<div class="set-controls"><h3>Сборщик сэта</h3><p class="set-controls-copy">Сочетания брони подбираются по характеристикам выбранного оружия, щита и тринкета. Можно оставить автоподбор или вручную заменить любой элемент.</p><div class="set-field"><label for="setWeaponSelect">Оружие</label><select id="setWeaponSelect" data-set-select="weapon">${weapons.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(displayName(item))}</option>`).join('')}</select></div>${oneHanded ? `<div class="set-field"><label for="setShieldSelect">Щит для одноручного оружия</label><select id="setShieldSelect" data-set-select="shield">${shields.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(displayName(item))}</option>`).join('')}</select></div>` : dualWield ? `<div class="synergy-note">Парное оружие занимает обе руки — второе лезвие добавлено автоматически.</div>` : `<div class="synergy-note">Для двуручного оружия щит не добавляется.</div>`}<div class="set-field"><label for="setTrinketSelect">Тринкет</label><select id="setTrinketSelect" data-set-select="trinket">${trinkets.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(displayName(item))}</option>`).join('')}</select></div><div class="set-field"><label for="setHeadSelect">Шлем</label><select id="setHeadSelect" data-set-select="head">${armorSelect('Head',head)}</select></div><div class="set-field"><label for="setBodySelect">Нагрудник</label><select id="setBodySelect" data-set-select="body">${armorSelect('Body',body)}</select></div><div class="set-field"><label for="setLegsSelect">Поножи</label><select id="setLegsSelect" data-set-select="legs">${armorSelect('Legs',legs)}</select></div><div class="set-field"><label for="armorProfileSelect">Подготовленное сочетание брони</label><select id="armorProfileSelect" data-set-select="profile">${armorProfiles.map(item => `<option value="${item.id}">${item.label}</option>`).join('')}</select></div><div class="synergy-note"><strong>Синергия: ${synergy} баллов</strong><br>${tags.length ? tags.map(tag => escapeHtml(tagLabels[tag] || tag)).join(' · ') : 'Выбери предметы, чтобы увидеть совместимость.'}</div></div><div class="set-preview"><div class="set-preview-top"><div><h3>Выбранная экипировка</h3><span class="modal-meta">Предметы отсортированы по совместимости эффектов</span></div></div><div class="set-items">${setItemCard('Оружие', weapon, displaySubtype(weapon?.subtype))}${oneHanded ? setItemCard('Щит', shield, displaySubtype(shield?.subtype)) : dualWield ? setItemCard('Второе оружие', weapon, 'Копия парного оружия') : setItemCard('Щит', null, 'Не требуется')}${setItemCard('Броня · шлем', head, head?.setRu || head?.set)}${setItemCard('Броня · нагрудник', body, body?.setRu || body?.set)}${setItemCard('Броня · поножи', legs, legs?.setRu || legs?.set)}${setItemCard('Тринкет', trinket, displaySubtype(trinket?.subtype))}</div></div>`;
+        const completeLoadout = { weapon, shield, head, body, legs, trinket };
+        $('setsPanel').innerHTML = `<div class="set-controls"><h3>Сборщик сэта</h3><p class="set-controls-copy">Сочетания брони подбираются по характеристикам выбранного оружия, щита и тринкета. Можно оставить автоподбор или вручную заменить любой элемент.</p><div class="set-field"><label for="setWeaponSelect">Оружие</label><select id="setWeaponSelect" data-set-select="weapon">${weapons.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(displayName(item))}</option>`).join('')}</select></div>${oneHanded ? `<div class="set-field"><label for="setShieldSelect">Щит для одноручного оружия</label><select id="setShieldSelect" data-set-select="shield">${shields.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(displayName(item))}</option>`).join('')}</select></div>` : dualWield ? `<div class="synergy-note">Парное оружие занимает обе руки — второе лезвие добавлено автоматически.</div>` : `<div class="synergy-note">Для двуручного оружия щит не добавляется.</div>`}<div class="set-field"><label for="setTrinketSelect">Тринкет</label><select id="setTrinketSelect" data-set-select="trinket">${trinkets.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(displayName(item))}</option>`).join('')}</select></div><div class="set-field"><label for="setHeadSelect">Шлем</label><select id="setHeadSelect" data-set-select="head">${armorSelect('Head',head)}</select></div><div class="set-field"><label for="setBodySelect">Нагрудник</label><select id="setBodySelect" data-set-select="body">${armorSelect('Body',body)}</select></div><div class="set-field"><label for="setLegsSelect">Поножи</label><select id="setLegsSelect" data-set-select="legs">${armorSelect('Legs',legs)}</select></div><div class="set-field"><label for="armorProfileSelect">Подготовленное сочетание брони</label><select id="armorProfileSelect" data-set-select="profile">${armorProfiles.map(item => `<option value="${item.id}">${item.label}</option>`).join('')}</select></div><div class="synergy-note"><strong>Синергия: ${synergy} баллов</strong><br>${tags.length ? tags.map(tag => escapeHtml(tagLabels[tag] || tag)).join(' · ') : 'Выбери предметы, чтобы увидеть совместимость.'}</div><div class="set-extra-actions"><button type="button" data-save-set="true">Сохранить сэт</button><button type="button" data-clear-set="true">Сбросить выбор</button></div>${loadoutMaterialsHtml(completeLoadout)}</div><div class="set-preview"><div class="set-preview-top"><div><h3>Выбранная экипировка</h3><span class="modal-meta">Предметы отсортированы по совместимости эффектов</span></div></div><div class="set-items">${setItemCard('Оружие', weapon, displaySubtype(weapon?.subtype))}${oneHanded ? setItemCard('Щит', shield, displaySubtype(shield?.subtype)) : dualWield ? setItemCard('Второе оружие', weapon, 'Копия парного оружия') : setItemCard('Щит', null, 'Не требуется')}${setItemCard('Броня · шлем', head, head?.setRu || head?.set)}${setItemCard('Броня · нагрудник', body, body?.setRu || body?.set)}${setItemCard('Броня · поножи', legs, legs?.setRu || legs?.set)}${setItemCard('Тринкет', trinket, displaySubtype(trinket?.subtype))}</div></div>`;
         $('setWeaponSelect').value = state.setWeapon;
         if ($('setShieldSelect')) $('setShieldSelect').value = state.setShield;
         $('setTrinketSelect').value = state.setTrinket;
@@ -1256,11 +1516,18 @@
       function renderLanguage() {
         $('languageSwitch').querySelectorAll('[data-lang]').forEach(button => button.classList.toggle('active', button.dataset.lang === state.lang));
       }
+      function renderMobileNav() {
+        $('mobileNav').querySelectorAll('[data-mobile-action]').forEach(button => {
+          const action = button.dataset.mobileAction;
+          button.classList.toggle('active', (action === 'sets' && state.showSets) || (action === 'favorites' && state.favoritesOnly));
+        });
+      }
 
       function render() {
         renderLanguage();
         glassBtn.classList.toggle('active', document.body.classList.contains('glass'));
         glassBtn.title = document.body.classList.contains('glass') ? 'Выключить дизайн жидкого стекла' : 'Включить дизайн жидкого стекла';
+        renderMobileNav();
         renderNav();
         const activePanel = panelModal.hidden ? '' : panelModal.dataset.panel;
         $('catalogToolbar').hidden = false;
@@ -1283,6 +1550,11 @@
         $('favoritesBtn').classList.toggle('active', state.favoritesOnly);
         $('favoritesBtn').textContent = state.favoritesOnly ? '★' : '☆';
         $('craftedToggle').classList.toggle('active', state.crafted);
+        $('compareCount').textContent = state.compare.size;
+        $('compareBtn').classList.toggle('active', state.compare.size > 0);
+        $('favoriteFolderWrap').hidden = !state.favoritesOnly;
+        $('exportFavorites').hidden = !state.favoritesOnly;
+        $('favoriteFolderSelect').value = state.favoriteFolder;
         const shown = pool.slice(0, state.visible);
         rows.innerHTML = shown.map(rowHtml).join('');
         emptyState.hidden = pool.length !== 0;
@@ -1299,6 +1571,11 @@
           if (resourceButton) {
             const resource = items.find(entry => entry.id === resourceButton.dataset.resource);
             if (resource) openDetail(resource);
+            return;
+          }
+          const compareButton = event.target.closest('[data-compare]');
+          if (compareButton) {
+            toggleCompare(compareButton.dataset.compare);
             return;
           }
           if (event.target.closest('[data-favorite]')) return;
@@ -1355,9 +1632,25 @@
         return `<div class="detail-block source-block"><div class="detail-label">Источник</div><div class="source-station-card">${image}<span><strong>${escapeHtml(stationLabel || 'Источник получения')}</strong><small>${station ? 'Инструмент или станция создания' : 'Предмет или ресурс, из которого получен'}</small></span></div></div>`;
       }
 
+      function itemPermalink(item) {
+        const url = new URL(window.location.href);
+        url.hash = `item=${encodeURIComponent(item.id)}`;
+        return url.toString();
+      }
+      async function copyItemLink(item) {
+        const link = itemPermalink(item);
+        try { await navigator.clipboard.writeText(link); showToast('Ссылка скопирована'); }
+        catch { window.prompt('Скопируй ссылку на предмет', link); }
+      }
+      function openItemFromHash() {
+        const match = window.location.hash.match(/^#item=(.+)$/);
+        if (!match) return;
+        const item = items.find(entry => entry.id === decodeURIComponent(match[1]));
+        if (item) openDetail(item);
+      }
       function openDetail(item) {
         if (dialog.open) dialog.close();
-        const meta = [categoryLabel(item), displaySubtype(item.subtype), tierLabel(item.tier), item.set ? `${state.lang === 'en' ? item.set : item.setRu || item.set} · комплект` : ''].filter(Boolean).join(' · ');
+        const meta = [categoryLabel(item), displaySubtypeForItem(item), tierLabel(item.tier), item.set ? `${state.lang === 'en' ? item.set : item.setRu || item.set} · комплект` : ''].filter(Boolean).join(' · ');
         const favorite = state.favorites.has(item.id);
         $('modalTitleRow').innerHTML = `${imageHtml(item, true)}<div><h2 class="modal-name">${escapeHtml(displayName(item))}</h2><div class="modal-meta">${escapeHtml(meta)}</div></div>`;
         const modalFavorite = $('modalFavorite');
@@ -1368,7 +1661,13 @@
         modalFavorite.setAttribute('aria-label', modalFavorite.title);
         const blocks = [];
         const localizedStats = displayField(item, 'stats');
-        if (localizedStats) blocks.push(`<div class="detail-block"><div class="detail-label">Характеристики</div><div class="detail-value">${escapeHtml(localizedStats)}</div></div>`);
+        if (item.category === 'weapon') {
+          blocks.push(`<div class="detail-block weapon-detail-block"><div class="detail-label">Характеристики</div><div class="detail-value">${weaponBars(item)}</div></div>`);
+        } else if (item.category === 'armor') {
+          blocks.push(`<div class="detail-block defensive-detail-block"><div class="detail-label">Характеристики</div><div class="detail-value">${armorBars(item)}</div></div>`);
+        } else if (localizedStats) {
+          blocks.push(`<div class="detail-block"><div class="detail-label">Характеристики</div><div class="detail-value">${escapeHtml(localizedStats)}</div></div>`);
+        }
         if (item.effect || item.sleek || item.setBonus || item.class) blocks.push(`<div class="detail-block"><div class="detail-label">Эффекты</div><div class="detail-value">${effectHtml(item).replace(/class="effect-stack"/g, 'class="modal-effects"')}</div></div>`);
         const hasRecipeInfo = Boolean(item.ingredients?.length || item.craftingMethods?.length || displayField(item, 'recipe'));
         if (hasRecipeInfo) {
@@ -1381,10 +1680,31 @@
         const usageBlock = item.category === 'resource' ? resourceUsageHtml(item) : '';
         const sourceKey = { weapon: 'Weapons', armor: 'Armor', trinket: 'Trinkets', resource: 'Resources', building: 'Construction' }[item.category];
         const source = DATA.sources?.find(source => source.label.includes(sourceKey || 'Grounded Wiki'));
-        const modalSource = `<div class="modal-source">Каталог обновлён ${escapeHtml(DATA.updated || '—')}. Данные сверены по открытым игровым справочникам. ${source ? `<a href="${source.url}" target="_blank" rel="noreferrer">Открыть первоисточник ↗</a>` : ''}</div>`;
+        const modalSource = `<div class="modal-source">Каталог обновлён ${escapeHtml(DATA.updated || '—')}. Данные сверены по открытым игровым справочникам.<span class="modal-source-actions"><a href="${itemPermalink(item)}">Открыть ссылку ↗</a><button type="button" class="copy-link-btn" data-copy-item="${escapeHtml(item.id)}">Скопировать</button>${source ? `<a href="${source.url}" target="_blank" rel="noreferrer">Источник ↗</a>` : ''}</span></div>`;
         $('modalBody').innerHTML = `<div class="modal-grid">${blocks.slice(0, 4).join('')}</div>${blocks.slice(4).join('')}${usageBlock}${modalSource}`;
         dialog.showModal();
       }
+      function toggleCompare(id) {
+        if (state.compare.has(id)) state.compare.delete(id);
+        else if (state.compare.size < 4) state.compare.add(id);
+        else { showToast('Можно сравнить не больше четырёх предметов'); return; }
+        render();
+      }
+      function comparisonText(item, field) {
+        const value = displayField(item, field);
+        return value || '—';
+      }
+      function openCompareOverlay() {
+        const selected = items.filter(item => state.compare.has(item.id));
+        if (selected.length < 2) { showToast('Выбери минимум два предмета для сравнения'); return; }
+        const row = (label, values) => `<tr><td>${label}</td>${values.map(value => `<td><div class="compare-value">${escapeHtml(value)}</div></td>`).join('')}</tr>`;
+        $('compareBody').innerHTML = `<table class="compare-table"><thead><tr><th>Параметр</th>${selected.map(item => `<th><div class="compare-item-head">${item.image ? `<img src="${escapeHtml(item.image)}" alt="" loading="lazy" />` : ''}<span class="compare-item-name">${escapeHtml(displayName(item))}</span></div></th>`).join('')}</tr></thead><tbody>${row('Характеристики', selected.map(item => comparisonText(item, 'stats')))}${row('Дополнительные эффекты', selected.map(item => [displayField(item,'effect'), displayField(item,'sleek'), displayField(item,'setBonus')].filter(Boolean).join(' · ') || '—'))}${row('Крафт или источник', selected.map(item => [craftingStationFor(item), displayField(item,'unlock'), displayField(item,'source')].filter(Boolean).join(' · ') || '—'))}</tbody></table>`;
+        if (!panelModal.hidden) closePanelOverlay();
+        if (dialog.open) dialog.close();
+        $('compareModal').hidden = false;
+        document.body.style.overflow = 'hidden';
+      }
+      function closeCompareOverlay() { $('compareModal').hidden = true; document.body.style.overflow = ''; }
       function toggleFavorite(id) {
         if (state.favorites.has(id)) state.favorites.delete(id); else state.favorites.add(id);
         localStorage.setItem('grounded-favorites', JSON.stringify([...state.favorites]));
@@ -1406,6 +1726,16 @@
         else openPanelOverlay('sets');
       });
       $('setsPanel').addEventListener('click', event => {
+        if (event.target.closest('[data-save-set]')) {
+          const loadout = { weapon: items.find(item => item.id === state.setWeapon), shield: items.find(item => item.id === state.setShield), head: items.find(item => item.id === state.setHead), body: items.find(item => item.id === state.setBody), legs: items.find(item => item.id === state.setLegs), trinket: items.find(item => item.id === state.setTrinket) };
+          saveLoadout(loadout);
+          return;
+        }
+        if (event.target.closest('[data-clear-set]')) {
+          state.setWeapon = ''; state.setShield = ''; state.setHead = ''; state.setBody = ''; state.setLegs = ''; state.setTrinket = ''; state.armorProfile = 'auto';
+          renderSets();
+          return;
+        }
         const trigger = event.target.closest('[data-equipment-id]');
         if (!trigger) return;
         const equipment = items.find(item => item.id === trigger.dataset.equipmentId);
@@ -1435,6 +1765,14 @@
         if (state.showCommunity && panelModal.dataset.panel === 'community') closePanelOverlay();
         else openPanelOverlay('community');
       });
+      $('mobileNav').addEventListener('click', event => {
+        const button = event.target.closest('[data-mobile-action]'); if (!button) return;
+        const action = button.dataset.mobileAction;
+        if (action === 'catalog') { if (!panelModal.hidden) closePanelOverlay(); state.category = 'all'; state.favoritesOnly = false; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        if (action === 'sets') { if (state.showSets && panelModal.dataset.panel === 'sets') closePanelOverlay(); else openPanelOverlay('sets'); }
+        if (action === 'favorites') { if (!panelModal.hidden) closePanelOverlay(); state.favoritesOnly = !state.favoritesOnly; state.favoriteFolder = 'all'; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        if (action === 'map') openMapOverlay('https://mapgenie.io/grounded-2/maps/brookhollow-park', 'Карта MapGenie');
+      });
       $('categoryNav').addEventListener('click', event => {
         const button = event.target.closest('[data-category]'); if (!button) return;
         state.category = button.dataset.category; state.subtype = 'all'; state.tier = 'all'; state.visible = 80; render();
@@ -1446,7 +1784,14 @@
       $('subtypeSelect').addEventListener('change', event => { state.subtype = event.target.value; state.visible = 80; render(); });
       $('tierSelect').addEventListener('change', event => { state.tier = event.target.value; state.visible = 80; render(); });
       $('craftedToggle').addEventListener('click', () => { state.crafted = !state.crafted; state.visible = 80; render(); });
-      $('favoritesBtn').addEventListener('click', () => { state.favoritesOnly = !state.favoritesOnly; state.visible = 80; render(); });
+      $('compareBtn').addEventListener('click', openCompareOverlay);
+      $('favoriteFolderSelect').addEventListener('change', event => { state.favoriteFolder = event.target.value; state.visible = 80; render(); });
+      $('exportFavorites').addEventListener('click', () => {
+        const payload = items.filter(item => state.favorites.has(item.id)).map(item => ({ id: item.id, name: item.name, category: item.category }));
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+        const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'backyard-archive-favorites.json'; link.click(); URL.revokeObjectURL(link.href);
+      });
+      $('favoritesBtn').addEventListener('click', () => { state.favoritesOnly = !state.favoritesOnly; state.favoriteFolder = 'all'; state.visible = 80; render(); });
       $('loadMore').addEventListener('click', () => { state.visible += 80; render(); });
       searchInput.addEventListener('input', event => { state.query = event.target.value.trim(); state.visible = 80; render(); });
       $('themeBtn').addEventListener('click', () => { document.body.classList.toggle('light'); localStorage.setItem('grounded-theme', document.body.classList.contains('light') ? 'light' : 'dark'); render(); });
@@ -1472,6 +1817,13 @@
         openMapOverlay(mapTrigger.dataset.mapOpen, mapTrigger.dataset.mapTitle || 'Интерактивная карта');
       });
       $('modalBody').addEventListener('click', event => {
+        const copyButton = event.target.closest('[data-copy-item]');
+        if (copyButton) {
+          event.preventDefault();
+          const item = items.find(entry => entry.id === copyButton.dataset.copyItem);
+          if (item) copyItemLink(item);
+          return;
+        }
         const mapTrigger = event.target.closest('[data-map-open]');
         if (mapTrigger) {
           event.preventDefault();
@@ -1504,18 +1856,23 @@
       mapModal.addEventListener('click', event => { if (event.target === mapModal) closeMapOverlay(); });
       $('panelWindowClose').addEventListener('click', closePanelOverlay);
       panelModal.addEventListener('click', event => { if (event.target === panelModal) closePanelOverlay(); });
+      $('compareClose').addEventListener('click', closeCompareOverlay);
+      $('compareModal').addEventListener('click', event => { if (event.target === $('compareModal')) closeCompareOverlay(); });
       document.addEventListener('keydown', event => {
         if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); searchInput.focus(); }
         if (event.key === '/' && document.activeElement !== searchInput) { event.preventDefault(); searchInput.focus(); }
         if (event.key === 'Escape' && dialog.open) { event.preventDefault(); closeDetailAnimated(); }
         if (event.key === 'Escape' && !mapModal.hidden) closeMapOverlay();
         if (event.key === 'Escape' && !panelModal.hidden) closePanelOverlay();
+        if (event.key === 'Escape' && !compareModal.hidden) closeCompareOverlay();
       });
       if (localStorage.getItem('grounded-theme') === 'light') document.body.classList.add('light');
       if (localStorage.getItem('grounded-glass') === 'on') document.body.classList.add('glass');
+      window.addEventListener('hashchange', openItemFromHash);
       renderStats();
       render();
+      openItemFromHash();
     })();
   </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a330074a1997afd2',t:'MTc4ODA1MzQwOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
