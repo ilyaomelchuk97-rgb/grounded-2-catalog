@@ -518,6 +518,7 @@
     .compare-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 15px; border-bottom: 1px solid var(--line); }
     .compare-head strong { font-size: 14px; }
     .compare-body { padding: 16px; overflow-x: auto; }
+    .compare-mobile-cards { display: none; }
     .compare-table { min-width: 640px; width: 100%; border-collapse: collapse; }
     .compare-table th, .compare-table td { border: 1px solid var(--line); padding: 10px; vertical-align: top; }
     .compare-table th { min-width: 150px; text-transform: none; letter-spacing: 0; font-size: 11px; color: var(--text); background: var(--panel-hover); }
@@ -587,13 +588,16 @@
       .hero-dashboard { grid-template-columns: 1fr; gap: 18px; margin-bottom: 25px; }
       .sidebar { border-right: 0; border-bottom: 1px solid var(--line); padding: 16px; }
       .park-summary, .eyebrow, .sidebar-foot, .nav-label { display: none; }
+      .sets-nav, .external-maps { display: none; }
       .nav-list { display: flex; overflow-x: auto; gap: 6px; }
       .nav-item { width: auto; flex: 0 0 auto; padding: 9px 10px; }
       .nav-item .nav-count { display: none; }
       .nav-item .nav-text { white-space: nowrap; }
       .main { padding: 22px 16px 55px; }
-      .hero { min-height: 0; padding: 27px 24px; }
-      .hero-art { display: none; }
+      .hero { min-height: 0; padding: 27px 24px 16px; flex-direction: column; align-items: stretch; }
+      .hero-copy { max-width: none; }
+      .hero-art { display: block; width: 100%; height: 155px; flex: 0 0 155px; transform: none; margin: 0; }
+      .hero-art img { object-position: center bottom; }
       .stats-row { grid-template-columns: repeat(2, 1fr); margin-bottom: 25px; }
       .sets-panel { grid-template-columns: 1fr; }
       .section-toolbar { align-items: flex-start; flex-direction: column; }
@@ -656,7 +660,21 @@
       .map-link { width: 100%; text-align: center; }
       .mini-map { height: 170px; }
       .location-screenshot { height: 180px; }
+      .hero-art { height: 145px; flex-basis: 145px; }
       .modal-grid { grid-template-columns: 1fr; }
+      .compare-modal { padding: 8px; place-items: start center; }
+      .compare-window { width: 100%; max-height: calc(100vh - 16px); border-radius: 15px; }
+      .compare-body { padding: 10px; overflow-x: hidden; }
+      .compare-table { display: none; }
+      .compare-mobile-cards { display: grid; gap: 9px; }
+      .compare-mobile-card { border: 1px solid var(--line); border-radius: 13px; padding: 11px; background: var(--panel); }
+      .compare-mobile-head { display: flex; align-items: center; gap: 10px; min-width: 0; padding-bottom: 9px; }
+      .compare-mobile-head img { width: 48px; height: 48px; flex: 0 0 48px; object-fit: contain; border-radius: 10px; background: rgba(216,241,123,.07); }
+      .compare-mobile-name { min-width: 0; color: var(--text); font-size: 13px; font-weight: 750; line-height: 1.3; overflow-wrap: anywhere; }
+      .compare-mobile-row { padding-top: 8px; margin-top: 8px; border-top: 1px solid var(--line); }
+      .compare-mobile-label { display: block; color: var(--muted-2); font-size: 9px; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 4px; }
+      .compare-mobile-value { color: var(--muted); font-size: 11px; line-height: 1.45; overflow-wrap: anywhere; }
+      body.light .compare-mobile-card { background: var(--panel); }
       .map-modal { padding: 8px; }
       .map-window { height: 94vh; border-radius: 15px; }
       .map-window-external { display: none; }
@@ -1698,7 +1716,12 @@
         const selected = items.filter(item => state.compare.has(item.id));
         if (selected.length < 2) { showToast('Выбери минимум два предмета для сравнения'); return; }
         const row = (label, values) => `<tr><td>${label}</td>${values.map(value => `<td><div class="compare-value">${escapeHtml(value)}</div></td>`).join('')}</tr>`;
-        $('compareBody').innerHTML = `<table class="compare-table"><thead><tr><th>Параметр</th>${selected.map(item => `<th><div class="compare-item-head">${item.image ? `<img src="${escapeHtml(item.image)}" alt="" loading="lazy" />` : ''}<span class="compare-item-name">${escapeHtml(displayName(item))}</span></div></th>`).join('')}</tr></thead><tbody>${row('Характеристики', selected.map(item => comparisonText(item, 'stats')))}${row('Дополнительные эффекты', selected.map(item => [displayField(item,'effect'), displayField(item,'sleek'), displayField(item,'setBonus')].filter(Boolean).join(' · ') || '—'))}${row('Крафт или источник', selected.map(item => [craftingStationFor(item), displayField(item,'unlock'), displayField(item,'source')].filter(Boolean).join(' · ') || '—'))}</tbody></table>`;
+        const mobileCards = selected.map(item => {
+          const effects = [displayField(item, 'effect'), displayField(item, 'sleek'), displayField(item, 'setBonus')].filter(Boolean).join(' · ') || '—';
+          const source = [craftingStationFor(item), displayField(item, 'unlock'), displayField(item, 'source')].filter(Boolean).join(' · ') || '—';
+          return `<article class="compare-mobile-card"><div class="compare-mobile-head">${item.image ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(displayName(item))}" loading="lazy" />` : ''}<strong class="compare-mobile-name">${escapeHtml(displayName(item))}</strong></div><div class="compare-mobile-row"><span class="compare-mobile-label">Характеристики</span><div class="compare-mobile-value">${escapeHtml(comparisonText(item, 'stats'))}</div></div><div class="compare-mobile-row"><span class="compare-mobile-label">Дополнительные эффекты</span><div class="compare-mobile-value">${escapeHtml(effects)}</div></div><div class="compare-mobile-row"><span class="compare-mobile-label">Крафт или источник</span><div class="compare-mobile-value">${escapeHtml(source)}</div></div></article>`;
+        }).join('');
+        $('compareBody').innerHTML = `<div class="compare-mobile-cards">${mobileCards}</div><table class="compare-table"><thead><tr><th>Параметр</th>${selected.map(item => `<th><div class="compare-item-head">${item.image ? `<img src="${escapeHtml(item.image)}" alt="" loading="lazy" />` : ''}<span class="compare-item-name">${escapeHtml(displayName(item))}</span></div></th>`).join('')}</tr></thead><tbody>${row('Характеристики', selected.map(item => comparisonText(item, 'stats')))}${row('Дополнительные эффекты', selected.map(item => [displayField(item,'effect'), displayField(item,'sleek'), displayField(item,'setBonus')].filter(Boolean).join(' · ') || '—'))}${row('Крафт или источник', selected.map(item => [craftingStationFor(item), displayField(item,'unlock'), displayField(item,'source')].filter(Boolean).join(' · ') || '—'))}</tbody></table>`;
         if (!panelModal.hidden) closePanelOverlay();
         if (dialog.open) dialog.close();
         $('compareModal').hidden = false;
