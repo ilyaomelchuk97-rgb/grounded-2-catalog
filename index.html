@@ -1145,7 +1145,7 @@
       }
       const weaponDamageTypeMeta = [
         { pattern: /fresh damage|fresh candy|mint arrow|glacial sting|мятн.*урон|свеж.*урон/i, icon: '💧', label: 'Свежий урон' },
-        { pattern: /chill(?:ing)?|frigid|cold snap|fresh damage|охлажд|холодн.*урон/i, icon: '❄', label: 'Холодный урон' },
+        { pattern: /chill(?:ing)?|frigid|cold snap|охлажд|холодн.*урон/i, icon: '❄', label: 'Холодный урон' },
         { pattern: /spicy|sizzle|burn|fire damage|scorch|sear|heatwave|огнен|обжига|шипен|жар/i, icon: '🔥', label: 'Пряный и огненный урон' },
         { pattern: /sour|tang|acid ruin|acid damage|кислот|кислый урон|танг/i, icon: '🧪', label: 'Кислый урон' },
         { pattern: /venom|poison|toxic|ядовит|токсич.*урон|урон ядом/i, icon: '☠', label: 'Ядовитый урон' },
@@ -1153,14 +1153,75 @@
         { pattern: /gas cloud|gas zone|gas damage|poison gas|газов.*урон|газовое облако|газовая зона/i, icon: '☣', label: 'Газовый урон' },
         { pattern: /salty sizzle|salt damage|солён.*урон|солёное шипение/i, icon: '🧂', label: 'Солёный урон' }
       ];
+      const generalDamageIconMeta = [
+        { pattern: /ant damage|red ant|ant weapons|муравь.*урон|урон.*мурав/i, icon: '🐜', label: 'Урон муравьям' },
+        { pattern: /bow|greatbow|bow attack|лук|стрел/i, icon: '🏹', label: 'Урон из лука' },
+        { pattern: /staff|staves|candy staff|посох/i, icon: '🪄', label: 'Урон посохом' },
+        { pattern: /sword|spear|melee|dual wield|ближн|меч|копь|парн/i, icon: '⚔', label: 'Ближний урон' },
+        { pattern: /attack damage|attack boost|increase.*damage|damage.*increase|усиление атаки|урон.*увелич|увелич.*урон/i, icon: '⚔', label: 'Усиление атаки' }
+      ];
+      const trinketIconMeta = {
+        buggy: { icon: '🚙', label: 'Бонус для багги' }, defense: { icon: '🛡', label: 'Защита' }, block: { icon: '◈', label: 'Блокирование' },
+        orc: { icon: '⬇', label: 'Снижение атаки О.Р.К.' }, shock: { icon: '⚡', label: 'Электричество' }, ranged: { icon: '🏹', label: 'Дальний бой' },
+        attack: { icon: '⚔', label: 'Урон атаки' }, threat: { icon: '⚠', label: 'Угроза' }, finale: { icon: '✦', label: 'Финальная атака' },
+        survival: { icon: '♥', label: 'Выживаемость' }, food: { icon: '🍎', label: 'Еда' }, regen: { icon: '♥', label: 'Регенерация' },
+        fall: { icon: '🪶', label: 'Защита от падения и парение' }, cold: { icon: '❄', label: 'Холод' }, fire: { icon: '🔥', label: 'Огонь и жар' },
+        fresh: { icon: '💧', label: 'Свежий урон' }, venom: { icon: '☠', label: 'Яд' }, acid: { icon: '🧪', label: 'Кислый урон' },
+        gas: { icon: '☣', label: 'Газ' }, speed: { icon: '➤', label: 'Скорость' }, ambush: { icon: '⌁', label: 'Засада' }, steal: { icon: '✋', label: 'Кража предметов' },
+        infection: { icon: '☣', label: 'Заражение' }, blast: { icon: '💥', label: 'Взрывная волна' }, durability: { icon: '∞', label: 'Бесконечная прочность' },
+        ant: { icon: '🐜', label: 'Муравьи' }, debuff: { icon: '▼', label: 'Ослабление врагов' }, carry: { icon: '💪', label: 'Переноска и сила' },
+        spider: { icon: '🕸', label: 'Пауки' }, candy: { icon: '🍬', label: 'Конфеты' }, smash: { icon: '🔨', label: 'Сокрушающий урон' },
+        health: { icon: '♥', label: 'Здоровье и лечение' }
+      };
+      const trinketIconKeys = {
+        'Nightstalker Fangs': ['buggy', 'health'], 'Reflex Guard': ['defense', 'block'], 'O.R.C. Nullifier': ['orc', 'debuff'],
+        'Volatile Capacitor': ['shock'], 'Nifty Needle': ['ranged', 'attack'], 'Sturdy Shell': ['defense', 'threat'],
+        'Astonishing Acid': ['finale', 'attack'], 'Cleaving Claw': ['survival'], 'Everlasting Hogstopper': ['food'],
+        'Fabulous Femur': ['fall'], 'Feasting Fangs': ['health', 'attack'], 'Frozen Droplet': ['cold'],
+        "King Dozer's Light": ['fire'], "Nightstalker's Bane": ['venom'], 'Pincer Pincher': ['ambush', 'steal'],
+        'Speed Droplet': ['speed'], 'Tickled Toenail': ['infection'], 'Blistering Boiler': ['blast'], 'Shivering Scale': ['cold'],
+        'Stabby Stinger': ['venom'], 'Pucker Charm': ['acid'], 'Fancy Fletching': ['ranged'], 'Fluffy Dandelion Tuft': ['durability'],
+        'Spectacular Spicy Shard': ['fire'], 'Suspicious Mint': ['fresh'], "Valentine's Fortune": ['health'], 'Sticky Fingers': ['steal'],
+        'Biomedical Token': ['food', 'regen'], 'Myrmecologist Token': ['ant', 'attack', 'debuff'], 'Eco Exploitation Token': ['carry', 'spider'],
+        'Ranger Token': ['attack', 'block'], 'Toxicology Token': ['gas', 'venom', 'debuff'], 'Bale Scale': ['candy'],
+        'The Crown Jewel': ['smash'], 'Roach Rage': ['attack', 'health']
+      };
+      function iconGroup(found, ariaLabel = 'Тип эффекта') {
+        const unique = [...new Map(found.map(type => [type.label, type])).values()];
+        if (!unique.length) return '';
+        return `<span class="damage-icons" aria-label="${ariaLabel}">${unique.map(type => `<span class="damage-icon" title="${type.label}">${type.icon}</span>`).join('')}</span>`;
+      }
       function weaponDamageIcons(item) {
         if (!item || item.category !== 'weapon') return '';
         // Для определения типа урона используем исходные английские поля: русские
         // переводы некоторых описаний могут содержать лишние слова вроде «кислотой».
         const text = [item.name, item.stats, item.effect, item.sleek, item.setBonus].filter(Boolean).join(' ');
-        const found = weaponDamageTypeMeta.filter(type => type.pattern.test(text));
-        if (!found.length) return '';
-        return `<span class="damage-icons" aria-label="Типы урона">${found.map(type => `<span class="damage-icon" title="${type.label}">${type.icon}</span>`).join('')}</span>`;
+        return iconGroup(weaponDamageTypeMeta.filter(type => type.pattern.test(text)), 'Типы урона');
+      }
+      function armorDamageIcons(item) {
+        if (!item || item.category !== 'armor') return '';
+        const texts = [item.effect, item.sleek, item.setBonus, item.class].filter(Boolean).map(String);
+        const offensive = /damage|deal|attack boost|increase|boost|more damage|урон|нанос|увелич/i;
+        const defensive = /adaptive resistance|damage reduction|resist(?:ance)?|reduc(?:es|tion).*damage|сопротив|сниж.*урон/i;
+        const offensiveTexts = texts.filter(text => offensive.test(text) && !defensive.test(text));
+        if (!offensiveTexts.length) return '';
+        const elemental = weaponDamageTypeMeta.filter(type => offensiveTexts.some(text => type.pattern.test(text)));
+        const physical = resistanceTypeMeta.filter(type => ['slash', 'stab', 'smash'].includes(type.key) && offensiveTexts.some(text => type.pattern.test(text)));
+        const contextText = [item.name, item.set, ...offensiveTexts].filter(Boolean).join(' ');
+        const general = generalDamageIconMeta.filter(type => type.pattern.test(contextText));
+        return iconGroup([...elemental, ...physical, ...general], 'Типы усиления урона');
+      }
+      function trinketEffectIcons(item) {
+        if (!item || item.category !== 'trinket') return '';
+        const explicit = (trinketIconKeys[item.name] || []).map(key => trinketIconMeta[key]).filter(Boolean);
+        if (explicit.length) return iconGroup(explicit, 'Типы эффекта');
+        const text = [item.name, item.effect, item.sleek, item.setBonus].filter(Boolean).join(' ');
+        const detected = [
+          ['cold', /chill|mint|cold|холод/i], ['fire', /sizzle|spicy|burn|fire|огн|жар/i], ['acid', /sour|tang|acid|кислот/i],
+          ['venom', /venom|poison|toxic|яд/i], ['shock', /shock|electric|электр|шок/i], ['speed', /speed|quick|скорост/i],
+          ['defense', /defense|guard|block|защит|блок/i], ['health', /health|heal|vampir|здоров|леч/i], ['attack', /attack|damage|урон|атак/i]
+        ].map(([key, pattern]) => pattern.test(text) ? trinketIconMeta[key] : null).filter(Boolean);
+        return iconGroup(detected.length ? detected : [trinketIconMeta.finale], 'Тип эффекта');
       }
       function defensiveBarRow(label, value, max, type, display, applicable = true, icons = '') {
         return weaponBarRow(`${label}${icons}`, value, max, type, display, applicable);
@@ -1252,8 +1313,9 @@
       }
       function effectHtml(item) {
         const lines = [];
-        const damageIcons = weaponDamageIcons(item);
-        if (damageIcons) lines.push(`<div class="effect-line effect-type"><strong>Тип урона</strong> ${damageIcons}</div>`);
+        const effectIcons = item.category === 'weapon' ? weaponDamageIcons(item) : item.category === 'armor' ? armorDamageIcons(item) : item.category === 'trinket' ? trinketEffectIcons(item) : '';
+        const effectIconLabel = item.category === 'armor' ? 'Тип усиления' : item.category === 'trinket' ? 'Тип эффекта' : 'Тип урона';
+        if (effectIcons) lines.push(`<div class="effect-line effect-type"><strong>${effectIconLabel}</strong> ${effectIcons}</div>`);
         const effect = displayField(item, 'effect');
         const sleek = displayField(item, 'sleek');
         const setBonus = displayField(item, 'setBonus');
@@ -1966,5 +2028,5 @@
       openItemFromHash();
     })();
   </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3342292ee050282',t:'MTc4ODA5NjQ2OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a335a35148c8d91b',t:'MTc4ODExMjIyOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
