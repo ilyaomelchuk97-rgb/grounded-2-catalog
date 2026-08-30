@@ -519,10 +519,30 @@
     .compare-head strong { font-size: 14px; }
     .compare-body { padding: 16px; overflow-x: auto; }
     .compare-mobile-cards { display: none; }
-    .compare-table { min-width: 640px; width: 100%; border-collapse: collapse; }
-    .compare-table th, .compare-table td { border: 1px solid var(--line); padding: 10px; vertical-align: top; }
+    .compare-weapon-view { display: none; }
+    .compare-body.weapon-compare-active .compare-weapon-view { display: block; }
+    .compare-body.weapon-compare-active .compare-general-view { display: none; }
+    .compare-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-bottom: 13px; }
+    .compare-tab { min-width: 0; min-height: 36px; padding: 0 9px; border: 1px solid var(--line); border-radius: 10px; color: var(--muted); background: transparent; font-size: 10px; font-weight: 750; cursor: pointer; transition: .2s ease; }
+    .compare-tab:hover, .compare-tab.active { color: var(--lime); border-color: rgba(216,241,123,.35); background: rgba(216,241,123,.09); }
+    .compare-metric-panel { display: none; }
+    .compare-metric-panel.active { display: block; }
+    .compare-metric-grid { display: grid; grid-template-columns: repeat(var(--compare-count), minmax(0, 1fr)); gap: 10px; }
+    .compare-metric-card { min-width: 0; padding: 13px; border: 1px solid var(--line); border-radius: 14px; background: rgba(255,255,255,.018); text-align: center; transition: .2s ease; }
+    .compare-metric-card.is-better { border-color: rgba(183,239,24,.58); background: rgba(183,239,24,.10); box-shadow: 0 0 22px rgba(183,239,24,.10); }
+    .compare-metric-head { display: grid; justify-items: center; gap: 7px; min-width: 0; min-height: 91px; }
+    .compare-metric-head img { width: 58px; height: 58px; object-fit: contain; border-radius: 12px; background: rgba(216,241,123,.07); }
+    .compare-metric-head strong { color: var(--text); font-size: 12px; line-height: 1.3; overflow-wrap: anywhere; }
+    .compare-metric-label { display: block; color: var(--muted-2); font-size: 9px; margin: 10px 0 8px; }
+    .compare-metric-bar { display: flex; justify-content: center; }
+    .compare-metric-bar .bar-track { width: 120px; min-width: 120px; }
+    .compare-metric-value { display: block; margin-top: 8px; color: var(--muted); font-size: 12px; font-weight: 800; }
+    .compare-metric-card.is-better .compare-metric-value { color: var(--lime); }
+    .compare-hint { margin: 12px 2px 0; color: var(--muted-2); font-size: 10px; text-align: center; }
+    .compare-table { min-width: 640px; width: 100%; table-layout: fixed; border-collapse: collapse; }
+    .compare-table th, .compare-table td { border: 1px solid var(--line); padding: 10px; vertical-align: top; overflow-wrap: anywhere; }
     .compare-table th { min-width: 150px; text-transform: none; letter-spacing: 0; font-size: 11px; color: var(--text); background: var(--panel-hover); }
-    .compare-table td:first-child { width: 150px; color: var(--muted); font-weight: 700; }
+    .compare-table th:first-child, .compare-table td:first-child { width: 150px; color: var(--muted); font-weight: 700; }
     .compare-item-head { display: grid; gap: 7px; justify-items: center; text-align: center; }
     .compare-item-head img { width: 58px; height: 58px; object-fit: contain; border-radius: 12px; background: rgba(216,241,123,.07); }
     .compare-item-name { font-size: 12px; line-height: 1.3; }
@@ -667,6 +687,13 @@
       .compare-body { padding: 10px; overflow-x: hidden; }
       .compare-table { display: none; }
       .compare-mobile-cards { display: grid; gap: 9px; }
+      .compare-tabs { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; }
+      .compare-tab { min-height: 34px; padding: 0 4px; font-size: 9px; }
+      .compare-metric-grid { grid-template-columns: 1fr !important; gap: 8px; }
+      .compare-metric-card { padding: 11px; }
+      .compare-metric-head { display: flex; align-items: center; text-align: left; min-height: 0; }
+      .compare-metric-head img { width: 48px; height: 48px; flex: 0 0 48px; }
+      .compare-metric-label { margin-top: 8px; }
       .compare-mobile-card { border: 1px solid var(--line); border-radius: 13px; padding: 11px; background: var(--panel); }
       .compare-mobile-head { display: flex; align-items: center; gap: 10px; min-width: 0; padding-bottom: 9px; }
       .compare-mobile-head img { width: 48px; height: 48px; flex: 0 0 48px; object-fit: contain; border-radius: 10px; background: rgba(216,241,123,.07); }
@@ -1176,11 +1203,8 @@
         ].join('');
         return `<div class="defensive-bars">${rows}</div>`;
       }
-      function weaponBars(item) {
-        if (!item || item.category !== 'weapon') return '';
-        if (isShield(item)) return shieldBars(item);
-        // Базовые значения берутся из оригинального поля stats: там сохраняются
-        // игровые названия параметров и значения, включая N/A для стрел.
+      function weaponMetricData(item) {
+        if (!item || item.category !== 'weapon' || isShield(item)) return null;
         const raw = item.stats || item.statsRu || '';
         const damageText = statPart(raw, /(?:Damage|Arrow damage|Урон(?: от стрел)?):\s*([^•]+)/i);
         const multiplierText = statPart(raw, /(?:Bow multiplier|Множитель лука):\s*([^•]+)/i);
@@ -1206,12 +1230,19 @@
         const speedLabel = speedLabelRaw
           ? (fallbackRussian[speedLabelRaw] || localizeText(speedLabelRaw)).replace(/\bSec\b/gi, 'сек.').replace(/(\d)\.(\d)/g, '$1,$2')
           : '';
-        const rows = [
-          weaponBarRow(damageLabel, damageValue, damageMax, 'damage', damageDisplay, damageApplicable),
-          weaponBarRow('Оглушение', stun, 10, 'stun', stun != null ? String(stun) : '', stun != null),
-          weaponBarRow(fireText ? 'Скорострельность' : 'Скорость', speedValue, 8, 'speed', speedLabel, speedApplicable),
-          weaponBarRow('Критический шанс', crit, 10, 'crit', crit != null ? `${crit}%` : '', crit != null)
-        ].join('');
+        return {
+          damage: { label: damageLabel, value: damageValue, max: damageMax, type: 'damage', display: damageDisplay, applicable: damageApplicable },
+          stun: { label: 'Оглушение', value: stun, max: 10, type: 'stun', display: stun != null ? String(stun) : '', applicable: stun != null },
+          speed: { label: fireText ? 'Скорострельность' : 'Скорость', value: speedValue, max: 8, type: 'speed', display: speedLabel, applicable: speedApplicable },
+          crit: { label: 'Критический шанс', value: crit, max: 10, type: 'crit', display: crit != null ? `${crit}%` : '', applicable: crit != null }
+        };
+      }
+      function weaponBars(item) {
+        if (!item || item.category !== 'weapon') return '';
+        if (isShield(item)) return shieldBars(item);
+        const metrics = weaponMetricData(item);
+        if (!metrics) return '';
+        const rows = Object.values(metrics).map(metric => weaponBarRow(metric.label, metric.value, metric.max, metric.type, metric.display, metric.applicable)).join('');
         return `<div class="weapon-bars">${rows}</div>`;
       }
       function formatStats(text) {
@@ -1712,16 +1743,43 @@
         const value = displayField(item, field);
         return value || '—';
       }
+      function comparisonMetricBar(metric) {
+        const hasValue = metric?.applicable && metric.value != null && Number.isFinite(metric.value);
+        const filled = hasValue ? Math.max(0, Math.min(8, Math.round((metric.value / metric.max) * 8))) : 0;
+        const segments = Array.from({ length: 8 }, (_, index) => `<span class="bar-segment ${hasValue && index < filled ? `filled ${metric.type}` : 'unavailable'}"></span>`).join('');
+        return `<div class="compare-metric-bar"><span class="bar-track">${segments}</span></div>`;
+      }
+      function weaponComparisonView(selected) {
+        const metricKeys = ['damage', 'stun', 'speed', 'crit'];
+        const metricLabels = { damage: 'Урон', stun: 'Оглушение', speed: 'Скорость', crit: 'Критический шанс' };
+        const tabs = metricKeys.map((key, index) => `<button type="button" class="compare-tab ${index === 0 ? 'active' : ''}" data-compare-tab="${key}" aria-selected="${index === 0 ? 'true' : 'false'}">${metricLabels[key]}</button>`).join('');
+        const panels = metricKeys.map((key, index) => {
+          const metrics = selected.map(item => weaponMetricData(item)[key]);
+          const available = metrics.filter(metric => metric.applicable && metric.value != null && Number.isFinite(metric.value));
+          const highest = available.length ? Math.max(...available.map(metric => metric.value)) : null;
+          const hasDifferentValues = available.length > 1 && new Set(available.map(metric => metric.value)).size > 1;
+          const cards = selected.map((item, itemIndex) => {
+            const metric = metrics[itemIndex];
+            const better = hasDifferentValues && metric.applicable && metric.value === highest;
+            return `<article class="compare-metric-card ${better ? 'is-better' : ''}"><div class="compare-metric-head">${item.image ? `<img src="${escapeHtml(item.image)}" alt="" loading="lazy" />` : ''}<strong>${escapeHtml(displayName(item))}</strong></div><span class="compare-metric-label">${escapeHtml(metric.label)}</span>${comparisonMetricBar(metric)}<strong class="compare-metric-value">${escapeHtml(metric.applicable ? metric.display : 'н/д')}</strong></article>`;
+          }).join('');
+          return `<section class="compare-metric-panel ${index === 0 ? 'active' : ''}" data-compare-panel="${key}"><div class="compare-metric-grid" style="--compare-count:${selected.length}">${cards}</div></section>`;
+        }).join('');
+        return `<div class="compare-weapon-view"><div class="compare-tabs" role="tablist" aria-label="Характеристика для сравнения">${tabs}</div><div class="compare-metric-panels">${panels}</div><p class="compare-hint">Зелёным подсвечено лучшее значение выбранной характеристики.</p></div>`;
+      }
       function openCompareOverlay() {
         const selected = items.filter(item => state.compare.has(item.id));
         if (selected.length < 2) { showToast('Выбери минимум два предмета для сравнения'); return; }
         const row = (label, values) => `<tr><td>${label}</td>${values.map(value => `<td><div class="compare-value">${escapeHtml(value)}</div></td>`).join('')}</tr>`;
+        const weaponComparison = selected.every(item => item.category === 'weapon' && !isShield(item) && !isConsumable(item) && weaponMetricData(item));
         const mobileCards = selected.map(item => {
           const effects = [displayField(item, 'effect'), displayField(item, 'sleek'), displayField(item, 'setBonus')].filter(Boolean).join(' · ') || '—';
           const source = [craftingStationFor(item), displayField(item, 'unlock'), displayField(item, 'source')].filter(Boolean).join(' · ') || '—';
           return `<article class="compare-mobile-card"><div class="compare-mobile-head">${item.image ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(displayName(item))}" loading="lazy" />` : ''}<strong class="compare-mobile-name">${escapeHtml(displayName(item))}</strong></div><div class="compare-mobile-row"><span class="compare-mobile-label">Характеристики</span><div class="compare-mobile-value">${escapeHtml(comparisonText(item, 'stats'))}</div></div><div class="compare-mobile-row"><span class="compare-mobile-label">Дополнительные эффекты</span><div class="compare-mobile-value">${escapeHtml(effects)}</div></div><div class="compare-mobile-row"><span class="compare-mobile-label">Крафт или источник</span><div class="compare-mobile-value">${escapeHtml(source)}</div></div></article>`;
         }).join('');
-        $('compareBody').innerHTML = `<div class="compare-mobile-cards">${mobileCards}</div><table class="compare-table"><thead><tr><th>Параметр</th>${selected.map(item => `<th><div class="compare-item-head">${item.image ? `<img src="${escapeHtml(item.image)}" alt="" loading="lazy" />` : ''}<span class="compare-item-name">${escapeHtml(displayName(item))}</span></div></th>`).join('')}</tr></thead><tbody>${row('Характеристики', selected.map(item => comparisonText(item, 'stats')))}${row('Дополнительные эффекты', selected.map(item => [displayField(item,'effect'), displayField(item,'sleek'), displayField(item,'setBonus')].filter(Boolean).join(' · ') || '—'))}${row('Крафт или источник', selected.map(item => [craftingStationFor(item), displayField(item,'unlock'), displayField(item,'source')].filter(Boolean).join(' · ') || '—'))}</tbody></table>`;
+        const generalComparison = `<div class="compare-general-view"><div class="compare-mobile-cards">${mobileCards}</div><table class="compare-table"><thead><tr><th>Параметр</th>${selected.map(item => `<th><div class="compare-item-head">${item.image ? `<img src="${escapeHtml(item.image)}" alt="" loading="lazy" />` : ''}<span class="compare-item-name">${escapeHtml(displayName(item))}</span></div></th>`).join('')}</tr></thead><tbody>${row('Характеристики', selected.map(item => comparisonText(item, 'stats')))}${row('Дополнительные эффекты', selected.map(item => [displayField(item,'effect'), displayField(item,'sleek'), displayField(item,'setBonus')].filter(Boolean).join(' · ') || '—'))}${row('Крафт или источник', selected.map(item => [craftingStationFor(item), displayField(item,'unlock'), displayField(item,'source')].filter(Boolean).join(' · ') || '—'))}</tbody></table></div>`;
+        $('compareBody').classList.toggle('weapon-compare-active', weaponComparison);
+        $('compareBody').innerHTML = `${weaponComparison ? weaponComparisonView(selected) : ''}${generalComparison}`;
         if (!panelModal.hidden) closePanelOverlay();
         if (dialog.open) dialog.close();
         $('compareModal').hidden = false;
@@ -1880,6 +1938,17 @@
       $('panelWindowClose').addEventListener('click', closePanelOverlay);
       panelModal.addEventListener('click', event => { if (event.target === panelModal) closePanelOverlay(); });
       $('compareClose').addEventListener('click', closeCompareOverlay);
+      $('compareBody').addEventListener('click', event => {
+        const tab = event.target.closest('[data-compare-tab]');
+        if (!tab) return;
+        const key = tab.dataset.compareTab;
+        $('compareBody').querySelectorAll('[data-compare-tab]').forEach(button => {
+          const active = button.dataset.compareTab === key;
+          button.classList.toggle('active', active);
+          button.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        $('compareBody').querySelectorAll('[data-compare-panel]').forEach(panel => panel.classList.toggle('active', panel.dataset.comparePanel === key));
+      });
       $('compareModal').addEventListener('click', event => { if (event.target === $('compareModal')) closeCompareOverlay(); });
       document.addEventListener('keydown', event => {
         if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); searchInput.focus(); }
@@ -1897,5 +1966,5 @@
       openItemFromHash();
     })();
   </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3342292ee050282',t:'MTc4ODA5NjQ2OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
