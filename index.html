@@ -404,6 +404,11 @@
     .modal-source { font-size: 10px; line-height: 1.5; color: var(--muted-2); border-top: 1px solid var(--line); padding-top: 14px; }
     .modal-source a { color: var(--lime); }
     .location-card { border: 1px solid var(--line); border-radius: 15px; padding: 13px; background: rgba(255,255,255,.018); }
+    .location-source-creature { display: flex; flex-direction: column; align-items: center; gap: 5px; margin: 12px 0 0; padding: 10px; border: 1px solid rgba(246,163,94,.20); border-radius: 11px; background: rgba(246,163,94,.055); text-decoration: none; transition: .2s ease; }
+    .location-source-creature:hover { border-color: rgba(246,163,94,.48); background: rgba(246,163,94,.11); transform: translateY(-1px); }
+    .location-source-creature img { width: 68px; height: 68px; flex: 0 0 68px; object-fit: contain; border-radius: 9px; background: rgba(0,0,0,.16); }
+    .location-source-creature strong { display: block; color: var(--orange); font-size: 12px; margin: 0; text-align: center; }
+    .location-source-creature span { display: block; color: var(--muted); font-size: 10px; line-height: 1.4; text-align: center; }
     .location-head { display: flex; justify-content: space-between; gap: 10px; align-items: center; margin-bottom: 10px; }
     .location-title { font-size: 12px; font-weight: 750; }
     .location-title span { color: var(--muted-2); font-size: 10px; font-weight: 500; margin-left: 5px; }
@@ -944,6 +949,41 @@
         { keys: ['garden', 'сад', 'veggie'], label: 'Овощной сад', x: 82, y: 57 },
         { keys: ['pond', 'пруд'], label: 'Пруд скунса', x: 14, y: 36 }
       ];
+      const creatureSources = [
+        { keys: ['bombardier beetle', 'bombardier', 'жук-бомбардир', 'бомбардир'], label: 'Жук-бомбардир', slug: 'Bombardier_Beetle' },
+        { keys: ['praying mantis nymph', 'praying mantis', 'нимфа богомола', 'богомол'], label: 'Нимфа богомола', slug: 'Praying_Mantis_Nymph' },
+        { keys: ['cockroach queen', 'cockroach', 'таракан', 'королева тараканов'], label: 'Королева тараканов', slug: 'Cockroach_Queen' },
+        { keys: ['billy hog', 'corn hog', 'билли хог', 'корн хог'], label: 'Билли Хог', slug: 'Billy_Hog' },
+        { keys: ['blue butterfly', 'синяя бабочка'], label: 'Синяя бабочка', slug: 'Blue_Butterfly' },
+        { keys: ['northern scorpion', 'скорпион', 'северный скорпион'], label: 'Северный скорпион', slug: 'Northern_Scorpion' },
+        { keys: ['crow feather', 'crow tail feather', 'crow', 'ворон'], label: 'Ворона', slug: 'Crow' },
+        { keys: ['dandelion', 'одуванчик'], label: 'Одуванчик', slug: 'Dandelion' },
+        { keys: ['spicy candy', 'пряная конфета'], label: 'Пряная конфета', slug: 'Spicy_Candy' },
+        { keys: ['fresh mint', 'свежая мята'], label: 'Свежая мята', slug: 'Fresh_Mint' },
+        { keys: ['bee', 'пчел'], label: 'Пчела', slug: 'Bee' },
+        { keys: ['wolf spider', 'волк-паук'], label: 'Волк-паук', slug: 'Wolf_Spider' },
+        { keys: ['orb weaver', 'паук-кругопряд'], label: 'Паук-кругопряд', slug: 'Orb_Weaver' },
+        { keys: ['mosquito', 'комар'], label: 'Комар', slug: 'Mosquito' },
+        { keys: ['stinkbug', 'вонючка'], label: 'Вонючка', slug: 'Stinkbug' },
+        { keys: ['gnat', 'мошка'], label: 'Мошка', slug: 'Gnat' },
+        { keys: ['weevil', 'долгоносик'], label: 'Долгоносик', slug: 'Weevil' },
+        { keys: ['lawn mite', 'mite', 'клещ'], label: 'Газонный клещ', slug: 'Mite' },
+        { keys: ['aphid', 'тля'], label: 'Тля', slug: 'Aphid' },
+        { keys: ['garden snail', 'садовая улитка'], label: 'Садовая улитка', slug: 'Garden_Snail' },
+        { keys: ['larva', 'личинка'], label: 'Личинка', slug: 'Larva' }
+      ];
+      function findCreatureSource(item) {
+        if (item.mapSourceCreature) {
+          const wanted = String(item.mapSourceCreature).toLocaleLowerCase().replace(/s$/, '');
+          const direct = creatureSources.find(source => source.label.toLocaleLowerCase() === wanted || source.keys.some(key => key.toLocaleLowerCase() === wanted));
+          if (direct) return direct;
+        }
+        const text = [item.source, item.unlock, item.sourceRu, item.unlockRu].filter(Boolean).join(' ').toLocaleLowerCase('ru-RU');
+        return creatureSources.find(source => source.keys.some(key => text.includes(key))) || null;
+      }
+      function creatureImageUrl(creature) {
+        return `https://grounded.wiki.gg/wiki/Special:FilePath/${creature.slug}.png?width=80`;
+      }
       function locationRegion(item) {
         const exact = mapPointPercent(item);
         if (exact) return { ...exact, label: 'Точная точка' };
@@ -961,13 +1001,13 @@
         const mapLabel = exact ? '⌖ Открыть точку на карте Grounded 2 ↗' : '⌖ Открыть карту Grounded 2 ↗';
         const points = mapPointsPercent(item);
         const pins = points.map(point => `<span class="map-pin" style="left:${point.x}%;top:${point.y}%"></span>`).join('');
+        const creature = findCreatureSource(item);
+        const creatureCard = creature ? `<a class="location-source-creature" href="${itemMapUrl(item)}" data-map-open="${itemMapUrl(item)}" data-map-title="${escapeHtml(creature.label)}"><img src="${creatureImageUrl(creature)}" alt="${escapeHtml(creature.label)}" loading="lazy" /><strong>${escapeHtml(creature.label)}</strong><span>Нажми, чтобы открыть точки расположения насекомого.</span></a>` : '';
         const visualMapAttrs = `href="${escapeHtml(itemMapUrl(item))}" data-map-open="${escapeHtml(itemMapUrl(item))}" data-map-title="${escapeHtml(displayName(item))}"`;
         const mapImage = item.mapProvider === 'MapGenie' ? 'https://media.mapgenie.io/v2/assets/prod/games/grounded-2/maps/brookhollow-park/preview.jpg' : mapPreviewUrl;
-        const visual = item.mapScreenshot
-          ? `<a class="location-map-visual" ${visualMapAttrs}><img class="location-screenshot" src="${escapeHtml(item.mapScreenshot)}" alt="Скриншот расположения: ${escapeHtml(displayName(item))}" loading="lazy" /></a>`
-          : `<a class="location-map-visual" ${visualMapAttrs}><div class="mini-map"><img src="${mapImage}" alt="Карта парка" /><div class="map-road"></div>${pins}<span class="map-label" style="left:${region.x}%;top:${region.y}%">${escapeHtml(item.mapPoints?.length > 1 ? `Показано точек: ${item.mapPoints.length}` : region.label)}</span></div></a>`;
+        const visual = `<a class="location-map-visual" ${visualMapAttrs}><div class="mini-map"><img src="${mapImage}" alt="Карта парка" /><div class="map-road"></div>${pins}<span class="map-label" style="left:${region.x}%;top:${region.y}%">${escapeHtml(item.mapPoints?.length > 1 ? `Показано точек: ${item.mapPoints.length}` : region.label)}</span></div></a>`;
         const exactLabel = item.mapLocationIds?.length ? `точные точки: ${item.mapLocationIds.length}` : (exact ? 'точная точка' : 'ориентир по описанию');
-        return `<div class="location-card"><div class="location-head"><div class="location-title">Расположение <span>${exactLabel}</span></div><a class="map-link" href="${itemMapUrl(item)}" data-map-open="${itemMapUrl(item)}" data-map-title="${escapeHtml(displayName(item))}">${mapLabel}</a></div>${visual}<div class="location-copy">${escapeHtml(truncate(locationText, 360))}</div></div>`;
+        return `<div class="location-card"><div class="location-head"><div class="location-title">Расположение <span>${exactLabel}</span></div><a class="map-link" href="${itemMapUrl(item)}" data-map-open="${itemMapUrl(item)}" data-map-title="${escapeHtml(displayName(item))}">${mapLabel}</a></div>${visual}<div class="location-copy">${escapeHtml(truncate(locationText, 360))}</div>${creatureCard}</div>`;
       }
       function rowHtml(item, index) {
         const favorite = state.favorites.has(item.id);
@@ -1282,5 +1322,5 @@
       render();
     })();
   </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a32f6511d9edd614',t:'MTc4ODA0Njc2Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a32f835c4e45cc60',t:'MTc4ODA0ODAwNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
