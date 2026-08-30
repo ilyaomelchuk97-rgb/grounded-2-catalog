@@ -68,6 +68,9 @@
     @keyframes rise-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes hero-float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-5px) rotate(.5deg); } }
     @keyframes row-in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes modal-pop { from { opacity: 0; transform: translateY(18px) scale(.91); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes modal-pop-out { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(12px) scale(.94); } }
+    @keyframes backdrop-in { from { opacity: 0; } to { opacity: 1; } }
     @keyframes pulse-dot { 0%,100% { box-shadow: 0 0 0 4px rgba(216,241,123,.10); } 50% { box-shadow: 0 0 0 7px rgba(216,241,123,.03); } }
     .app-shell { min-height: 100vh; }
     .hero-kicker i, .live-dot { animation: pulse-dot 2.4s ease-in-out infinite; }
@@ -104,13 +107,12 @@
     .searchbox { flex: 1; max-width: 610px; position: relative; }
     .searchbox input {
       width: 100%; height: 44px; color: var(--text); background: var(--panel);
-      border: 1px solid var(--line-strong); border-radius: 14px; outline: none; padding: 0 82px 0 43px;
+      border: 1px solid var(--line-strong); border-radius: 14px; outline: none; padding: 0 16px 0 43px;
       transition: .2s ease; box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
     }
     .searchbox input:focus { border-color: var(--lime-dark); box-shadow: 0 0 0 4px rgba(216,241,123,.10); }
     .searchbox input::placeholder { color: var(--muted-2); }
-    .search-icon { position: absolute; left: 15px; top: 12px; color: var(--muted); font-size: 18px; pointer-events: none; }
-    .shortcut { position: absolute; right: 11px; top: 9px; font-size: 10px; color: var(--muted); border: 1px solid var(--line-strong); border-radius: 7px; padding: 5px 7px; background: rgba(255,255,255,.03); }
+    .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 18px; line-height: 1; pointer-events: none; }
     .map-btn { display: inline-flex; align-items: center; gap: 7px; height: 40px; white-space: nowrap; color: var(--lime); border: 1px solid rgba(216,241,123,.27); border-radius: 12px; padding: 0 12px; background: rgba(216,241,123,.07); text-decoration: none; font-size: 11px; font-weight: 700; transition: .2s ease; }
     .map-btn:hover { color: var(--text); border-color: var(--lime); background: rgba(216,241,123,.13); transform: translateY(-1px); }
     .language-switch { height: 40px; display: flex; align-items: center; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
@@ -161,7 +163,8 @@
     .sidebar-foot {  margin-top: auto; padding: 19px 12px 0; color: var(--muted-2); font-size: 10px; line-height: 1.6; }
     .sidebar-foot a { color: var(--muted); text-decoration: none; border-bottom: 1px dotted var(--muted-2); }
     .main { min-width: 0; padding: 38px clamp(22px, 4vw, 60px) 72px; max-width: 1600px; width: 100%; margin: 0 auto; }
-    .hero { min-height: 184px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: space-between; padding: 27px 34px; border: 1px solid var(--line); border-radius: 25px; background: linear-gradient(115deg, rgba(30,44,33,.92) 0%, rgba(25,35,28,.92) 51%, rgba(52,65,37,.68) 100%); box-shadow: var(--shadow); animation: rise-in .55s ease both; }
+    .hero-dashboard { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(320px, .65fr); gap: 16px; align-items: stretch; margin-bottom: 32px; }
+    .hero { min-height: 196px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: space-between; padding: 27px 34px; border: 1px solid var(--line); border-radius: 25px; background: linear-gradient(115deg, rgba(30,44,33,.92) 0%, rgba(25,35,28,.92) 51%, rgba(52,65,37,.68) 100%); box-shadow: var(--shadow); animation: rise-in .55s ease both; }
     body.light .hero { background: linear-gradient(115deg, #ffffff, #eef4fd 65%, #dce9fb); }
     body.light .leaf.one { background: linear-gradient(140deg, #7fa9ea, #365d9b); }
     body.light .leaf.two { background: linear-gradient(140deg, #9dc3f5, #3d72bb); }
@@ -184,7 +187,7 @@
     .blade { position: absolute; width: 145px; height: 9px; right: 82px; top: 89px; transform: rotate(-23deg); border-radius: 10px 4px 4px 10px; background: linear-gradient(90deg, #d8f17b, #fbf5c6 40%, #9bb779); box-shadow: 0 0 30px rgba(216,241,123,.33); }
     .blade::after { content: ""; position: absolute; right: -15px; top: -5px; width: 17px; height: 17px; background: var(--orange); transform: rotate(45deg); border-radius: 3px; }
     .blade::before { content: ""; position: absolute; left: -34px; top: -7px; width: 38px; height: 23px; border: 5px solid #bd7c45; border-right: 0; border-radius: 15px 0 0 15px; }
-    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 19px 0 32px; }
+    .stats-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 0; align-content: stretch; }
     .stat-card { border: 1px solid var(--line); border-radius: 17px; padding: 16px 17px; background: var(--panel); min-height: 89px; animation: rise-in .55s ease both; }
     .stat-card:nth-child(2) { animation-delay: .06s; }
     .stat-card:nth-child(3) { animation-delay: .12s; }
@@ -385,11 +388,14 @@
     .footnote a { color: var(--muted); }
     dialog { color: var(--text); background: var(--panel-strong); border: 1px solid var(--line-strong); border-radius: 23px; width: min(700px, calc(100vw - 28px)); padding: 0; box-shadow: 0 30px 100px rgba(0,0,0,.58); }
     dialog::backdrop { background: rgba(4,8,5,.74); backdrop-filter: blur(5px); }
+    dialog[open] { animation: modal-pop .32s cubic-bezier(.22,.8,.24,1) both; }
+    dialog.closing { animation: modal-pop-out .20s ease both; }
+    dialog[open]::backdrop { animation: backdrop-in .24s ease both; }
     .modal-head { padding: 22px 24px 18px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; gap: 18px; align-items: flex-start; }
     .modal-title-row { display: flex; gap: 15px; align-items: center; min-width: 0; flex: 1; }
     .modal-title-row > div:not(.item-art) { min-width: 0; }
     .modal-art { width: 71px; height: 71px; flex-basis: 71px; border-radius: 18px; }
-    .modal-star { width: 38px; height: 38px; flex: 0 0 38px; margin-left: auto; border: 1px solid var(--line-strong); border-radius: 11px; color: var(--muted); background: transparent; font-size: 22px; line-height: 1; transition: .2s ease; }
+    .modal-star { width: 31px; height: 31px; flex: 0 0 31px; margin-left: auto; border: 1px solid var(--line-strong); border-radius: 9px; color: var(--muted); background: transparent; font-size: 18px; line-height: 1; transition: .2s ease; }
     .modal-star:hover, .modal-star.active { color: var(--orange); border-color: rgba(246,163,94,.42); background: transparent; transform: scale(1.04); }
     .modal-name { margin: 0 0 7px; font-size: 23px; letter-spacing: -.045em; }
     .modal-meta { color: var(--muted); font-size: 11px; }
@@ -401,6 +407,18 @@
     .detail-label { color: var(--muted-2); font-size: 9px; text-transform: uppercase; letter-spacing: .11em; margin-bottom: 8px; }
     .detail-value { color: var(--muted); font-size: 12px; line-height: 1.55; white-space: pre-wrap; }
     .detail-value strong { color: var(--text); }
+    .resource-usage-block { border: 1px solid var(--line); border-radius: 15px; padding: 14px; background: rgba(255,255,255,.018); }
+    .resource-usage-title { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+    .resource-usage-title strong { font-size: 12px; }
+    .resource-usage-title span { color: var(--muted-2); font-size: 10px; }
+    .usage-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .usage-item { min-width: 126px; flex: 1 1 126px; display: flex; align-items: center; gap: 8px; padding: 7px; border: 1px solid var(--line); border-radius: 10px; background: transparent; color: var(--text); text-align: left; cursor: pointer; transition: .18s ease; }
+    .usage-item:hover { border-color: rgba(216,241,123,.36); background: rgba(216,241,123,.07); transform: translateY(-1px); }
+    .usage-item img, .usage-item-icon { width: 38px; height: 38px; flex: 0 0 38px; object-fit: contain; border-radius: 8px; background: rgba(216,241,123,.07); }
+    .usage-item-icon { display: grid; place-items: center; color: var(--lime); font-size: 17px; }
+    .usage-item-name { font-size: 10px; line-height: 1.3; overflow-wrap: anywhere; }
+    body.light .usage-item:hover { border-color: rgba(47,111,209,.36); background: rgba(47,111,209,.07); }
+    body.light .usage-item img, body.light .usage-item-icon { background: rgba(47,111,209,.07); }
     .modal-source { font-size: 10px; line-height: 1.5; color: var(--muted-2); border-top: 1px solid var(--line); padding-top: 14px; }
     .modal-source a { color: var(--lime); }
     .location-card { border: 1px solid var(--line); border-radius: 15px; padding: 13px; background: rgba(255,255,255,.018); }
@@ -409,7 +427,15 @@
     .location-source-creature img { width: 68px; height: 68px; flex: 0 0 68px; object-fit: contain; border-radius: 9px; background: rgba(0,0,0,.16); }
     .location-source-creature strong { display: block; color: var(--orange); font-size: 12px; margin: 0; text-align: center; }
     .location-source-creature span { display: block; color: var(--muted); font-size: 10px; line-height: 1.4; text-align: center; }
-    .location-head { display: flex; justify-content: space-between; gap: 10px; align-items: center; margin-bottom: 10px; }
+    .source-station-card, .source-location-card { display: flex; align-items: center; gap: 10px; min-height: 58px; padding: 8px; border: 1px solid var(--line); border-radius: 11px; color: var(--text); text-decoration: none; background: rgba(255,255,255,.02); }
+    .source-station-card img, .source-location-card img { width: 48px; height: 48px; flex: 0 0 48px; object-fit: contain; border-radius: 8px; background: rgba(216,241,123,.07); }
+    .source-station-card strong, .source-location-card strong { display: block; font-size: 11px; }
+    .source-station-card small, .source-location-card small { display: block; color: var(--muted); font-size: 10px; line-height: 1.35; margin-top: 3px; }
+    .source-station-card:hover, .source-location-card:hover { border-color: rgba(216,241,123,.36); background: rgba(216,241,123,.07); }
+    .source-location-icon { width: 48px; height: 48px; flex: 0 0 48px; display: grid; place-items: center; border-radius: 8px; background: rgba(216,241,123,.10); color: var(--lime); font-size: 22px; }
+    body.light .source-station-card img, body.light .source-location-card img, body.light .source-location-icon { background: rgba(47,111,209,.08); }
+    body.light .source-station-card:hover, body.light .source-location-card:hover { border-color: rgba(47,111,209,.36); background: rgba(47,111,209,.07); }
+    .location-head {  display: flex; justify-content: space-between; gap: 10px; align-items: center; margin-bottom: 10px; }
     .location-title { font-size: 12px; font-weight: 750; }
     .location-title span { color: var(--muted-2); font-size: 10px; font-weight: 500; margin-left: 5px; }
     .map-link { color: var(--lime); text-decoration: none; border: 1px solid rgba(216,241,123,.22); background: rgba(216,241,123,.07); padding: 7px 9px; border-radius: 9px; font-size: 10px; white-space: nowrap; }
@@ -443,8 +469,49 @@
     .map-frame { display: block; width: 100%; height: 100%; min-height: 0; border: 0; background: #0d1814; }
     .map-fallback { padding: 8px 15px; color: var(--muted-2); font-size: 10px; border-top: 1px solid var(--line); }
     .map-fallback a { color: var(--lime); }
-    .toast { position: fixed; bottom: 22px; left: 50%; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; background: var(--text); color: var(--bg); border-radius: 11px; padding: 10px 14px; font-size: 11px; font-weight: 700; transition: .25s ease; z-index: 70; }
+    .panel-modal { position: fixed; inset: 0; z-index: 9000; display: grid; place-items: center; padding: 24px; background: rgba(3,8,5,.78); backdrop-filter: blur(8px); animation: rise-in .22s ease both; }
+    .panel-window { width: min(1280px, 100%); height: min(850px, 92vh); display: grid; grid-template-rows: auto 1fr; overflow: hidden; border: 1px solid var(--line-strong); border-radius: 20px; background: var(--panel-strong); box-shadow: 0 30px 100px rgba(0,0,0,.55); }
+    .panel-window-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 15px; border-bottom: 1px solid var(--line); }
+    .panel-window-title { font-size: 13px; font-weight: 800; }
+    .panel-window-body { min-height: 0; overflow: auto; padding: 18px; }
+    .panel-window-body > .sets-panel, .panel-window-body > .community-panel { display: grid; }
+    .panel-window-body > .sets-panel[hidden], .panel-window-body > .community-panel[hidden] { display: none !important; }
+    .toast { position: fixed; bottom: 22px; left: 50%; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; background: var(--text); color: var(--bg); border-radius: 11px; padding: 10px 14px; font-size: 11px; font-weight: 700; transition: .25s ease; z-index: 11000; }
     .toast.show { transform: translate(-50%, 0); opacity: 1; }
+    body.glass {
+      --bg: #07121c;
+      --bg-soft: #0b1c2b;
+      --panel: rgba(255,255,255,.075);
+      --panel-strong: rgba(11,24,38,.88);
+      --panel-hover: rgba(255,255,255,.13);
+      --line: rgba(220,245,255,.16);
+      --line-strong: rgba(220,245,255,.28);
+      --text: #f0f8ff;
+      --muted: #a8bac8;
+      --muted-2: #7e94a5;
+      --lime: #9bf6e4;
+      --lime-dark: #67dfca;
+      --blue: #a8d1ff;
+      --orange: #ffd09b;
+      --shadow: 0 24px 90px rgba(0,0,0,.46);
+      position: relative;
+      overflow-x: hidden;
+      background: radial-gradient(circle at 9% 10%, rgba(97,222,205,.18), transparent 27rem), radial-gradient(circle at 90% 18%, rgba(112,151,255,.22), transparent 30rem), linear-gradient(140deg,#07121c,#101a32 55%,#08141e);
+    }
+    body.glass::before, body.glass::after { content: ""; position: fixed; z-index: 0; pointer-events: none; border-radius: 50%; filter: blur(55px); opacity: .38; }
+    body.glass::before { width: 250px; height: 250px; left: 20%; top: 18%; background: rgba(127,248,226,.23); }
+    body.glass::after { width: 330px; height: 330px; right: 5%; bottom: 8%; background: rgba(139,157,255,.25); }
+    body.glass .app-shell { position: relative; z-index: 1; }
+    body.glass .topbar, body.glass .sidebar, body.glass .hero, body.glass .stat-card, body.glass .table-card, body.glass .table-caption, body.glass .select-wrap select, body.glass .toggle, body.glass .filter-chip, body.glass .sets-panel, body.glass .community-panel, body.glass .set-controls, body.glass .set-preview, body.glass .set-item-card, body.glass .detail-block, body.glass .location-card, body.glass .resource-usage-block, body.glass dialog, body.glass .map-window, body.glass .panel-window { background-color: rgba(255,255,255,.075); backdrop-filter: blur(24px) saturate(145%); -webkit-backdrop-filter: blur(24px) saturate(145%); border-color: rgba(220,245,255,.17); }
+    body.glass .topbar { background: rgba(7,18,28,.52); }
+    body.glass .sidebar { background: rgba(7,18,28,.34); }
+    body.glass .hero { background: linear-gradient(118deg, rgba(82,229,209,.15), rgba(63,98,190,.16)); }
+    body.glass th { background: rgba(0,0,0,.18); }
+    body.glass .item-art, body.glass .ingredient-card, body.glass .usage-item, body.glass .source-station-card, body.glass .source-location-card { background: rgba(255,255,255,.07); border-color: rgba(220,245,255,.17); }
+    body.glass .map-modal, body.glass .panel-modal { background: rgba(2,9,16,.62); }
+    body.glass .map-window, body.glass .panel-window { background-color: rgba(8,20,33,.78); }
+    body.glass .glass-btn.active { color: var(--lime); box-shadow: 0 0 20px rgba(155,246,228,.25); }
+
     @media (max-width: 1100px) {
       .topbar { padding: 0 22px; gap: 15px; }
       .brand { min-width: 180px; }
@@ -459,6 +526,7 @@
       .map-btn { grid-area: map; flex: none; width: auto; margin-left: 0; justify-self: end; justify-content: center; }
       .searchbox { grid-area: search; flex: none; width: 100%; max-width: none; }
       .layout { display: block; }
+      .hero-dashboard { grid-template-columns: 1fr; gap: 18px; margin-bottom: 25px; }
       .sidebar { border-right: 0; border-bottom: 1px solid var(--line); padding: 16px; }
       .park-summary, .eyebrow, .sidebar-foot, .nav-label { display: none; }
       .nav-list { display: flex; overflow-x: auto; gap: 6px; }
@@ -533,6 +601,9 @@
       .map-modal { padding: 8px; }
       .map-window { height: 94vh; border-radius: 15px; }
       .map-window-external { display: none; }
+      .panel-modal { padding: 8px; }
+      .panel-window { height: 94vh; border-radius: 15px; }
+      .panel-window-body { padding: 11px; }
       .modal-head, .modal-body { padding-left: 17px; padding-right: 17px; }
     }
   </style>
@@ -547,25 +618,18 @@
       <label class="searchbox" aria-label="Поиск по названию">
         <span class="search-icon">⌕</span>
         <input id="searchInput" type="search" autocomplete="off" placeholder="Найти оружие, предмет или ресурс…" />
-        <span class="shortcut">⌘ K</span>
       </label>
       <div class="language-switch" id="languageSwitch" aria-label="Выбор языка"><button data-lang="ru" title="Русский">РУС</button><button data-lang="en" title="Английский">АНГЛ</button></div>
       <div class="top-actions">
-        <button class="icon-btn" id="themeBtn" title="Переключить тему" aria-label="Переключить тему">☼</button>
+        <button class="icon-btn" id="themeBtn" title="Переключить светлую и тёмную тему" aria-label="Переключить светлую и тёмную тему">☼</button>
+        <button class="icon-btn glass-btn" id="glassBtn" title="Включить дизайн жидкого стекла" aria-label="Включить дизайн жидкого стекла">◉</button>
         <button class="icon-btn" id="favoritesBtn" title="Избранное" aria-label="Показать избранное">☆</button>
       </div>
-      <a class="map-btn" href="https://grounded2.th.gl/maps/Brookhollow%20Park" data-map-open="https://grounded2.th.gl/maps/Brookhollow%20Park" data-map-title="Интерактивная карта Grounded 2" title="Открыть интерактивную карту Grounded 2">⌖ <span>Интерактивная карта</span> ↗</a>
     </header>
 
     <div class="layout" id="top">
       <aside class="sidebar">
         <div class="eyebrow">ПОЛЕВАЯ БАЗА · 02</div>
-        <div class="park-summary">
-          <div class="park-title">Парк Брукхоллоу</div>
-          <div class="park-copy">Всё, что удалось рассмотреть под травой: от первой палки до редких находок Незнакомца.</div>
-          <div class="park-line"></div>
-          <div class="park-meta"><span>Статус</span><b>КАТАЛОГ АКТИВЕН</b></div>
-        </div>
         <div class="nav-label">РАЗДЕЛЫ КАТАЛОГА</div>
         <nav class="nav-list" id="categoryNav"></nav>
         <button class="nav-item sets-nav" id="setsNav" data-sets="true"><span class="nav-icon">♙</span><span class="nav-text">Сэты</span><span class="nav-count">3</span></button>
@@ -575,21 +639,16 @@
       </aside>
 
       <main class="main">
-        <section class="hero">
-          <div class="hero-copy">
-            <div class="hero-kicker"><i></i> ПОЛЕВАЯ ЭНЦИКЛОПЕДИЯ</div>
-            <h1>Мир большой.<br /><em>Ты — крошечный.</em></h1>
-            <p class="hero-description">Удобный каталог предметов Grounded 2: характеристики, эффекты, рецепты и источники в одном месте.</p>
-            <div class="hero-bubbles">
-              <span class="bubble">⌕ Поиск по названию</span>
-              <span class="bubble">⚒ Рецепты</span>
-              <span class="bubble">♡ Избранное</span>
+        <div class="hero-dashboard">
+          <section class="hero">
+            <div class="hero-copy">
+              <div class="hero-kicker"><i></i> ПОЛЕВАЯ ЭНЦИКЛОПЕДИЯ ПАРКА БРУКХОЛЛОУ</div>
+              <h1>Мир большой.<br /><em>Ты — крошечный.</em></h1>
+              <p class="hero-description">Всё, что удалось рассмотреть под травой: от первой палки до редких находок Незнакомца.</p>
             </div>
-          </div>
-          <div class="hero-art" aria-hidden="true"><div class="leaf one"></div><div class="leaf two"></div><div class="leaf three"></div><div class="blade"></div></div>
-        </section>
-
-        <section class="stats-row" id="statsRow"></section>
+          </section>
+          <section class="stats-row" id="statsRow"></section>
+        </div>
 
         <section class="section-toolbar" id="catalogToolbar">
           <div>
@@ -626,6 +685,7 @@
   <dialog id="detailDialog">
     <div class="modal-head">
       <div class="modal-title-row" id="modalTitleRow"></div>
+      <button type="button" class="modal-star" id="modalFavorite" title="Добавить в избранное" aria-label="Добавить в избранное">☆</button>
       <button class="modal-close" id="modalClose" aria-label="Закрыть">×</button>
     </div>
     <div class="modal-body" id="modalBody"></div>
@@ -635,6 +695,12 @@
       <div class="map-window-head"><span class="map-window-title" id="mapWindowTitle">Интерактивная карта</span><div class="map-window-actions"><a class="map-window-external" id="mapWindowExternal" href="#" target="_blank" rel="noreferrer">Открыть отдельно ↗</a><button class="map-window-close" id="mapWindowClose" aria-label="Закрыть карту">×</button></div></div>
       <div class="map-frame-wrap"><iframe class="map-frame" id="mapFrame" title="Интерактивная карта Grounded 2" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
       <div class="map-fallback">Если карта не загрузилась внутри окна, открой её отдельно: <a id="mapFallbackLink" href="#" target="_blank" rel="noreferrer">перейти к карте ↗</a></div>
+    </div>
+  </div>
+  <div class="panel-modal" id="panelModal" hidden role="dialog" aria-modal="true" aria-label="Дополнительный раздел">
+    <div class="panel-window">
+      <div class="panel-window-head"><span class="panel-window-title" id="panelWindowTitle">Дополнительный раздел</span><button class="map-window-close" id="panelWindowClose" aria-label="Закрыть раздел">×</button></div>
+      <div class="panel-window-body" id="panelModalBody"></div>
     </div>
   </div>
   <div class="toast" id="toast"></div>
@@ -706,14 +772,26 @@
       const rows = $('itemRows');
       const emptyState = $('emptyState');
       const dialog = $('detailDialog');
+      const glassBtn = $('glassBtn');
       const mapModal = $('mapModal');
       const mapFrame = $('mapFrame');
       const mapWindowTitle = $('mapWindowTitle');
       const mapWindowExternal = $('mapWindowExternal');
       const mapFallbackLink = $('mapFallbackLink');
+      let detailCloseTimer;
+      function closeDetailAnimated() {
+        if (!dialog.open) return;
+        clearTimeout(detailCloseTimer);
+        dialog.classList.add('closing');
+        detailCloseTimer = setTimeout(() => {
+          dialog.close();
+          dialog.classList.remove('closing');
+        }, 200);
+      }
       function openMapOverlay(url, title = 'Интерактивная карта') {
         if (!url || url === '#') return;
         if (dialog.open) dialog.close();
+        if (!panelModal.hidden) closePanelOverlay();
         mapWindowTitle.textContent = title;
         mapWindowExternal.href = url;
         mapFallbackLink.href = url;
@@ -725,6 +803,35 @@
         mapModal.hidden = true;
         mapFrame.src = 'about:blank';
         document.body.style.overflow = '';
+      }
+      const panelModal = $('panelModal');
+      const panelModalBody = $('panelModalBody');
+      const panelWindowTitle = $('panelWindowTitle');
+      function openPanelOverlay(kind) {
+        if (dialog.open) dialog.close();
+        const panel = kind === 'sets' ? $('setsPanel') : $('communityPanel');
+        panelModalBody.querySelectorAll('.sets-panel, .community-panel').forEach(item => { item.hidden = true; });
+        panelModalBody.appendChild(panel);
+        panel.hidden = false;
+        panelModal.dataset.panel = kind;
+        state.showSets = kind === 'sets';
+        state.showCommunity = kind === 'community';
+        panelWindowTitle.textContent = kind === 'sets' ? 'Сэты и подбор экипировки' : 'Советы сообщества';
+        panelModal.hidden = false;
+        document.body.style.overflow = 'hidden';
+        if (kind === 'sets') renderSets(); else renderCommunity();
+        renderNav();
+      }
+      function closePanelOverlay() {
+        const kind = panelModal.dataset.panel;
+        panelModal.hidden = true;
+        if (kind === 'sets') $('setsPanel').hidden = true;
+        if (kind === 'community') $('communityPanel').hidden = true;
+        state.showSets = false;
+        state.showCommunity = false;
+        panelModal.dataset.panel = '';
+        document.body.style.overflow = '';
+        renderNav();
       }
 
       const countBy = (category) => items.filter(item => item.category === category).length;
@@ -745,7 +852,7 @@
         'Unique': 'Уникальные', 'Ominent token': 'Жетон Оминент', 'Stranger': 'Находки Незнакомца',
         'Roofs': 'Крыши', 'Walls & doors': 'Стены и двери', 'Floors & foundations': 'Полы и фундаменты',
         'Decorations & utilities': 'Декор и полезные предметы', 'Structures': 'Конструкции',
-        'Upgrade material': 'Материал улучшения', 'Natural resource': 'Природный ресурс', 'Crafting material': 'Материал для крафта'
+        'Upgrade material': 'Материал улучшения', 'Natural resource': 'Природный ресурс', 'Crafting material': 'Материал для крафта', 'Buggy egg': 'Яйцо для выращивания багги'
       };
       const displaySubtype = (value) => subtypeRu[value] || value || 'Общее';
       const nameOverrides = {
@@ -889,10 +996,18 @@
         const resourceId = resource ? `data-resource="${escapeHtml(resource.id)}"` : '';
         return `<button type="button" class="ingredient-card" ${resourceId} title="Открыть карточку ресурса: ${escapeHtml(displayIngredient(ingredient))}">${ingredient.image ? `<img src="${escapeHtml(ingredient.image)}" alt="" loading="lazy" />` : `<span class="ingredient-icon">●</span>`}<span class="ingredient-info"><b class="ingredient-qty">${ingredient.qty}×</b><span class="ingredient-name">${escapeHtml(displayIngredient(ingredient))}</span></span></button>`;
       }
+      function craftingStationFor(item) {
+        if (item.craftingStation) return stationRussian[item.craftingStation] || localizeText(item.craftingStation);
+        if (!item.ingredients?.length) return '';
+        if (item.category === 'building') return 'В мире';
+        if (item.category === 'weapon' || item.category === 'armor' || item.category === 'trinket') return 'Верстак';
+        return '';
+      }
       function recipeHtml(item) {
         const ingredients = item.ingredients || [];
         const methods = item.craftingMethods || [];
-        const source = methods.length ? '' : clean(displayField(item, 'unlock') || displayField(item, 'source'));
+        const craftedGear = ingredients.length && ['weapon', 'armor', 'trinket', 'building'].includes(item.category);
+        const source = methods.length || craftedGear ? '' : clean(displayField(item, 'unlock') || displayField(item, 'source'));
         let recipeLine;
         if (methods.length) {
           recipeLine = methods.map(method => {
@@ -904,7 +1019,8 @@
             return `<div class="craft-method"><div class="method-label">С помощью: ${escapeHtml(station)}</div>${content}</div>`;
           }).join('');
         } else if (ingredients.length) {
-          recipeLine = `<div class="ingredient-list">${ingredients.map(ingredientCardHtml).join('')}</div>`;
+          const station = craftingStationFor(item);
+          recipeLine = `<div class="craft-method">${station ? `<div class="method-label">С помощью: ${escapeHtml(station)}</div>` : ''}<div class="ingredient-list">${ingredients.map(ingredientCardHtml).join('')}</div></div>`;
         } else if (displayField(item, 'recipe')) {
           recipeLine = `<div class="recipe-text">${escapeHtml(displayField(item, 'recipe'))}</div>`;
         } else {
@@ -967,8 +1083,10 @@
         { keys: ['stinkbug', 'вонючка'], label: 'Вонючка', slug: 'Stinkbug' },
         { keys: ['gnat', 'мошка'], label: 'Мошка', slug: 'Gnat' },
         { keys: ['weevil', 'долгоносик'], label: 'Долгоносик', slug: 'Weevil' },
-        { keys: ['lawn mite', 'mite', 'клещ'], label: 'Газонный клещ', slug: 'Mite' },
+        { keys: ['lawn mite', 'mite', 'клещ'], label: 'Газонный клещ', slug: 'Lawn_Mite' },
         { keys: ['aphid', 'тля'], label: 'Тля', slug: 'Aphid' },
+        { keys: ['black soldier ant', 'black worker ant', 'black ant', 'чёрный муравей', 'черный муравей'], label: 'Чёрный муравей', slug: 'Black_Soldier_Ant' },
+        { keys: ['red soldier ant', 'red worker ant', 'red ant', 'красный муравей'], label: 'Красный муравей', slug: 'Red_Soldier_Ant' },
         { keys: ['garden snail', 'садовая улитка'], label: 'Садовая улитка', slug: 'Garden_Snail' },
         { keys: ['larva', 'личинка'], label: 'Личинка', slug: 'Larva' }
       ];
@@ -979,7 +1097,8 @@
           if (direct) return direct;
         }
         const text = [item.source, item.unlock, item.sourceRu, item.unlockRu].filter(Boolean).join(' ').toLocaleLowerCase('ru-RU');
-        return creatureSources.find(source => source.keys.some(key => text.includes(key))) || null;
+        const containsTerm = key => new RegExp(`(^|[^\\p{L}\\p{N}])${key.replace(/[.*+?^${}()|[\\]\\]/g, '\\\\$&')}([^\\p{L}\\p{N}]|$)`, 'iu').test(text);
+        return creatureSources.find(source => source.keys.some(containsTerm)) || null;
       }
       function creatureImageUrl(creature) {
         return `https://grounded.wiki.gg/wiki/Special:FilePath/${creature.slug}.png?width=80`;
@@ -1001,13 +1120,11 @@
         const mapLabel = exact ? '⌖ Открыть точку на карте Grounded 2 ↗' : '⌖ Открыть карту Grounded 2 ↗';
         const points = mapPointsPercent(item);
         const pins = points.map(point => `<span class="map-pin" style="left:${point.x}%;top:${point.y}%"></span>`).join('');
-        const creature = findCreatureSource(item);
-        const creatureCard = creature ? `<a class="location-source-creature" href="${itemMapUrl(item)}" data-map-open="${itemMapUrl(item)}" data-map-title="${escapeHtml(creature.label)}"><img src="${creatureImageUrl(creature)}" alt="${escapeHtml(creature.label)}" loading="lazy" /><strong>${escapeHtml(creature.label)}</strong><span>Нажми, чтобы открыть точки расположения насекомого.</span></a>` : '';
         const visualMapAttrs = `href="${escapeHtml(itemMapUrl(item))}" data-map-open="${escapeHtml(itemMapUrl(item))}" data-map-title="${escapeHtml(displayName(item))}"`;
         const mapImage = item.mapProvider === 'MapGenie' ? 'https://media.mapgenie.io/v2/assets/prod/games/grounded-2/maps/brookhollow-park/preview.jpg' : mapPreviewUrl;
         const visual = `<a class="location-map-visual" ${visualMapAttrs}><div class="mini-map"><img src="${mapImage}" alt="Карта парка" /><div class="map-road"></div>${pins}<span class="map-label" style="left:${region.x}%;top:${region.y}%">${escapeHtml(item.mapPoints?.length > 1 ? `Показано точек: ${item.mapPoints.length}` : region.label)}</span></div></a>`;
         const exactLabel = item.mapLocationIds?.length ? `точные точки: ${item.mapLocationIds.length}` : (exact ? 'точная точка' : 'ориентир по описанию');
-        return `<div class="location-card"><div class="location-head"><div class="location-title">Расположение <span>${exactLabel}</span></div><a class="map-link" href="${itemMapUrl(item)}" data-map-open="${itemMapUrl(item)}" data-map-title="${escapeHtml(displayName(item))}">${mapLabel}</a></div>${visual}<div class="location-copy">${escapeHtml(truncate(locationText, 360))}</div>${creatureCard}</div>`;
+        return `<div class="location-card"><div class="location-head"><div class="location-title">Расположение <span>${exactLabel}</span></div><a class="map-link" href="${itemMapUrl(item)}" data-map-open="${itemMapUrl(item)}" data-map-title="${escapeHtml(displayName(item))}">${mapLabel}</a></div>${visual}<div class="location-copy">${escapeHtml(truncate(locationText, 360))}</div></div>`;
       }
       function rowHtml(item, index) {
         const favorite = state.favorites.has(item.id);
@@ -1143,18 +1260,19 @@
 
       function render() {
         renderLanguage();
+        glassBtn.classList.toggle('active', document.body.classList.contains('glass'));
+        glassBtn.title = document.body.classList.contains('glass') ? 'Выключить дизайн жидкого стекла' : 'Включить дизайн жидкого стекла';
         renderNav();
-        const isCommunity = state.showCommunity;
-        const isSets = state.showSets;
+        const activePanel = panelModal.hidden ? '' : panelModal.dataset.panel;
         $('catalogToolbar').hidden = false;
         $('quickFilters').hidden = false;
         $('catalogTable').hidden = false;
         $('loadMore').hidden = false;
         $('catalogFootnote').hidden = false;
-        $('communityPanel').hidden = !isCommunity;
-        $('setsPanel').hidden = !isSets;
-        if (isCommunity) renderCommunity();
-        if (isSets) renderSets();
+        $('communityPanel').hidden = activePanel !== 'community';
+        $('setsPanel').hidden = activePanel !== 'sets';
+        if (activePanel === 'community') renderCommunity();
+        if (activePanel === 'sets') renderSets();
         const pool = currentPool();
         updateSelects(pool);
         renderQuickFilters();
@@ -1191,24 +1309,81 @@
         rows.querySelectorAll('[data-favorite]').forEach(button => button.addEventListener('click', () => toggleFavorite(button.dataset.favorite)));
       }
 
+      const usageCache = new Map();
+      function itemsUsingResource(resource) {
+        if (usageCache.has(resource.id)) return usageCache.get(resource.id);
+        const used = items.filter(item => item.id !== resource.id && (
+          item.ingredients?.some(ingredient => ingredient.name === resource.name) ||
+          item.craftingMethods?.some(method => parseRecipeIngredients(method.recipe).some(ingredient => ingredient.name === resource.name))
+        )).sort((a, b) => displayName(a).localeCompare(displayName(b)));
+        usageCache.set(resource.id, used);
+        return used;
+      }
+      function resourceUsageHtml(resource) {
+        const used = itemsUsingResource(resource);
+        const cards = used.map(item => `<button type="button" class="usage-item" data-usage-id="${escapeHtml(item.id)}" title="Открыть карточку: ${escapeHtml(displayName(item))}">${item.image ? `<img src="${escapeHtml(item.image)}" alt="" loading="lazy" />` : `<span class="usage-item-icon">${itemLetter(item)}</span>`}<span class="usage-item-name">${escapeHtml(displayName(item))}</span></button>`).join('');
+        return `<section class="resource-usage-block"><div class="resource-usage-title"><strong>Предметы из этого ресурса</strong><span>${used.length} ${used.length === 1 ? 'предмет' : 'предметов'}</span></div>${used.length ? `<div class="usage-list">${cards}</div>` : '<div class="detail-value">Пока не найдено предметов, которые создаются с его использованием.</div>'}</section>`;
+      }
+
+      function sourceHtml(item) {
+        const isEquipment = ['weapon', 'armor', 'trinket'].includes(item.category);
+        const isStranger = String(item.subtype || '').toLocaleLowerCase().includes('stranger');
+        if (isStranger) return '';
+        const creature = !isEquipment || item.category === 'trinket' && !item.ingredients?.length ? findCreatureSource(item) : null;
+        const rawSource = clean(item.source || item.unlock || '');
+        const station = craftingStationFor(item);
+        const isFoundOnMap = Boolean(item.mapLocationIds?.length || item.mapUrl) && (isEquipment || item.category === 'resource' && !item.craftingMethods?.length);
+        const isLocationSource = /\b(in|inside|found|location|cave|stash|chest|located|under|south|north|area)\b|антхилл|anthill|пещер|внутри|воронк|тайник|сундук|пещера|располож/i.test(rawSource);
+        if (!creature && !rawSource && !station) return '';
+        const mapAttrs = item.mapUrl ? `href="${escapeHtml(itemMapUrl(item))}" data-map-open="${escapeHtml(itemMapUrl(item))}" data-map-title="${escapeHtml(displayName(item))}"` : '';
+        if (creature) {
+          const card = item.mapUrl
+            ? `<a class="location-source-creature" ${mapAttrs}><img src="${creatureImageUrl(creature)}" alt="${escapeHtml(creature.label)}" loading="lazy" /><strong>${escapeHtml(creature.label)}</strong><span>Нажми, чтобы открыть точки появления.</span></a>`
+            : `<div class="location-source-creature"><img src="${creatureImageUrl(creature)}" alt="${escapeHtml(creature.label)}" loading="lazy" /><strong>${escapeHtml(creature.label)}</strong><span>Источник выпадения предмета.</span></div>`;
+          return `<div class="detail-block source-block"><div class="detail-label">Источник</div><div class="detail-value"><strong>Выпадает из:</strong> ${escapeHtml(creature.label)}</div>${card}</div>`;
+        }
+        if (isFoundOnMap || isLocationSource) {
+          const mapCard = item.mapUrl
+            ? `<a class="source-location-card" ${mapAttrs}><span class="source-location-icon">⌖</span><span><strong>Расположение на карте</strong><small>Нажми, чтобы открыть точную точку</small></span></a>`
+            : `<div class="source-location-card"><span class="source-location-icon">⌖</span><span><strong>Расположение</strong><small>Точная точка пока не добавлена</small></span></div>`;
+          return `<div class="detail-block source-block"><div class="detail-label">Источник</div>${mapCard}</div>`;
+        }
+        const stationNames = { 'Workbench': 'Верстак', 'By Hand': 'Вручную', 'Oven': 'Печь', 'Grinder': 'Измельчитель', 'Spinning Wheel': 'Прялка', 'Jerky Rack': 'Сушилка', 'Glue Masher': 'Мешалка для клея', 'Shard Recipe': 'Рецепт из осколков', 'Bug Part Recipe': 'Рецепт из частей существа' };
+        const stationRaw = isStranger ? 'Workbench' : (item.craftingStation || ({ 'Верстак': 'Workbench', 'Вручную': 'By Hand', 'Печь': 'Oven', 'Измельчитель': 'Grinder', 'Прялка': 'Spinning Wheel', 'Сушилка': 'Jerky Rack', 'Мешалка для клея': 'Glue Masher', 'Рецепт из осколков': 'Shard Recipe', 'Рецепт из частей существа': 'Bug Part Recipe' }[station] || (stationNames[rawSource] ? rawSource : '')));
+        const stationLabel = isStranger ? 'Верстак Незнакомца' : (station || stationNames[stationRaw] || displayField(item, 'source') || displayField(item, 'unlock'));
+        const stationItem = items.find(entry => entry.name === stationRaw);
+        const image = stationItem?.image ? `<img src="${escapeHtml(stationItem.image)}" alt="" loading="lazy" />` : `<span class="source-location-icon">⚒</span>`;
+        return `<div class="detail-block source-block"><div class="detail-label">Источник</div><div class="source-station-card">${image}<span><strong>${escapeHtml(stationLabel || 'Источник получения')}</strong><small>${station ? 'Инструмент или станция создания' : 'Предмет или ресурс, из которого получен'}</small></span></div></div>`;
+      }
+
       function openDetail(item) {
         if (dialog.open) dialog.close();
         const meta = [categoryLabel(item), displaySubtype(item.subtype), tierLabel(item.tier), item.set ? `${state.lang === 'en' ? item.set : item.setRu || item.set} · комплект` : ''].filter(Boolean).join(' · ');
         const favorite = state.favorites.has(item.id);
-        $('modalTitleRow').innerHTML = `${imageHtml(item, true)}<div><h2 class="modal-name">${escapeHtml(displayName(item))}</h2><div class="modal-meta">${escapeHtml(meta)}</div></div><button type="button" class="modal-star ${favorite ? 'active' : ''}" data-modal-favorite="${escapeHtml(item.id)}" title="${favorite ? 'Убрать из избранного' : 'Добавить в избранное'}">${favorite ? '★' : '☆'}</button>`;
+        $('modalTitleRow').innerHTML = `${imageHtml(item, true)}<div><h2 class="modal-name">${escapeHtml(displayName(item))}</h2><div class="modal-meta">${escapeHtml(meta)}</div></div>`;
+        const modalFavorite = $('modalFavorite');
+        modalFavorite.dataset.modalFavorite = item.id;
+        modalFavorite.classList.toggle('active', favorite);
+        modalFavorite.textContent = favorite ? '★' : '☆';
+        modalFavorite.title = favorite ? 'Убрать из избранного' : 'Добавить в избранное';
+        modalFavorite.setAttribute('aria-label', modalFavorite.title);
         const blocks = [];
         const localizedStats = displayField(item, 'stats');
         if (localizedStats) blocks.push(`<div class="detail-block"><div class="detail-label">Характеристики</div><div class="detail-value">${escapeHtml(localizedStats)}</div></div>`);
         if (item.effect || item.sleek || item.setBonus || item.class) blocks.push(`<div class="detail-block"><div class="detail-label">Эффекты</div><div class="detail-value">${effectHtml(item).replace(/class="effect-stack"/g, 'class="modal-effects"')}</div></div>`);
-        const recipeTitle = item.ingredients?.length ? 'Ресурсы для создания' : (displayField(item, 'recipe') ? 'Рецепт' : 'Источник');
-        blocks.push(`<div class="detail-block"><div class="detail-label">${recipeTitle}</div><div class="detail-value">${recipeHtml(item)}</div></div>`);
-        const repair = displayField(item, 'repair');
-        if (repair) blocks.push(`<div class="detail-block"><div class="detail-label">Ремонт</div><div class="detail-value">${escapeHtml(repair)}</div></div>`);
+        const hasRecipeInfo = Boolean(item.ingredients?.length || item.craftingMethods?.length || displayField(item, 'recipe'));
+        if (hasRecipeInfo) {
+          const recipeTitle = item.ingredients?.length || item.craftingMethods?.length ? 'Ресурсы для создания' : 'Рецепт';
+          blocks.push(`<div class="detail-block"><div class="detail-label">${recipeTitle}</div><div class="detail-value">${recipeHtml(item)}</div></div>`);
+        }
+        const sourceBlock = sourceHtml(item);
+        if (sourceBlock) blocks.push(sourceBlock);
         if (hasLocation(item)) blocks.push(locationHtml(item));
+        const usageBlock = item.category === 'resource' ? resourceUsageHtml(item) : '';
         const sourceKey = { weapon: 'Weapons', armor: 'Armor', trinket: 'Trinkets', resource: 'Resources', building: 'Construction' }[item.category];
         const source = DATA.sources?.find(source => source.label.includes(sourceKey || 'Grounded Wiki'));
-        blocks.push(`<div class="modal-source">Каталог обновлён ${escapeHtml(DATA.updated || '—')}. Данные сверены по открытым игровым справочникам. ${source ? `<a href="${source.url}" target="_blank" rel="noreferrer">Открыть первоисточник ↗</a>` : ''}</div>`);
-        $('modalBody').innerHTML = `<div class="modal-grid">${blocks.slice(0, 4).join('')}</div>${blocks.slice(4).join('')}`;
+        const modalSource = `<div class="modal-source">Каталог обновлён ${escapeHtml(DATA.updated || '—')}. Данные сверены по открытым игровым справочникам. ${source ? `<a href="${source.url}" target="_blank" rel="noreferrer">Открыть первоисточник ↗</a>` : ''}</div>`;
+        $('modalBody').innerHTML = `<div class="modal-grid">${blocks.slice(0, 4).join('')}</div>${blocks.slice(4).join('')}${usageBlock}${modalSource}`;
         dialog.showModal();
       }
       function toggleFavorite(id) {
@@ -1228,8 +1403,8 @@
         render();
       });
       $('setsNav').addEventListener('click', () => {
-        state.showSets = !state.showSets;
-        render();
+        if (state.showSets && panelModal.dataset.panel === 'sets') closePanelOverlay();
+        else openPanelOverlay('sets');
       });
       $('setsPanel').addEventListener('click', event => {
         const trigger = event.target.closest('[data-equipment-id]');
@@ -1258,8 +1433,8 @@
         renderSets();
       });
       $('communityNav').addEventListener('click', () => {
-        state.showCommunity = !state.showCommunity;
-        render();
+        if (state.showCommunity && panelModal.dataset.panel === 'community') closePanelOverlay();
+        else openPanelOverlay('community');
       });
       $('categoryNav').addEventListener('click', event => {
         const button = event.target.closest('[data-category]'); if (!button) return;
@@ -1275,12 +1450,13 @@
       $('favoritesBtn').addEventListener('click', () => { state.favoritesOnly = !state.favoritesOnly; state.visible = 80; render(); });
       $('loadMore').addEventListener('click', () => { state.visible += 80; render(); });
       searchInput.addEventListener('input', event => { state.query = event.target.value.trim(); state.visible = 80; render(); });
-      $('themeBtn').addEventListener('click', () => { document.body.classList.toggle('light'); localStorage.setItem('grounded-theme', document.body.classList.contains('light') ? 'light' : 'dark'); });
-      $('modalClose').addEventListener('click', () => dialog.close());
-      $('modalTitleRow').addEventListener('click', event => {
-        const button = event.target.closest('[data-modal-favorite]');
-        if (!button) return;
+      $('themeBtn').addEventListener('click', () => { document.body.classList.toggle('light'); localStorage.setItem('grounded-theme', document.body.classList.contains('light') ? 'light' : 'dark'); render(); });
+      $('glassBtn').addEventListener('click', () => { document.body.classList.toggle('glass'); localStorage.setItem('grounded-glass', document.body.classList.contains('glass') ? 'on' : 'off'); render(); showToast(document.body.classList.contains('glass') ? 'Жидкое стекло включено' : 'Жидкое стекло выключено'); });
+      $('modalClose').addEventListener('click', closeDetailAnimated);
+      $('modalFavorite').addEventListener('click', () => {
+        const button = $('modalFavorite');
         const id = button.dataset.modalFavorite;
+        if (!id) return;
         if (state.favorites.has(id)) state.favorites.delete(id); else state.favorites.add(id);
         localStorage.setItem('grounded-favorites', JSON.stringify([...state.favorites]));
         const active = state.favorites.has(id);
@@ -1304,23 +1480,43 @@
           return;
         }
         const resourceButton = event.target.closest('[data-resource]');
-        if (!resourceButton) return;
-        const resource = items.find(entry => entry.id === resourceButton.dataset.resource);
-        if (resource) openDetail(resource);
+        if (resourceButton) {
+          const resource = items.find(entry => entry.id === resourceButton.dataset.resource);
+          if (resource) openDetail(resource);
+          return;
+        }
+        const usageButton = event.target.closest('[data-usage-id]');
+        if (usageButton) {
+          event.preventDefault();
+          const usedItem = items.find(entry => entry.id === usageButton.dataset.usageId);
+          if (usedItem) openDetail(usedItem);
+        }
       });
-      dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
+      document.addEventListener('click', event => {
+        const usageButton = event.target.closest('[data-usage-id]');
+        if (!usageButton || event.defaultPrevented) return;
+        event.preventDefault();
+        const usedItem = items.find(entry => entry.id === usageButton.dataset.usageId);
+        if (usedItem) openDetail(usedItem);
+      });
+      dialog.addEventListener('click', event => { if (event.target === dialog) closeDetailAnimated(); });
+      dialog.addEventListener('cancel', event => { event.preventDefault(); closeDetailAnimated(); });
       $('mapWindowClose').addEventListener('click', closeMapOverlay);
       mapModal.addEventListener('click', event => { if (event.target === mapModal) closeMapOverlay(); });
+      $('panelWindowClose').addEventListener('click', closePanelOverlay);
+      panelModal.addEventListener('click', event => { if (event.target === panelModal) closePanelOverlay(); });
       document.addEventListener('keydown', event => {
         if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); searchInput.focus(); }
         if (event.key === '/' && document.activeElement !== searchInput) { event.preventDefault(); searchInput.focus(); }
-        if (event.key === 'Escape' && dialog.open) dialog.close();
+        if (event.key === 'Escape' && dialog.open) { event.preventDefault(); closeDetailAnimated(); }
         if (event.key === 'Escape' && !mapModal.hidden) closeMapOverlay();
+        if (event.key === 'Escape' && !panelModal.hidden) closePanelOverlay();
       });
       if (localStorage.getItem('grounded-theme') === 'light') document.body.classList.add('light');
+      if (localStorage.getItem('grounded-glass') === 'on') document.body.classList.add('glass');
       renderStats();
       render();
     })();
   </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a32f835c4e45cc60',t:'MTc4ODA0ODAwNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a32ffd5c2decafd2',t:'MTc4ODA1MzAwMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
