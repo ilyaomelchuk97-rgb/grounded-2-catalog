@@ -664,7 +664,7 @@
       .layout { display: block; }
       .mobile-nav { position: fixed; left: 8px; right: 8px; bottom: 8px; z-index: 40; display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 5px; border: 1px solid var(--line-strong); border-radius: 16px; background: rgba(18,26,22,.90); backdrop-filter: blur(18px); box-shadow: 0 12px 40px rgba(0,0,0,.30); }
       .aphid-chat-fab { right: 14px; bottom: 73px; width: 56px; height: 56px; }
-      .aphid-chat { left: 10px; right: 10px; bottom: 72px; width: auto; height: min(720px, calc(100vh - 86px)); }
+      .aphid-chat { left: auto; right: 10px; bottom: 72px; width: calc(100vw - 20px); height: min(720px, calc(100vh - 86px)); transform: scale(.5); transform-origin: bottom right; animation: none; }
       .mobile-nav button { min-width: 0; height: 43px; border: 0; border-radius: 11px; background: transparent; color: var(--muted); font-size: 10px; font-weight: 750; }
       .mobile-nav button:hover, .mobile-nav button.active { color: var(--lime); background: rgba(216,241,123,.10); }
       body.light .mobile-nav { background: rgba(255,255,255,.91); }
@@ -1036,9 +1036,9 @@
       }
 
       const MISTRAL_API_BASE = 'https://api.mistral.ai/v1';
-      const MISTRAL_API_KEY = 'tTSWnND0tBfhbziycEbKh1RV5qqbsybK'; // ВСТАВЬ СЮДА СВОЙ API-КЛЮЧ MISTRAL МЕЖДУ КАВЫЧКАМИ
-      const APHID_AGENT_STORAGE = 'aphid-mistral-agent-id-v3';
-      const APHID_CONVERSATION_STORAGE = 'aphid-mistral-conversation-id-v3';
+      const MISTRAL_API_KEY = ''; // ВСТАВЬ СЮДА СВОЙ API-КЛЮЧ MISTRAL МЕЖДУ КАВЫЧКАМИ
+      const APHID_AGENT_STORAGE = 'aphid-mistral-agent-id-v4';
+      const APHID_CONVERSATION_STORAGE = 'aphid-mistral-conversation-id-v4';
       let aphidChatInitialized = false;
       function aphidSiteContext(question) {
         const tokens = [...new Set(String(question || '').toLocaleLowerCase('ru-RU').split(/[^\p{L}\p{N}]+/u).filter(token => token.length > 1))];
@@ -1070,7 +1070,7 @@
       async function aphidCreateAgent(key) {
         const payload = await aphidMistralRequest('/agents', key, {
           model: 'mistral-medium-latest', name: 'Тля — Архив дворика', description: 'Помощник каталога Grounded 2 с поиском по сайту и в интернете.',
-          instructions: 'Ты — дружелюбная Тля, помощник каталога Grounded 2. Отвечай только на русском языке, кроме названия игры Grounded 2 и общепринятых игровых терминов. У тебя есть полный актуальный контекст каталога в каждом сообщении. Сначала используй его, а если ответа там нет или нужна актуальная информация, используй встроенный инструмент web_search. Не выдумывай точные координаты, рецепты или характеристики. Отвечай понятно и кратко, а найденные источники указывай в конце ответа. У тебя есть доступ к карточкам сайта: если упоминаешь подходящий предмет, добавляй маркер [ITEM id="точный-id"]. Для набора из нескольких предметов используй [SET title="русское название набора" ids="id1,id2,id3"]. Для ссылок на сайт или найденные источники используй [LINK url="https://..." title="русское название"], а для изображения из разрешённого источника — [IMAGE url="https://..." alt="русское описание"]. Используй только id, URL и изображения, которые есть в контексте сайта или пришли из web_search. Не изменяй текст маркеров.',
+          instructions: 'Ты — Тля, глава Архива домика и заботливый маленький помощник игрока. Обращайся к пользователю только как «маленький помощник» или «помощник», дружелюбно и по-доброму, без навязчивого повторения обращения в каждом предложении. Отвечай только на русском языке, кроме названия игры Grounded 2 и общепринятых игровых терминов. У тебя есть полный актуальный контекст каталога в каждом сообщении. Сначала используй его, а если ответа там нет или нужна актуальная информация, используй встроенный инструмент web_search. Не выдумывай точные координаты, рецепты или характеристики. Отвечай понятно и кратко, а найденные источники указывай в конце ответа. У тебя есть доступ к карточкам сайта: если упоминаешь подходящий предмет, добавляй маркер [ITEM id="точный-id"]. Для набора из нескольких предметов используй [SET title="русское название набора" ids="id1,id2,id3"]. Для ссылок на сайт или найденные источники используй [LINK url="https://..." title="русское название"], а для изображения из разрешённого источника — [IMAGE url="https://..." alt="русское описание"]. Используй только id, URL и изображения, которые есть в контексте сайта или пришли из web_search. Не изменяй текст маркеров.',
           tools: [{ type: 'web_search' }], completion_args: { temperature: 0.25, top_p: 0.9 }
         });
         const agentId = payload.id || payload.agent_id;
@@ -1170,7 +1170,7 @@
       function aphidOpenChat() {
         $('aphidChat').hidden = false;
         if (!aphidChatInitialized) {
-          aphidAppendMessage('Привет! Я Тля. Сначала проверю каталог, а если нужной информации нет — попробую найти её в интернете.', 'assistant');
+          aphidAppendMessage('Привет, маленький помощник! Я Тля — глава Архива домика. Сначала проверю каталог, а если нужной информации нет — попробую найти её в интернете.', 'assistant');
           aphidChatInitialized = true;
         }
         setTimeout(() => $('aphidChatInput').focus(), 0);
@@ -2337,6 +2337,11 @@
         if (item) openDetail(item);
       });
       $('aphidChatForm').addEventListener('submit', aphidSubmit);
+      $('aphidChatInput').addEventListener('keydown', event => {
+        if (event.key !== 'Enter' || event.shiftKey || event.isComposing) return;
+        event.preventDefault();
+        $('aphidChatForm').requestSubmit();
+      });
       document.addEventListener('keydown', event => {
         if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); searchInput.focus(); }
         if (event.key === '/' && document.activeElement !== searchInput) { event.preventDefault(); searchInput.focus(); }
@@ -2354,5 +2359,5 @@
       openItemFromHash();
     })();
   </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a33dfe504bc3a1a4',t:'MTc4ODE5OTg0MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a33e5c3b9c1deecf',t:'MTc4ODIwMzY4OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
