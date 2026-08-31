@@ -882,12 +882,12 @@
     </div>
   </div>
   <nav class="mobile-nav" id="mobileNav" aria-label="Быстрая навигация"><button type="button" data-mobile-action="catalog">Каталог</button><button type="button" data-mobile-action="sets">Сэты</button><button type="button" data-mobile-action="favorites">Избранное</button><button type="button" data-mobile-action="map">Карта</button></nav>
-  <button class="aphid-chat-fab" id="aphidChatFab" type="button" title="Открыть чат с тлёй" aria-label="Открыть чат с тлёй"><img src="https://grounded.wiki.gg/wiki/Special:FilePath/Aphid.png?width=120" alt="Тля" /></button>
+  <button class="aphid-chat-fab" id="aphidChatFab" type="button" title="Открыть подсказки от тли" aria-label="Открыть подсказки от тли"><img src="https://grounded.wiki.gg/wiki/Special:FilePath/Aphid.png?width=120" alt="Тля" /></button>
   <aside class="aphid-chat" id="aphidChat" hidden role="dialog" aria-modal="false" aria-labelledby="aphidChatTitle">
     <div class="aphid-branch aphid-branch-left" aria-hidden="true"></div><div class="aphid-branch aphid-branch-right" aria-hidden="true"></div>
     <header class="aphid-chat-head">
       <div class="aphid-chat-avatar"><img src="https://grounded.wiki.gg/wiki/Special:FilePath/Aphid.png?width=120" alt="Тля" /></div>
-      <div class="aphid-chat-heading"><strong id="aphidChatTitle">Чат с тлёй</strong></div>
+      <div class="aphid-chat-heading"><strong id="aphidChatTitle">Подсказки от тли</strong></div>
       <button class="aphid-chat-close" id="aphidChatClose" type="button" aria-label="Закрыть чат">×</button>
     </header>
     <div class="aphid-chat-messages" id="aphidChatMessages"></div>
@@ -917,7 +917,9 @@
       const consumableNamePattern = /(?:arrow|bolt|rounds?|ammo|ammunition|cartridge|bullet|dart|стрел|болт|патрон)/i;
       const isConsumable = (item) => Boolean(item && item.category === 'weapon' && (item.subtype === 'Turret ammo' || consumableNamePattern.test(`${item.name || ''} ${item.nameRu || ''}`)));
       const isShield = (item) => Boolean(item && item.category === 'weapon' && /shield/i.test(item.subtype || ''));
-      const isUtilityObject = (item) => Boolean(item && item.category === 'building' && item.subtype === 'Decorations & utilities');
+      const insectHeadMountPattern = /(?:Red Worker Ant|Red Soldier Ant|Orb Weaver|Wolf Spider|Larva|Bombardier|Ladybug|Bee|Mosquito|Spiderling|Mite|Stinkbug|Weevil|Gnat|Aphid|Grub|Northern Scorpion|Blue Butterfly|Cockroach|Praying Mantis) (?:Mount|Wall Mount)$/i;
+      const isInsectHeadMount = (item) => Boolean(item && item.category === 'building' && insectHeadMountPattern.test(item.name || ''));
+      const isUtilityObject = (item) => Boolean(item && item.category === 'building' && (item.subtype === 'Decorations & utilities' || isInsectHeadMount(item) || /^Stuffed /i.test(item.name || '')));
       const itemCategoryKey = (item) => isConsumable(item) ? 'consumable' : isUtilityObject(item) ? 'utility' : item?.category;
       const communityTips = [
         {
@@ -1237,13 +1239,16 @@
       const displaySubtype = (value) => subtypeRu[value] || value || 'Общее';
       const utilitySubtypeForItem = (item) => {
         const text = `${item?.name || ''} ${item?.nameRu || ''}`;
-        if (/workbench|spinning wheel|roasting spit|smoothie|cookery|jerky|grinder|dew collector|sap catcher|hatchery|smithing station/i.test(text)) return 'Станции и производство';
-        if (/storage|pallet|water container|egg storage|fresh storage/i.test(text)) return 'Хранилища';
-        if (/turret|spike strip|disruption bomb|ant nest|spider nest/i.test(text)) return 'Оборона';
+        if (/^Stuffed /i.test(item?.name || '')) return 'Чучела насекомых';
+        if (isInsectHeadMount(item)) return 'Доски с головами насекомых';
+        if (/ant nest|spider nest|hatchery|egg storage/i.test(text)) return 'Всё для насекомых';
+        if (/workbench|spinning wheel|roasting spit|smoothie|cookery|jerky|grinder|dew collector|sap catcher|smithing station|garden patch/i.test(text)) return 'Напольные инструменты и хранение';
+        if (/storage|pallet|water container|fresh storage/i.test(text)) return 'Напольные инструменты и хранение';
+        if (/turret|spike strip|disruption bomb/i.test(text)) return 'Оборона';
         if (/bed|lean-to|trail marker|ladder|landing pad|bounce web/i.test(text)) return 'Быт и перемещение';
-        if (/lamp|sconce|fireplace|candle/i.test(text)) return 'Освещение';
         if (/target|dummy|basketball/i.test(text)) return 'Тренировка';
-        return 'Декор и полезные объекты';
+        if (/lamp|sconce|fireplace|candle|chair|table|shelf|vase|sign frame|picture frame|totem|trash can/i.test(text)) return 'Элементы декора';
+        return 'Прочие полезные объекты';
       };
       const displaySubtypeForItem = (item) => {
         if (isUtilityObject(item)) return utilitySubtypeForItem(item);
@@ -1331,7 +1336,7 @@
           const categoryMatch = categoryPool.has(item);
           const query = state.query.toLocaleLowerCase('ru-RU');
           const queryMatch = !query || findText(item).toLocaleLowerCase('ru-RU').includes(query);
-          const subtypeMatch = state.subtype === 'all' || item.subtype === state.subtype;
+          const subtypeMatch = state.subtype === 'all' || (state.category === 'utility' ? utilitySubtypeForItem(item) === state.subtype : item.subtype === state.subtype);
           const tierMatch = state.tier === 'all' || item.tier === state.tier;
           const craftedMatch = !state.crafted || hasRecipe(item);
           const favoriteMatch = !state.favoritesOnly || state.favorites.has(item.id);
@@ -1347,7 +1352,7 @@
 
       function updateSelects(pool) {
         const source = itemsForCategory(state.category);
-        const subtypes = [...new Set(source.map(item => item.subtype).filter(Boolean))].sort((a,b) => a.localeCompare(b));
+        const subtypes = [...new Set(source.map(item => state.category === 'utility' ? utilitySubtypeForItem(item) : item.subtype).filter(Boolean))].sort((a,b) => a.localeCompare(b));
         const tiers = [...new Set(source.map(item => item.tier).filter(Boolean))].sort((a,b) => Number(a)-Number(b));
         if (!subtypes.includes(state.subtype)) state.subtype = 'all';
         if (!tiers.includes(state.tier)) state.tier = 'all';
@@ -1359,7 +1364,7 @@
 
       function renderQuickFilters() {
         const source = itemsForCategory(state.category);
-        const values = [...new Set(source.map(item => item.subtype).filter(Boolean))].sort((a,b) => a.localeCompare(b));
+        const values = [...new Set(source.map(item => state.category === 'utility' ? utilitySubtypeForItem(item) : item.subtype).filter(Boolean))].sort((a,b) => a.localeCompare(b));
         const all = ['all', ...values];
         $('quickFilters').innerHTML = all.slice(0, 14).map((value, index) => `<button class="filter-chip ${state.subtype === value || (index === 0 && state.subtype === 'all') ? 'active' : ''}" data-subtype="${escapeHtml(value)}">${value === 'all' ? 'Все подкатегории' : escapeHtml(displaySubtypeFilter(value))}</button>`).join('');
         if (values.length > 13) $('quickFilters').insertAdjacentHTML('beforeend', `<button class="filter-chip" data-open-types="true">+ ещё ${values.length - 13}</button>`);
@@ -1522,8 +1527,10 @@
         if (!item || !isUtilityObject(item)) return '';
         if (utilityUseText[item.name]) return utilityUseText[item.name];
         const text = String(item.name || '');
-        if (/Stuffed/i.test(text)) return 'Декоративный трофей для оформления базы.';
-        if (/Mount/i.test(text)) return 'Настенный трофей для оформления базы.';
+        if (isInsectHeadMount(item)) return 'Доска с головой насекомого для украшения и обозначения трофея.';
+        if (/Stuffed/i.test(text)) return 'Декоративное чучело насекомого для оформления базы.';
+        if (/Wall-Mounted Basketball Hoop/i.test(text)) return 'Крепится к стене и используется для игры в баскетбол.';
+        if (/Mount/i.test(text)) return 'Настенный трофей или крепление для оформления базы.';
         if (/Candle|Lamp|Sconce/i.test(text)) return 'Освещает базу и служит декоративным объектом.';
         if (/Chair|Table|Shelf/i.test(text)) return 'Мебель для оформления и обустройства базы.';
         return 'Полезный объект для обустройства базы.';
@@ -2359,5 +2366,5 @@
       openItemFromHash();
     })();
   </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a33e5c3b9c1deecf',t:'MTc4ODIwMzY4OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a33e68773e8feecf',t:'MTc4ODIwNDE4OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
