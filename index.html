@@ -548,6 +548,69 @@
     .compare-item-name { font-size: 12px; line-height: 1.3; }
     .compare-value { color: var(--muted); font-size: 11px; line-height: 1.45; }
     .mobile-nav { display: none; }
+    .aphid-chat-fab { position: fixed; right: 18px; bottom: 20px; z-index: 8400; width: 62px; height: 62px; padding: 4px; border: 3px solid #8b5a2b; border-radius: 50%; background: radial-gradient(circle at 35% 24%, #c98a48, #6b3e1d 72%); box-shadow: 0 9px 24px rgba(0,0,0,.40), inset 0 0 0 2px rgba(255,214,133,.22); cursor: pointer; transition: .2s ease; }
+    .aphid-chat-fab:hover { transform: translateY(-3px) scale(1.04); border-color: #d9a25b; box-shadow: 0 14px 30px rgba(0,0,0,.46), 0 0 0 6px rgba(139,90,43,.16); }
+    .aphid-chat-fab img { display: block; width: 100%; height: 100%; object-fit: contain; border-radius: 50%; transform: scaleX(-1); }
+    .aphid-chat[hidden] { display: none; }
+    .aphid-chat { position: fixed; right: 20px; bottom: 92px; z-index: 8500; width: min(430px, calc(100vw - 40px)); height: min(650px, calc(100vh - 120px)); display: grid; grid-template-rows: auto minmax(0, 1fr) auto; overflow: hidden; border: 2px solid #76502d; border-radius: 19px 19px 15px 15px; background: linear-gradient(145deg, rgba(62,39,22,.98), rgba(27,22,16,.98)); box-shadow: 0 24px 70px rgba(0,0,0,.58), inset 0 1px 0 rgba(255,215,145,.12); animation: modal-pop .24s cubic-bezier(.22,.8,.24,1) both; }
+    .aphid-chat::before, .aphid-chat::after { content: ""; position: absolute; z-index: 0; width: 170px; height: 14px; border: 4px solid rgba(139,90,43,.72); border-left: 0; border-bottom: 0; border-radius: 0 32px 0 0; pointer-events: none; }
+    .aphid-chat::before { top: 44px; left: -30px; transform: rotate(16deg); }
+    .aphid-chat::after { right: -38px; bottom: 82px; transform: rotate(190deg); }
+    .aphid-branch { position: absolute; z-index: 0; width: 88px; height: 8px; border-radius: 99px; background: #76502d; opacity: .78; pointer-events: none; }
+    .aphid-branch::before, .aphid-branch::after { content: ""; position: absolute; width: 25px; height: 7px; border-radius: 99px; background: #76502d; transform-origin: left center; }
+    .aphid-branch::before { left: 23px; top: -11px; transform: rotate(-38deg); }
+    .aphid-branch::after { left: 48px; top: 7px; transform: rotate(35deg); }
+    .aphid-branch-left { left: -27px; top: 132px; transform: rotate(-28deg); }
+    .aphid-branch-right { right: -28px; top: 190px; transform: rotate(24deg); }
+    .aphid-chat-head, .aphid-chat-messages, .aphid-chat-form { position: relative; z-index: 1; }
+    .aphid-chat-head { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 12px 13px; border-bottom: 1px solid rgba(222,169,92,.28); background: linear-gradient(90deg, rgba(126,78,35,.42), rgba(57,37,22,.14)); }
+    .aphid-chat-avatar { width: 42px; height: 42px; flex: 0 0 42px; overflow: hidden; border: 2px solid #d5a45e; border-radius: 50%; background: #4b2e19; }
+    .aphid-chat-avatar img { width: 100%; height: 100%; object-fit: contain; transform: scaleX(-1); }
+    .aphid-chat-heading { min-width: 0; flex: 1; }
+    .aphid-chat-heading strong { display: block; color: #ffe2a7; font-size: 14px; letter-spacing: .01em; }
+    .aphid-chat-close { width: 31px; height: 31px; flex: 0 0 31px; border: 1px solid rgba(222,169,92,.30); border-radius: 9px; color: #d9bb8e; background: rgba(20,13,9,.32); font-size: 18px; cursor: pointer; }
+    .aphid-chat-close:hover { color: #fff1d1; background: rgba(222,169,92,.16); }
+    .aphid-chat-messages { display: flex; flex-direction: column; gap: 9px; overflow-y: auto; padding: 12px; }
+    .aphid-message { max-width: 88%; padding: 9px 10px; border: 1px solid rgba(222,169,92,.20); border-radius: 12px 12px 12px 4px; color: #ead7b8; background: rgba(16,12,8,.56); font-size: 11px; line-height: 1.5; overflow-wrap: anywhere; }
+    .aphid-message.user { align-self: flex-end; border-radius: 12px 12px 4px 12px; border-color: rgba(169,214,126,.32); color: #eef8d8; background: rgba(69,91,43,.52); }
+    .aphid-message.pending { color: #d8b681; font-style: italic; }
+    .aphid-message-sources { display: flex; flex-direction: column; gap: 3px; margin-top: 7px; padding-top: 6px; border-top: 1px solid rgba(222,169,92,.17); }
+    .aphid-message-sources a { color: #e3b56c; font-size: 9px; text-decoration: none; }
+    .aphid-message-sources a:hover { color: #fff1d1; text-decoration: underline; }
+    .aphid-site-item, .aphid-site-set, .aphid-site-image { margin-top: 7px; }
+    .aphid-site-item { display: flex; align-items: center; gap: 8px; width: 100%; min-width: 0; padding: 7px; border: 1px solid rgba(222,169,92,.26); border-radius: 10px; color: #f2dfbf; background: rgba(89,54,27,.46); text-align: left; cursor: pointer; transition: .18s ease; }
+    .aphid-site-item:hover { border-color: #d5a45e; background: rgba(130,79,34,.58); transform: translateY(-1px); }
+    .aphid-site-item-art { display: grid; place-items: center; width: 38px; height: 38px; flex: 0 0 38px; overflow: hidden; border-radius: 8px; background: rgba(216,241,123,.08); color: #e9c27b; font-size: 15px; }
+    .aphid-site-item-art img { width: 100%; height: 100%; object-fit: contain; }
+    .aphid-site-item-copy { display: block; min-width: 0; }
+    .aphid-site-item-copy strong { display: block; font-size: 10px; line-height: 1.3; overflow-wrap: anywhere; }
+    .aphid-site-item-copy small { display: block; margin-top: 2px; color: #c7a77b; font-size: 8px; line-height: 1.25; }
+    .aphid-site-set { padding: 8px; border: 1px solid rgba(222,169,92,.24); border-radius: 10px; background: rgba(89,54,27,.26); }
+    .aphid-site-set > strong { display: block; color: #ffe2a7; font-size: 10px; }
+    .aphid-site-set-items { display: grid; gap: 4px; margin-top: 5px; }
+    .aphid-site-set-items .aphid-site-item { margin-top: 0; }
+    .aphid-site-link { display: inline-block; margin-top: 7px; color: #e3b56c; font-size: 10px; text-decoration: none; }
+    .aphid-site-link:hover { color: #fff1d1; text-decoration: underline; }
+    .aphid-site-image { padding: 6px; border: 1px solid rgba(222,169,92,.24); border-radius: 10px; background: rgba(24,15,9,.36); }
+    .aphid-site-image img { display: block; width: 100%; max-height: 180px; object-fit: contain; border-radius: 7px; }
+    .aphid-site-image figcaption { margin-top: 4px; color: #c7a77b; font-size: 8px; line-height: 1.25; }
+    body.light .aphid-site-item { color: #5d4026; background: rgba(255,255,255,.55); }
+    body.light .aphid-site-item-copy small, body.light .aphid-site-set > strong, body.light .aphid-site-image figcaption { color: #86643d; }
+    body.light .aphid-site-set, body.light .aphid-site-image { background: rgba(255,255,255,.35); }
+    .aphid-chat-form { display: flex; align-items: flex-end; gap: 7px; padding: 10px 11px; border-top: 1px solid rgba(222,169,92,.28); background: rgba(20,13,9,.42); }
+    .aphid-chat-form textarea { min-height: 38px; max-height: 100px; flex: 1; resize: vertical; padding: 10px; border: 1px solid rgba(222,169,92,.28); border-radius: 10px; outline: none; color: #f5e7cc; background: rgba(8,7,5,.55); font: inherit; font-size: 11px; line-height: 1.35; }
+    .aphid-chat-form textarea:focus { border-color: #d5a45e; box-shadow: 0 0 0 3px rgba(213,164,94,.12); }
+    .aphid-chat-form button { width: 39px; height: 39px; flex: 0 0 39px; border: 1px solid #a8733b; border-radius: 9px; color: #fff0cf; background: linear-gradient(145deg, #9a6330, #5b351b); font-size: 17px; cursor: pointer; }
+    .aphid-chat-form button:hover { filter: brightness(1.15); }
+    .aphid-chat-form button:disabled { cursor: wait; opacity: .55; }
+    body.light .aphid-chat { border-color: #b27a3e; background: linear-gradient(145deg, rgba(255,248,232,.98), rgba(242,229,207,.98)); }
+    body.light .aphid-chat-head { background: linear-gradient(90deg, rgba(239,195,130,.38), rgba(255,255,255,.16)); }
+    body.light .aphid-chat-heading strong { color: #603914; }
+    body.light .aphid-message { background: rgba(255,255,255,.38); }
+    body.light .aphid-message { color: #5d4630; }
+    body.light .aphid-message.user { color: #365020; background: rgba(196,224,159,.52); }
+    body.light .aphid-chat-form { background: rgba(255,255,255,.33); }
+    body.light .aphid-chat-form textarea { color: #4c3724; background: rgba(255,255,255,.65); }
     .toast { position: fixed; bottom: 22px; left: 50%; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; background: var(--text); color: var(--bg); border-radius: 11px; padding: 10px 14px; font-size: 11px; font-weight: 700; transition: .25s ease; z-index: 11000; }
     .toast.show { transform: translate(-50%, 0); opacity: 1; }
     body.glass {
@@ -600,6 +663,8 @@
       .searchbox { grid-area: search; flex: none; width: 100%; max-width: none; }
       .layout { display: block; }
       .mobile-nav { position: fixed; left: 8px; right: 8px; bottom: 8px; z-index: 40; display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 5px; border: 1px solid var(--line-strong); border-radius: 16px; background: rgba(18,26,22,.90); backdrop-filter: blur(18px); box-shadow: 0 12px 40px rgba(0,0,0,.30); }
+      .aphid-chat-fab { right: 14px; bottom: 73px; width: 56px; height: 56px; }
+      .aphid-chat { left: 10px; right: 10px; bottom: 72px; width: auto; height: min(720px, calc(100vh - 86px)); }
       .mobile-nav button { min-width: 0; height: 43px; border: 0; border-radius: 11px; background: transparent; color: var(--muted); font-size: 10px; font-weight: 750; }
       .mobile-nav button:hover, .mobile-nav button.active { color: var(--lime); background: rgba(216,241,123,.10); }
       body.light .mobile-nav { background: rgba(255,255,255,.91); }
@@ -765,7 +830,7 @@
             <div class="select-wrap"><select id="sortSelect" aria-label="Сортировка"><option value="name">По названию</option><option value="tier">Сначала высокий уровень</option><option value="name-desc">Название: Я—А</option></select></div>
             <button class="toggle" id="craftedToggle">⚒ Только с рецептом</button>
             <button class="toggle" id="compareBtn">Сравнить <span id="compareCount">0</span></button>
-            <div class="select-wrap" id="favoriteFolderWrap" hidden><select id="favoriteFolderSelect" aria-label="Папка избранного"><option value="all">Все избранные</option><option value="weapon">Оружие</option><option value="consumable">Расходники</option><option value="armor">Доспехи</option><option value="trinket">Тринкеты</option><option value="building">Строительство</option><option value="resource">Материалы</option></select></div>
+            <div class="select-wrap" id="favoriteFolderWrap" hidden><select id="favoriteFolderSelect" aria-label="Папка избранного"><option value="all">Все избранные</option><option value="weapon">Оружие</option><option value="consumable">Расходники</option><option value="armor">Доспехи</option><option value="trinket">Тринкеты</option><option value="building">Строительство</option><option value="utility">Полезные объекты</option><option value="resource">Материалы</option></select></div>
             <button class="toggle" id="exportFavorites" hidden>Экспорт избранного</button>
           </div>
         </section>
@@ -817,6 +882,20 @@
     </div>
   </div>
   <nav class="mobile-nav" id="mobileNav" aria-label="Быстрая навигация"><button type="button" data-mobile-action="catalog">Каталог</button><button type="button" data-mobile-action="sets">Сэты</button><button type="button" data-mobile-action="favorites">Избранное</button><button type="button" data-mobile-action="map">Карта</button></nav>
+  <button class="aphid-chat-fab" id="aphidChatFab" type="button" title="Открыть чат с тлёй" aria-label="Открыть чат с тлёй"><img src="https://grounded.wiki.gg/wiki/Special:FilePath/Aphid.png?width=120" alt="Тля" /></button>
+  <aside class="aphid-chat" id="aphidChat" hidden role="dialog" aria-modal="false" aria-labelledby="aphidChatTitle">
+    <div class="aphid-branch aphid-branch-left" aria-hidden="true"></div><div class="aphid-branch aphid-branch-right" aria-hidden="true"></div>
+    <header class="aphid-chat-head">
+      <div class="aphid-chat-avatar"><img src="https://grounded.wiki.gg/wiki/Special:FilePath/Aphid.png?width=120" alt="Тля" /></div>
+      <div class="aphid-chat-heading"><strong id="aphidChatTitle">Чат с тлёй</strong></div>
+      <button class="aphid-chat-close" id="aphidChatClose" type="button" aria-label="Закрыть чат">×</button>
+    </header>
+    <div class="aphid-chat-messages" id="aphidChatMessages"></div>
+    <form class="aphid-chat-form" id="aphidChatForm">
+      <textarea id="aphidChatInput" rows="1" maxlength="2000" placeholder="Спроси про оружие, броню, ресурс или карту…"></textarea>
+      <button type="submit" aria-label="Отправить сообщение">➤</button>
+    </form>
+  </aside>
   <div class="toast" id="toast"></div>
 
   <script src="data.js"></script>
@@ -830,14 +909,16 @@
         consumable: { label: 'Расходники', icon: '➹', subtitle: 'Стрелы, болты, патроны и другие боеприпасы.' },
         armor: { label: 'Доспехи', icon: '◈', subtitle: 'Комплекты, отдельные элементы и бонусы экипировки.' },
         trinket: { label: 'Тринкеты', icon: '✦', subtitle: 'Пассивные эффекты, редкие находки и полезные аксессуары.' },
-        building: { label: 'Строительство', icon: '⌂', subtitle: 'Стены, полы, крыши, мебель и всё для базы.' },
+        building: { label: 'Строительство', icon: '⌂', subtitle: 'Стены, полы, крыши и конструктивные элементы базы.' },
+        utility: { label: 'Полезные объекты', icon: '⚙', subtitle: 'Станции, хранилища, оборона, освещение и предметы для базы.' },
         resource: { label: 'Материалы', icon: '●', subtitle: 'Ресурсы, ингредиенты и материалы для крафта.' }
       };
       const symbols = { weapon: '⚔', consumable: '➹', armor: '◈', trinket: '✦', building: '⌂', resource: '●' };
       const consumableNamePattern = /(?:arrow|bolt|rounds?|ammo|ammunition|cartridge|bullet|dart|стрел|болт|патрон)/i;
       const isConsumable = (item) => Boolean(item && item.category === 'weapon' && (item.subtype === 'Turret ammo' || consumableNamePattern.test(`${item.name || ''} ${item.nameRu || ''}`)));
       const isShield = (item) => Boolean(item && item.category === 'weapon' && /shield/i.test(item.subtype || ''));
-      const itemCategoryKey = (item) => isConsumable(item) ? 'consumable' : item?.category;
+      const isUtilityObject = (item) => Boolean(item && item.category === 'building' && item.subtype === 'Decorations & utilities');
+      const itemCategoryKey = (item) => isConsumable(item) ? 'consumable' : isUtilityObject(item) ? 'utility' : item?.category;
       const communityTips = [
         {
           icon: '◈', title: 'Редкие ресурсы', tag: 'добыча',
@@ -954,10 +1035,183 @@
         renderNav();
       }
 
+      const MISTRAL_API_BASE = 'https://api.mistral.ai/v1';
+      const MISTRAL_API_KEY = 'tTSWnND0tBfhbziycEbKh1RV5qqbsybK'; // ВСТАВЬ СЮДА СВОЙ API-КЛЮЧ MISTRAL МЕЖДУ КАВЫЧКАМИ
+      const APHID_AGENT_STORAGE = 'aphid-mistral-agent-id-v3';
+      const APHID_CONVERSATION_STORAGE = 'aphid-mistral-conversation-id-v3';
+      let aphidChatInitialized = false;
+      function aphidSiteContext(question) {
+        const tokens = [...new Set(String(question || '').toLocaleLowerCase('ru-RU').split(/[^\p{L}\p{N}]+/u).filter(token => token.length > 1))];
+        const ranked = items.map(item => {
+          const haystack = [item.name, item.nameRu, item.subtype, item.set, item.setRu, item.statsRu, item.effectRu, item.sleekRu, item.setBonusRu, item.classRu, item.sourceRu, item.unlockRu, ...(item.ingredients || []).map(ingredient => `${ingredient.name} ${ingredient.nameRu || ''}`)].filter(Boolean).join(' ').toLocaleLowerCase('ru-RU');
+          const score = tokens.reduce((total, token) => total + (haystack.includes(token) ? (String(item.nameRu || item.name).toLocaleLowerCase('ru-RU').includes(token) ? 5 : 1) : 0), 0);
+          return { item, score };
+        }).filter(entry => entry.score > 0).sort((a, b) => b.score - a.score || String(a.item.name).localeCompare(String(b.item.name))).slice(0, 12).map(entry => entry.item);
+        const compact = value => String(value || '').replace(/\s+/g, ' ').trim().slice(0, 480);
+        const itemLines = ranked.length ? ranked.map(item => {
+          const ingredients = (item.ingredients || []).map(ingredient => `${ingredient.qty || 1}× ${ingredient.nameRu || ingredient.name}`).join(', ');
+          return `- id: ${item.id} | ${displayName(item)} | раздел: ${categoryLabel(item)} | тип: ${displaySubtypeForItem(item)} | характеристики: ${compact(displayField(item, 'stats')) || 'нет'} | эффект: ${compact(displayField(item, 'effect')) || 'нет'} | изящный путь: ${compact(displayField(item, 'sleek')) || 'нет'} | комплект: ${compact(displayField(item, 'setBonus')) || 'нет'} | создаётся из: ${ingredients || 'рецепт не указан'} | источник: ${compact(displayField(item, 'unlock') || displayField(item, 'source')) || 'не указан'} | карта: ${item.mapUrl || 'нет подтверждённой точки'}`;
+        }).join('\n') : 'По словам запроса совпадений в каталоге не найдено.';
+        const fullIndex = items.map(item => `${item.id} | ${displayName(item)} | ${categoryLabel(item)} | ${displaySubtypeForItem(item)} | комплект: ${item.setRu || item.set || '—'} | изображение: ${item.image || 'нет'} | карта: ${item.mapUrl || 'нет подтверждённой точки'}`).join('\n');
+        const counts = ['weapon', 'consumable', 'armor', 'trinket', 'building', 'utility', 'resource'].map(category => `${categoryMeta[category].label}: ${itemsForCategory(category).length}`).join(', ');
+        const activeSection = categoryMeta[state.category]?.label || 'каталог';
+        return `КОНТЕКСТ САЙТА «АРХИВ ДВОРИКА»\nТекущий раздел сайта: ${activeSection}. В каталоге: ${counts}.\nПолный индекс всех предметов и их id для карточек:\n${fullIndex}\n\nПодробные релевантные записи каталога:\n${itemLines}\n\nПравила: сначала используй данные каталога. Если данных недостаточно, точка карты не подтверждена или нужен свежий ответ, обязательно используй встроенный web_search. Не выдумывай координаты и отделяй сведения каталога от найденных в интернете.`;
+      }
+      async function aphidMistralRequest(path, key, body) {
+        const response = await fetch(`${MISTRAL_API_BASE}${path}`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` }, body: JSON.stringify(body) });
+        const payload = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          const error = new Error(payload.message || payload.detail || `Ошибка API ${response.status}`);
+          error.status = response.status;
+          throw error;
+        }
+        return payload;
+      }
+      async function aphidCreateAgent(key) {
+        const payload = await aphidMistralRequest('/agents', key, {
+          model: 'mistral-medium-latest', name: 'Тля — Архив дворика', description: 'Помощник каталога Grounded 2 с поиском по сайту и в интернете.',
+          instructions: 'Ты — дружелюбная Тля, помощник каталога Grounded 2. Отвечай только на русском языке, кроме названия игры Grounded 2 и общепринятых игровых терминов. У тебя есть полный актуальный контекст каталога в каждом сообщении. Сначала используй его, а если ответа там нет или нужна актуальная информация, используй встроенный инструмент web_search. Не выдумывай точные координаты, рецепты или характеристики. Отвечай понятно и кратко, а найденные источники указывай в конце ответа. У тебя есть доступ к карточкам сайта: если упоминаешь подходящий предмет, добавляй маркер [ITEM id="точный-id"]. Для набора из нескольких предметов используй [SET title="русское название набора" ids="id1,id2,id3"]. Для ссылок на сайт или найденные источники используй [LINK url="https://..." title="русское название"], а для изображения из разрешённого источника — [IMAGE url="https://..." alt="русское описание"]. Используй только id, URL и изображения, которые есть в контексте сайта или пришли из web_search. Не изменяй текст маркеров.',
+          tools: [{ type: 'web_search' }], completion_args: { temperature: 0.25, top_p: 0.9 }
+        });
+        const agentId = payload.id || payload.agent_id;
+        if (!agentId) throw new Error('Mistral не вернул идентификатор агента');
+        localStorage.setItem(APHID_AGENT_STORAGE, agentId);
+        return agentId;
+      }
+      function aphidResponseText(payload) {
+        const textParts = [];
+        const references = [];
+        const readContent = content => {
+          if (typeof content === 'string') { textParts.push(content); return; }
+          if (!Array.isArray(content)) return;
+          content.forEach(chunk => {
+            if (chunk?.type === 'text' && chunk.text) textParts.push(chunk.text);
+            if (chunk?.type === 'tool_reference' && (chunk.url || chunk.title)) references.push({ title: chunk.title || 'Источник в интернете', url: chunk.url || '' });
+          });
+        };
+        (Array.isArray(payload.outputs) ? payload.outputs : []).forEach(output => readContent(output?.content));
+        if (!textParts.length && payload.choices?.[0]?.message?.content) readContent(payload.choices[0].message.content);
+        const uniqueReferences = [...new Map(references.filter(reference => reference.url).map(reference => [reference.url, reference])).values()];
+        return { text: textParts.join('\n').trim() || 'Тля не смогла получить текст ответа.', references: uniqueReferences };
+      }
+      async function aphidAskMistralOnce(question, key) {
+        let agentId = localStorage.getItem(APHID_AGENT_STORAGE) || await aphidCreateAgent(key);
+        const input = `${aphidSiteContext(question)}\n\nВопрос пользователя:\n${question}`;
+        const conversationId = localStorage.getItem(APHID_CONVERSATION_STORAGE);
+        let payload;
+        if (conversationId) {
+          payload = await aphidMistralRequest(`/conversations/${encodeURIComponent(conversationId)}`, key, { inputs: input });
+        } else {
+          payload = await aphidMistralRequest('/conversations', key, { agent_id: agentId, inputs: input });
+        }
+        const nextConversationId = payload.conversation_id || payload.id;
+        if (nextConversationId) localStorage.setItem(APHID_CONVERSATION_STORAGE, nextConversationId);
+        return aphidResponseText(payload);
+      }
+      async function aphidAskMistral(question, key) {
+        try { return await aphidAskMistralOnce(question, key); }
+        catch (error) {
+          if ([400, 404].includes(error.status)) {
+            localStorage.removeItem(APHID_AGENT_STORAGE);
+            localStorage.removeItem(APHID_CONVERSATION_STORAGE);
+            return aphidAskMistralOnce(question, key);
+          }
+          throw error;
+        }
+      }
+      function aphidAttribute(attributes, name) {
+        const match = String(attributes || '').match(new RegExp(`${name}=(?:"([^"]*)"|'([^']*)'|([^\\s\\]]+))`, 'i'));
+        return match?.[1] || match?.[2] || match?.[3] || '';
+      }
+      function aphidSafeUrl(url) {
+        return /^https?:\/\//i.test(String(url || '').trim()) ? String(url).trim() : '';
+      }
+      function aphidSiteItemCard(item) {
+        return `<button type="button" class="aphid-site-item" data-aphid-item="${escapeHtml(item.id)}"><span class="aphid-site-item-art">${item.image ? `<img src="${escapeHtml(item.image)}" alt="" loading="lazy" />` : itemLetter(item)}</span><span class="aphid-site-item-copy"><strong>${escapeHtml(displayName(item))}</strong><small>${escapeHtml(categoryLabel(item))} · ${escapeHtml(displaySubtypeForItem(item))}</small></span></button>`;
+      }
+      function aphidRenderRichText(text = '') {
+        const marker = /\[(ITEM|SET|LINK|IMAGE)\s+([^\]]+)\]/gi;
+        let html = '';
+        let cursor = 0;
+        for (const match of String(text).matchAll(marker)) {
+          html += escapeHtml(String(text).slice(cursor, match.index)).replace(/\n/g, '<br>');
+          const type = match[1].toUpperCase();
+          const attributes = match[2];
+          if (type === 'ITEM') {
+            const item = items.find(entry => entry.id === aphidAttribute(attributes, 'id'));
+            html += item ? aphidSiteItemCard(item) : escapeHtml(match[0]);
+          } else if (type === 'SET') {
+            const title = aphidAttribute(attributes, 'title') || 'Набор предметов';
+            const setItems = aphidAttribute(attributes, 'ids').split(',').map(id => items.find(entry => entry.id === id.trim())).filter(Boolean);
+            html += setItems.length ? `<div class="aphid-site-set"><strong>${escapeHtml(title)}</strong><div class="aphid-site-set-items">${setItems.map(aphidSiteItemCard).join('')}</div></div>` : escapeHtml(match[0]);
+          } else if (type === 'LINK') {
+            const url = aphidSafeUrl(aphidAttribute(attributes, 'url'));
+            const title = aphidAttribute(attributes, 'title') || 'Открыть ссылку';
+            html += url ? `<a class="aphid-site-link" href="${escapeHtml(url)}" target="_blank" rel="noreferrer">${escapeHtml(title)} ↗</a>` : escapeHtml(match[0]);
+          } else if (type === 'IMAGE') {
+            const url = aphidSafeUrl(aphidAttribute(attributes, 'url'));
+            const alt = aphidAttribute(attributes, 'alt') || 'Изображение из источника';
+            html += url ? `<figure class="aphid-site-image"><img src="${escapeHtml(url)}" alt="${escapeHtml(alt)}" loading="lazy" /><figcaption>${escapeHtml(alt)}</figcaption></figure>` : escapeHtml(match[0]);
+          }
+          cursor = match.index + match[0].length;
+        }
+        html += escapeHtml(String(text).slice(cursor)).replace(/\n/g, '<br>');
+        return html;
+      }
+      function aphidAppendMessage(text, role = 'assistant', references = []) {
+        const bubble = document.createElement('div');
+        bubble.className = `aphid-message ${role}`;
+        const sourceHtml = references.length ? `<div class="aphid-message-sources">${references.map(reference => `<a href="${escapeHtml(reference.url)}" target="_blank" rel="noreferrer">${escapeHtml(reference.title)} ↗</a>`).join('')}</div>` : '';
+        bubble.innerHTML = `<div>${aphidRenderRichText(text)}</div>${sourceHtml}`;
+        $('aphidChatMessages').appendChild(bubble);
+        $('aphidChatMessages').scrollTop = $('aphidChatMessages').scrollHeight;
+        return bubble;
+      }
+      function aphidOpenChat() {
+        $('aphidChat').hidden = false;
+        if (!aphidChatInitialized) {
+          aphidAppendMessage('Привет! Я Тля. Сначала проверю каталог, а если нужной информации нет — попробую найти её в интернете.', 'assistant');
+          aphidChatInitialized = true;
+        }
+        setTimeout(() => $('aphidChatInput').focus(), 0);
+      }
+      function aphidCloseChat() { $('aphidChat').hidden = true; }
+      async function aphidSubmit(event) {
+        event.preventDefault();
+        const input = $('aphidChatInput');
+        const question = input.value.trim();
+        if (!question) return;
+        const key = MISTRAL_API_KEY.trim();
+        if (!key) {
+          aphidAppendMessage('API-ключ Mistral ещё не добавлен. Вставь его в строку MISTRAL_API_KEY в index.html и обнови страницу.', 'assistant');
+          return;
+        }
+        input.value = '';
+        aphidAppendMessage(question, 'user');
+        const pending = aphidAppendMessage('Тля проверяет каталог и при необходимости ищет в интернете…', 'assistant');
+        pending.classList.add('pending');
+        const sendButton = $('aphidChatForm').querySelector('button[type="submit"]');
+        sendButton.disabled = true;
+        try {
+          const result = await aphidAskMistral(question, key);
+          pending.remove();
+          aphidAppendMessage(result.text, 'assistant', result.references);
+        } catch (error) {
+          pending.remove();
+          const message = error.status === 401 || error.status === 403 ? 'Mistral не принял API-ключ. Проверь ключ и сохрани его заново.' : 'Не удалось связаться с Mistral. Проверь интернет, доступ API и разрешение запросов из браузера.';
+          aphidAppendMessage(message, 'assistant');
+        } finally {
+          sendButton.disabled = false;
+          input.focus();
+        }
+      }
+
       const itemsForCategory = (category) => {
         if (category === 'all') return items;
         if (category === 'weapon') return items.filter(item => item.category === 'weapon' && !isConsumable(item));
         if (category === 'consumable') return items.filter(isConsumable);
+        if (category === 'building') return items.filter(item => item.category === 'building' && !isUtilityObject(item));
+        if (category === 'utility') return items.filter(isUtilityObject);
         return items.filter(item => item.category === category);
       };
       const countBy = (category) => itemsForCategory(category).length;
@@ -981,7 +1235,18 @@
         'Upgrade material': 'Материал улучшения', 'Natural resource': 'Природный ресурс', 'Crafting material': 'Материал для крафта', 'Buggy egg': 'Яйцо для выращивания багги'
       };
       const displaySubtype = (value) => subtypeRu[value] || value || 'Общее';
+      const utilitySubtypeForItem = (item) => {
+        const text = `${item?.name || ''} ${item?.nameRu || ''}`;
+        if (/workbench|spinning wheel|roasting spit|smoothie|cookery|jerky|grinder|dew collector|sap catcher|hatchery|smithing station/i.test(text)) return 'Станции и производство';
+        if (/storage|pallet|water container|egg storage|fresh storage/i.test(text)) return 'Хранилища';
+        if (/turret|spike strip|disruption bomb|ant nest|spider nest/i.test(text)) return 'Оборона';
+        if (/bed|lean-to|trail marker|ladder|landing pad|bounce web/i.test(text)) return 'Быт и перемещение';
+        if (/lamp|sconce|fireplace|candle/i.test(text)) return 'Освещение';
+        if (/target|dummy|basketball/i.test(text)) return 'Тренировка';
+        return 'Декор и полезные объекты';
+      };
       const displaySubtypeForItem = (item) => {
+        if (isUtilityObject(item)) return utilitySubtypeForItem(item);
         if (!isConsumable(item)) return displaySubtype(item?.subtype);
         const text = `${item.name || ''} ${item.nameRu || ''}`;
         if (/bolt|болт/i.test(text)) return 'Болты';
@@ -991,7 +1256,9 @@
       };
       const displaySubtypeFilter = (value) => state.category === 'consumable'
         ? ({ Bow: 'Стрелы и болты', Greatbow: 'Большие стрелы', 'Turret ammo': 'Патроны' }[value] || displaySubtype(value))
-        : displaySubtype(value);
+        : state.category === 'utility'
+          ? ({ 'Decorations & utilities': 'Полезные объекты' }[value] || displaySubtype(value))
+          : displaySubtype(value);
       const nameOverrides = {
         'Shellshocker': 'Шеллшокер', 'Toe Biter Coat': 'Пальто кусателя пальцев ног', 'Grub Leggings': 'Леггинсы личинки',
         'Red Ant Knee Guards': 'Наколенники красного муравья', 'Lean-To': 'Навес', 'Grass Half Wall A and B': 'Половина стены из травы · варианты 1 и 2',
@@ -1038,7 +1305,7 @@
       const findText = (item) => [item.name, item.nameRu, item.set, item.setRu, item.subtype, displaySubtype(item.subtype), item.recipe, item.effect, item.effectRu, item.unlock, item.unlockRu, item.source, item.sourceRu].filter(Boolean).join(' ');
 
       function renderNav() {
-        const categories = ['all', 'weapon', 'consumable', 'armor', 'trinket', 'building', 'resource'];
+        const categories = ['all', 'weapon', 'consumable', 'armor', 'trinket', 'building', 'utility', 'resource'];
         $('categoryNav').innerHTML = categories.map(key => {
           const count = key === 'all' ? items.length : countBy(key);
           const meta = categoryMeta[key];
@@ -1068,7 +1335,7 @@
           const tierMatch = state.tier === 'all' || item.tier === state.tier;
           const craftedMatch = !state.crafted || hasRecipe(item);
           const favoriteMatch = !state.favoritesOnly || state.favorites.has(item.id);
-          const folderMatch = state.favoriteFolder === 'all' || (state.favoriteFolder === 'consumable' ? isConsumable(item) : state.favoriteFolder === 'weapon' ? item.category === 'weapon' && !isConsumable(item) : item.category === state.favoriteFolder);
+          const folderMatch = state.favoriteFolder === 'all' || (state.favoriteFolder === 'consumable' ? isConsumable(item) : state.favoriteFolder === 'utility' ? isUtilityObject(item) : state.favoriteFolder === 'weapon' ? item.category === 'weapon' && !isConsumable(item) : state.favoriteFolder === 'building' ? item.category === 'building' && !isUtilityObject(item) : item.category === state.favoriteFolder);
           return categoryMatch && queryMatch && subtypeMatch && tierMatch && craftedMatch && favoriteMatch && folderMatch;
         }).sort((a, b) => {
           const byTier = (Number(b.tier) || 0) - (Number(a.tier) || 0);
@@ -1223,6 +1490,44 @@
         ].map(([key, pattern]) => pattern.test(text) ? trinketIconMeta[key] : null).filter(Boolean);
         return iconGroup(detected.length ? detected : [trinketIconMeta.finale], 'Тип эффекта');
       }
+      const utilityUseText = {
+        'Roasting Spit': 'Жарит мясо и готовит простую еду.', 'Workbench': 'Создаёт оружие, броню, инструменты и другие предметы.',
+        'Spinning Wheel': 'Прядёт волокна в верёвку и другие материалы.', 'Trail Marker': 'Ставит личную отметку для навигации по парку.',
+        'Lean-To': 'Позволяет отдохнуть и выбрать точку возрождения.', 'Simple Bed': 'Позволяет спать и задаёт точку возрождения.',
+        'Bunk Bed': 'Позволяет спать и задаёт точку возрождения для базы.', 'Plank Pallet': 'Хранит травяные доски и освобождает инвентарь.',
+        'Stem Pallet': 'Хранит стебли и освобождает инвентарь.', 'Storage Basket': 'Хранит предметы на базе.', 'Storage Chest': 'Хранит большое количество предметов.',
+        'Garden Patch': 'Позволяет выращивать растения и получать урожай.', 'Water Container': 'Собирает и хранит воду.',
+        'Smoothie Station': 'Смешивает смузи из найденных ингредиентов.', 'Cookery': 'Готовит блюда и пищу из ресурсов.',
+        'Dew Collector': 'Собирает капли росы для питья.', 'Hatchery': 'Высиживает яйца и помогает выращивать багги.',
+        'Jerky Rack': 'Сушит мясо, превращая его в вяленую еду.', 'Sap Catcher': 'Собирает сок рядом с базой.',
+        'Grinder': 'Перерабатывает ресурсы в порошки и компоненты.', 'Egg Storage': 'Хранит яйца существ.',
+        'Ladder': 'Позволяет перемещаться между уровнями базы.', 'Fresh Storage': 'Хранит свежие продукты и еду.',
+        'O.R.C. Disruption Bomb': 'Взрывное средство для нанесения урона и подавления угроз О.Р.К.', 'Acorn Turret': 'Автоматически защищает базу от врагов.',
+        'Spike Strip': 'Останавливает и наносит урон существам, проходящим по ловушке.', 'Bounce Web': 'Позволяет подпрыгивать и быстро перемещаться по базе.',
+        'Basketball Hoop': 'Используется для игры в баскетбол.', 'Wall-Mounted Basketball Hoop': 'Крепится к стене и используется для игры в баскетбол.',
+        'Target': 'Используется для тренировки прицеливания.', 'Standing Target': 'Отдельно стоящая мишень для тренировки.',
+        'Target Dummy': 'Манекен для проверки урона и тренировок.', 'Landing Pad': 'Помогает безопасно приземляться после прыжка или падения.',
+        'Smithing Station': 'Улучшает оружие и броню.', 'Ant Nest': 'Используется для размещения и выращивания муравьёв.',
+        'Spider Nest': 'Используется для размещения и выращивания пауков.', 'Plant Lamp': 'Освещает базу и помогает растениям расти.',
+        'Sap Sconce': 'Освещает базу мягким светом.', 'Slime Mold Sconce': 'Освещает базу мягким светом.',
+        'Fireplace Hearth': 'Создаёт костёр для обогрева и приготовления еды.', 'Fireplace Chimney': 'Отводит дым и завершает конструкцию камина.',
+        'Fireplace Half Chimney': 'Часть дымохода для камина.', 'Fireplace Vent': 'Обеспечивает выход дыма из камина.',
+        'Ant Candle': 'Освещает базу и служит декоративным объектом.', 'Spider Candle': 'Освещает базу и служит декоративным объектом.',
+        'Armor Dummy': 'Используется для демонстрации комплектов брони.', 'Trash Can': 'Служит декоративным контейнером для мусора.',
+        'Sign Frame': 'Позволяет размещать собственные указатели и надписи.', 'Picture Frame': 'Позволяет размещать изображения как украшение базы.',
+        'Vase A': 'Декоративный объект для оформления базы.', 'Vase B': 'Декоративный объект для оформления базы.', 'Vase C': 'Декоративный объект для оформления базы.',
+        'Ant Head Totem': 'Декоративный тотем из головы муравья.', 'Red Worker Ant Mount': 'Настенный трофей из красного рабочего муравья.'
+      };
+      function utilityUseDescription(item) {
+        if (!item || !isUtilityObject(item)) return '';
+        if (utilityUseText[item.name]) return utilityUseText[item.name];
+        const text = String(item.name || '');
+        if (/Stuffed/i.test(text)) return 'Декоративный трофей для оформления базы.';
+        if (/Mount/i.test(text)) return 'Настенный трофей для оформления базы.';
+        if (/Candle|Lamp|Sconce/i.test(text)) return 'Освещает базу и служит декоративным объектом.';
+        if (/Chair|Table|Shelf/i.test(text)) return 'Мебель для оформления и обустройства базы.';
+        return 'Полезный объект для обустройства базы.';
+      }
       function defensiveBarRow(label, value, max, type, display, applicable = true, icons = '') {
         return weaponBarRow(`${label}${icons}`, value, max, type, display, applicable);
       }
@@ -1316,6 +1621,8 @@
         const effectIcons = item.category === 'weapon' ? weaponDamageIcons(item) : item.category === 'armor' ? armorDamageIcons(item) : item.category === 'trinket' ? trinketEffectIcons(item) : '';
         const effectIconLabel = item.category === 'armor' ? 'Тип усиления' : item.category === 'trinket' ? 'Тип эффекта' : 'Тип урона';
         if (effectIcons) lines.push(`<div class="effect-line effect-type"><strong>${effectIconLabel}</strong> ${effectIcons}</div>`);
+        const utilityUse = utilityUseDescription(item);
+        if (utilityUse) lines.push(`<div class="effect-line utility-use"><strong>Использование</strong> · ${escapeHtml(utilityUse)}</div>`);
         const effect = displayField(item, 'effect');
         const sleek = displayField(item, 'sleek');
         const setBonus = displayField(item, 'setBonus');
@@ -1366,11 +1673,13 @@
             const content = methodIngredients.length
               ? `<div class="ingredient-list">${methodIngredients.map(ingredientCardHtml).join('')}</div>`
               : `<div class="recipe-text">${escapeHtml(localizeText(method.recipe || 'Ресурсы не указаны'))}</div>`;
-            return `<div class="craft-method"><div class="method-label">С помощью: ${escapeHtml(station)}</div>${content}</div>`;
+            const methodLabel = isUtilityObject(item) ? 'Создаётся из:' : `С помощью: ${station}`;
+            return `<div class="craft-method"><div class="method-label">${escapeHtml(methodLabel)}</div>${content}</div>`;
           }).join('');
         } else if (ingredients.length) {
           const station = craftingStationFor(item);
-          recipeLine = `<div class="craft-method">${station ? `<div class="method-label">С помощью: ${escapeHtml(station)}</div>` : ''}<div class="ingredient-list">${ingredients.map(ingredientCardHtml).join('')}</div></div>`;
+          const methodLabel = isUtilityObject(item) ? 'Создаётся из:' : (station ? `С помощью: ${station}` : '');
+          recipeLine = `<div class="craft-method">${methodLabel ? `<div class="method-label">${escapeHtml(methodLabel)}</div>` : ''}<div class="ingredient-list">${ingredients.map(ingredientCardHtml).join('')}</div></div>`;
         } else if (displayField(item, 'recipe')) {
           recipeLine = `<div class="recipe-text">${escapeHtml(displayField(item, 'recipe'))}</div>`;
         } else {
@@ -1479,11 +1788,13 @@
       function rowHtml(item, index) {
         const favorite = state.favorites.has(item.id);
         const meta = [categoryLabel(item), displaySubtypeForItem(item), item.tier ? `<span class="tier-badge">Ур. ${escapeHtml(item.tier)}</span>` : ''].filter(Boolean).join(' · ');
+        const effectsLabel = isUtilityObject(item) ? 'Использование' : 'Доп. эффекты';
+        const recipeLabel = isUtilityObject(item) ? 'Материалы' : 'Крафт / источник';
         return `<tr data-id="${escapeHtml(item.id)}" style="--row-index:${Math.min(index, 20)}">
           <td><div class="item-cell">${imageHtml(item)}<div class="item-text"><strong class="item-name">${escapeHtml(displayName(item))}</strong><span class="item-meta">${meta}</span>${item.set ? `<span class="item-meta">${escapeHtml(state.lang === 'en' ? item.set : item.setRu || item.set)} · комплект</span>` : ''}</div></div></td>
           <td><span class="cell-label">Характеристики</span>${item.category === 'weapon' ? (weaponBars(item) || formatStats(displayField(item, 'stats'))) : item.category === 'armor' ? (armorBars(item) || formatStats(displayField(item, 'stats'))) : formatStats(displayField(item, 'stats'))}</td>
-          <td><span class="cell-label">Доп. эффекты</span>${effectHtml(item)}</td>
-          <td><span class="cell-label">Крафт / источник</span>${recipeHtml(item)}</td>
+          <td><span class="cell-label">${effectsLabel}</span>${effectHtml(item)}</td>
+          <td><span class="cell-label">${recipeLabel}</span>${recipeHtml(item)}</td>
           <td><div class="row-actions"><button class="compare-btn ${state.compare.has(item.id) ? 'active' : ''}" data-compare="${escapeHtml(item.id)}" title="Добавить или убрать из сравнения">＋</button><button class="star-btn ${favorite ? 'active' : ''}" data-favorite="${escapeHtml(item.id)}" title="${favorite ? 'Убрать из избранного' : 'В избранное'}">${favorite ? '★' : '☆'}</button></div></td>
         </tr>`;
       }
@@ -1656,6 +1967,11 @@
         const meta = categoryMeta[state.category] || categoryMeta.all;
         $('sectionTitle').innerHTML = `${meta.label} <small>${pool.length.toLocaleString('ru-RU')} результата</small>`;
         $('sectionSubtitle').textContent = state.favoritesOnly ? 'Твои сохранённые находки из базы.' : meta.subtitle;
+        const tableHeaders = $('catalogTable').querySelectorAll('thead th');
+        if (tableHeaders.length >= 4) {
+          tableHeaders[2].textContent = state.category === 'utility' ? 'Использование' : 'Доп. эффекты';
+          tableHeaders[3].textContent = state.category === 'utility' ? 'Из чего создаётся' : 'Крафт / источник';
+        }
         $('visibleCount').textContent = pool.length.toLocaleString('ru-RU');
         $('catalogHint').textContent = state.query ? `По запросу «${truncate(state.query, 28)}»` : 'Нажми на строку, чтобы открыть карточку';
         $('favoritesBtn').classList.toggle('active', state.favoritesOnly);
@@ -2012,6 +2328,15 @@
         $('compareBody').querySelectorAll('[data-compare-panel]').forEach(panel => panel.classList.toggle('active', panel.dataset.comparePanel === key));
       });
       $('compareModal').addEventListener('click', event => { if (event.target === $('compareModal')) closeCompareOverlay(); });
+      $('aphidChatFab').addEventListener('click', () => { if ($('aphidChat').hidden) aphidOpenChat(); else aphidCloseChat(); });
+      $('aphidChatClose').addEventListener('click', aphidCloseChat);
+      $('aphidChatMessages').addEventListener('click', event => {
+        const itemButton = event.target.closest('[data-aphid-item]');
+        if (!itemButton) return;
+        const item = items.find(entry => entry.id === itemButton.dataset.aphidItem);
+        if (item) openDetail(item);
+      });
+      $('aphidChatForm').addEventListener('submit', aphidSubmit);
       document.addEventListener('keydown', event => {
         if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); searchInput.focus(); }
         if (event.key === '/' && document.activeElement !== searchInput) { event.preventDefault(); searchInput.focus(); }
@@ -2019,6 +2344,7 @@
         if (event.key === 'Escape' && !mapModal.hidden) closeMapOverlay();
         if (event.key === 'Escape' && !panelModal.hidden) closePanelOverlay();
         if (event.key === 'Escape' && !compareModal.hidden) closeCompareOverlay();
+        if (event.key === 'Escape' && !$('aphidChat').hidden) aphidCloseChat();
       });
       if (localStorage.getItem('grounded-theme') === 'light') document.body.classList.add('light');
       if (localStorage.getItem('grounded-glass') === 'on') document.body.classList.add('glass');
@@ -2028,5 +2354,5 @@
       openItemFromHash();
     })();
   </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a335a35148c8d91b',t:'MTc4ODExMjIyOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a33dfe504bc3a1a4',t:'MTc4ODE5OTg0MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
